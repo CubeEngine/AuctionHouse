@@ -1,0 +1,14 @@
+name: AuctionHouse
+version: "${project.version}"
+main: de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse
+#commands:
+depend: []
+softdepend: []
+database: false
+website: "http://parallel-universe.de"
+description: ""
+author: "Faithcaio"
+authors:
+  - "Faithcaio"
+load: postworld
+#permissions:

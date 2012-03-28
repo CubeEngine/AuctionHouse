@@ -1,0 +1,14 @@
+name: AuctionHouse
+version: "1.0.0-SNAPSHOT"
+main: de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse
+#commands:
+depend: []
+softdepend: []
+database: false
+website: "http://parallel-universe.de"
+description: ""
+author: "Faithcaio"
+authors:
+  - "Faithcaio"
+load: postworld
+#permissions:
