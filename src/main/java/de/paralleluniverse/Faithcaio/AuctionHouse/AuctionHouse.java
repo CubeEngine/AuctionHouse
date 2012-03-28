@@ -3,13 +3,14 @@ package de.paralleluniverse.Faithcaio.AuctionHouse;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.Server;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.Server;
 
 public class AuctionHouse extends JavaPlugin
 {
+    private static AuctionHouse instance = null;
     protected static Logger logger = null;
     public static boolean debugMode = false;
     
@@ -20,6 +21,11 @@ public class AuctionHouse extends JavaPlugin
 
     public AuctionHouse()
     {
+        instance = this;
+    }
+    public static AuctionHouse getInstance()
+    {
+        return instance;
     }
 
     public void onEnable()
@@ -40,10 +46,15 @@ public class AuctionHouse extends JavaPlugin
 
         log("Version " + this.getDescription().getVersion() + " enabled");
     }
-
+    
     public void onDisable()
     {
         log("Version " + this.getDescription().getVersion() + " disabled");
+    }
+    
+    public AuctionHouseConfiguration getConfigurations()
+    {
+        return this.config;
     }
 
     public static void log(String msg)

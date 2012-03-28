@@ -16,6 +16,8 @@ public class Auction
     public final Player owner;
     public final long auctionEnd;
     public final Stack<Bid> bids;
+    private static final AuctionHouse plugin = AuctionHouse.getInstance();
+    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
     public Auction(int id, ItemStack item, Player owner, long auctionEnd)
     {
@@ -33,6 +35,24 @@ public class Auction
             return false;
         }
         this.bids.push(new Bid(bidder, amount));
-        return true; 
+        return true;
+    }
+    public boolean undobid(final Player bidder)
+    {
+        //is last bidder?
+        if (bidder != this.bids.peek().getBidder()) 
+          { return false; }
+        
+        //calculate UndoTime from config
+        long undoTime = config.auction_UndoTimer / 1000;
+        if (config.auction_UndoTimer < 0) //Infinite UndoTime
+          { undoTime = this.auctionEnd - this.bids.peek().getTimestamp(); }
+        
+        //undoTime ok?
+        if ((System.currentTimeMillis() - this.bids.peek().getTimestamp()) < undoTime)
+          { return false; }
+        //else: Undo Last Bid
+        this.bids.pop();
+        return true;
     }
 }
