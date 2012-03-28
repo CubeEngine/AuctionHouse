@@ -27,17 +27,44 @@ public class Auction
         this.auctionEnd = auctionEnd;
         this.bids = new Stack<Bid>();
     }
-    
-    public boolean bid(final Player bidder, final double amount)
+    //Overload with StartBid
+    public Auction(int id, ItemStack item, Player owner, long auctionEnd, double startBid)
     {
-        if (amount < this.bids.peek().getAmount())
+        this.id = id;
+        this.item = item;
+        this.owner = owner;
+        this.auctionEnd = auctionEnd;
+        this.bids = new Stack<Bid>();
+        this.bids.push(new Bid(owner, startBid));
+    }
+    
+    //Remove Auction
+    public boolean AbortAuction()
+    {
+        //Rechte zum Abbrechen ?
+        //return false;
+        //
+        while (!(this.bids.isEmpty()))
+        {
+            //Geld zurückgeben & Meldung wenn online sonst per mail ?
+            this.bids.pop();            
+        }
+        super.finalize();
+        return true;
+    }
+    
+    public boolean bid(final Player bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
+    {
+        if (amount <= 0) { return false;}         //Bid cannot be 0 or less !
+        if (amount < this.bids.peek().getAmount())//Bid is too low !
         {
             return false;
         }
+        //Ueberbotener bekommt Geld zurück?
         this.bids.push(new Bid(bidder, amount));
         return true;
     }
-    public boolean undobid(final Player bidder)
+    public boolean undobid(final Player bidder)//evtl nicht bool / bessere Unterscheidung
     {
         //is last bidder?
         if (bidder != this.bids.peek().getBidder()) 
