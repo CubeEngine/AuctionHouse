@@ -2,13 +2,14 @@ name: AuctionHouse
 version: "${project.version}"
 main: de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse
 #commands:
-depend: []
+depend:
+  - Vault
 softdepend: []
 database: false
 website: "http://parallel-universe.de"
 description: ""
-author: "Faithcaio"
 authors:
   - "Faithcaio"
+  - "Quick_Wango"
 load: postworld
 #permissions:
