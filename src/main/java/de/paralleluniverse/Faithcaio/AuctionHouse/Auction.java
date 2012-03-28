@@ -26,9 +26,9 @@ public class Auction
         this.bids = new Stack<Bid>();
     }
     
-    public boolean bid(Player bidder,double amount)
+    public boolean bid(final Player bidder, final double amount)
     {
-        if (amount<this.bids.peek().amount)
+        if (amount < this.bids.peek().getAmount())
         {
             return false;
         }
