@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 /**
  * Represents a bid by a player
  *
- * @author Anselm
+ * @author Faithcaio
  */
 public class Bid
 {

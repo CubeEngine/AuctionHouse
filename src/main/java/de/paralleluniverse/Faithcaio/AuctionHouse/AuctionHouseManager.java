@@ -8,8 +8,9 @@ import org.bukkit.inventory.ItemStack;
 
 
 /**
+ * Manages all Auctions
  *
- * @author Anselm
+ * @author Faithcaio
  */
 public class AuctionHouseManager {
     
@@ -49,9 +50,31 @@ public class AuctionHouseManager {
     public boolean addAuction(ItemStack item, Player owner, long auctionEnd, double startBid)
     {
         //Rechte zum Starten ?
-        //return false; 
+        //return false;
+        //inherit addAuction;//von oben
         int id=this.auctions.size(); //Suche nach erstem freien Slot??
         this.auctions.add(new Auction(id,item,owner,auctionEnd,startBid));
+        return true;   
+    }
+    //multiple Auctions
+    public boolean addMultiAuction(ItemStack item, Player owner, long auctionEnd, double startBid, int multiAuction)
+    {
+        //Rechte zum Starten ?
+        //return false; 
+        for (int i=1; i == multiAuction; i++)
+        {
+          this.addAuction(item, owner, auctionEnd, startBid);    
+        }
+        return true;   
+    }
+    public boolean addMultiAuction(ItemStack item, Player owner, long auctionEnd, int multiAuction)
+    {
+        //Rechte zum Starten ?
+        //return false; 
+        for (int i=1; i == multiAuction; i++)
+        {
+          this.addAuction(item, owner, auctionEnd);    
+        }
         return true;   
     }
 }

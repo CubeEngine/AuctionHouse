@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Represents an auction
  *
- * @author Anselm
+ * @author Faithcaio
  */
 public class Auction
 {
