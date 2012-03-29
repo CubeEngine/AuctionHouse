@@ -40,33 +40,7 @@ public class AuctionManager
     {
         return this.auctions.get(id);
     }
-    
-    public List<Auction> getAuctions(Player player) //Get all Auctions of player
-    {
-        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};  
-        for (int i = 1;i == this.auctions.size();i++)
-        {
-            if (this.auctions.get(i).owner == player)
-            { auctionlist.add( this.getAuction(i) ); }     
-        }
-        return auctionlist;
-    }
 
-    // TODO move into Bidder
-    public List<Auction> getHighestBidders(Player player)
-    {
-        List<Auction> auctionlist = new ArrayList<Auction>();
-        final int length = this.auctions.size();
-        for (int i = 0; i < length; ++i)
-        {
-            if (this.auctions.get(i).bids.peek().getBidder() == player)
-            {
-                auctionlist.add(this.getAuction(i));
-            }
-        } 
-        return auctionlist;
-    }
-    
     public List<Auction> getAuctionItems(ItemStack item) //Get all Auctions with item
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
