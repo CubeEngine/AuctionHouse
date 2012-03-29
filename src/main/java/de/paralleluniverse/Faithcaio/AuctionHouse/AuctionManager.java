@@ -3,6 +3,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Random;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -13,22 +14,34 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class AuctionHouseManager {
-    
-    public final ArrayList<Auction> auctions;
+public class AuctionManager
+{
+    private static AuctionManager instance = null;
+
+    public final List<Auction> auctions;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
-    public AuctionHouseManager ()
+    private AuctionManager()
     {
         this.auctions = new ArrayList<Auction>() {};
     }
-    
+
+    public static AuctionManager getInstance()
+    {
+        if (instance == null)
+        {
+            instance = new AuctionManager();
+        }
+        return instance;
+    }
     
     public Auction getAuction(int id) //Get Auction with ID
-    { return this.auctions.get(id); }
+    {
+        return this.auctions.get(id);
+    }
     
-    public ArrayList<Auction> getAuctions(Player player) //Get all Auctions of player
+    public List<Auction> getAuctions(Player player) //Get all Auctions of player
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};  
         for (int i = 1;i == this.auctions.size();i++)
@@ -38,19 +51,23 @@ public class AuctionHouseManager {
         }
         return auctionlist;
     }
-    
-    public ArrayList<Auction> getghighestBidder(Player player) //Get all highest Bids of player
+
+    // TODO move into Bidder
+    public List<Auction> getHighestBidders(Player player)
     {
-        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
-        for (int i = 1;i == this.auctions.size();i++)
+        List<Auction> auctionlist = new ArrayList<Auction>();
+        final int length = this.auctions.size();
+        for (int i = 0; i < length; ++i)
         {
             if (this.auctions.get(i).bids.peek().getBidder() == player)
-            { auctionlist.add( this.getAuction(i) ); }
+            {
+                auctionlist.add(this.getAuction(i));
+            }
         } 
         return auctionlist;
     }
     
-    public ArrayList<Auction> getAuctionItem(ItemStack item) //Get all Auctions with item
+    public List<Auction> getAuctionItems(ItemStack item) //Get all Auctions with item
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
         for (int i = 1;i == this.auctions.size();i++)
@@ -61,7 +78,7 @@ public class AuctionHouseManager {
         return auctionlist;    
     }
     
-    public ArrayList<Auction> getEndingAuction(int min) //Get soon Ending Auctions
+    public List<Auction> getEndingAuctions(int min) //Get soon Ending Auctions
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
         for (int i = 1;i == this.auctions.size();i++)
