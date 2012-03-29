@@ -22,10 +22,56 @@ public class AuctionHouseManager {
     {
         this.auctions = new ArrayList<Auction>() {};
     }
-    public Auction getAuction(int id)
+    
+    
+    public Auction getAuction(int id) //Get Auction with ID
+    { return this.auctions.get(id); }
+    
+    public ArrayList<Auction> getAuctions(Player player) //Get all Auctions of player
     {
-       return this.auctions.get(id);    
+        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};  
+        for (int i = 1;i == this.auctions.size();i++)
+        {
+            if (this.auctions.get(i).owner == player)
+            { auctionlist.add( this.getAuction(i) ); }     
+        }
+        return auctionlist;
     }
+    
+    public ArrayList<Auction> getghighestBidder(Player player) //Get all highest Bids of player
+    {
+        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
+        for (int i = 1;i == this.auctions.size();i++)
+        {
+            if (this.auctions.get(i).bids.peek().getBidder() == player)
+            { auctionlist.add( this.getAuction(i) ); }
+        } 
+        return auctionlist;
+    }
+    
+    public ArrayList<Auction> getAuctionItem(ItemStack item) //Get all Auctions with item
+    {
+        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
+        for (int i = 1;i == this.auctions.size();i++)
+        {
+            if (this.auctions.get(i).item == item)
+            { auctionlist.add( this.getAuction(i) ); }
+        } 
+        return auctionlist;    
+    }
+    
+    public ArrayList<Auction> getEndingAuction(int min) //Get soon Ending Auctions
+    {
+        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
+        for (int i = 1;i == this.auctions.size();i++)
+        {
+            if (this.auctions.get(i).auctionEnd - System.currentTimeMillis() <= 1000 * 60 * min)
+            { auctionlist.add( this.getAuction(i) ); }
+        }
+        //Array Sortieren nach Datumsstempel?
+        return auctionlist;    
+    }
+            
     public boolean addAuction(ItemStack item, Player owner, long auctionEnd)
     {
         //Rechte zum Starten ?
