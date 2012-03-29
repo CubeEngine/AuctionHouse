@@ -37,7 +37,7 @@ public class Auction
         //
         while (!(this.bids.isEmpty()))
         {
-            //TODO Geld zurückgeben & Meldung wenn online sonst per mail ?
+            //TODO Geld zurückgeben & Meldung wenn online sonst per mail (Essentials)?
             this.bids.pop();
         }
         return true;

@@ -1,7 +1,9 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.entity.Player;
 
 /**
@@ -11,7 +13,9 @@ import org.bukkit.entity.Player;
 public class Bidder {
    public final Player player;
    public final ArrayList<Auction> activeBids;
-   private static Bidder instance = null;
+   
+   private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
+   
    public Bidder(Player player)
    {
        this.player = player;  
@@ -20,13 +24,13 @@ public class Bidder {
    
      public static Bidder getInstance(Player player)
     {
+        Bidder instance;
+        instance = bidderInstances.get(player);
         if (instance == null)
-        {
-            instance = new Bidder(player);
-        }
+        bidderInstances.put(player, new Bidder(player));
         return instance;
     }
-
+    
     public List<Auction> getLeadingAuctions(Player player)
     {
         List<Auction> auctionlist = new ArrayList<Auction>();
