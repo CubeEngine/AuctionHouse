@@ -1,15 +1,18 @@
 name: AuctionHouse
 version: "${project.version}"
 main: de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse
-#commands:
+commands:
+  auctionhouse:
+    description: "This is the base command of AuctionHouse"
+    usage: "/<command> <action>"
+    aliases:
+      - ah
 depend:
   - Vault
-softdepend: []
 database: false
 website: "http://parallel-universe.de"
 description: ""
 authors:
   - "Faithcaio"
   - "Quick_Wango"
-load: postworld
 #permissions:
