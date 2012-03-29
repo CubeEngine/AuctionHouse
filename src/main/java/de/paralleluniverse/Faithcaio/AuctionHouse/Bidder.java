@@ -6,17 +6,26 @@ import org.bukkit.entity.Player;
 
 /**
  *
- * @author Anselm
+ * @author Faithcaio
  */
 public class Bidder {
    public final Player player;
    public final ArrayList<Auction> activeBids;
-   
+   private static Bidder instance = null;
    public Bidder(Player player)
    {
        this.player = player;  
        this.activeBids = new ArrayList<Auction>();
    }
+   
+     public static Bidder getInstance(Player player)
+    {
+        if (instance == null)
+        {
+            instance = new Bidder(player);
+        }
+        return instance;
+    }
 
     public List<Auction> getLeadingAuctions(Player player)
     {
@@ -31,6 +40,7 @@ public class Bidder {
         } 
         return auctionlist;
     }
+    
     
     public List<Auction> getAuctions() //Get all Auctions with player involved
     {

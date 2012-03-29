@@ -19,18 +19,9 @@ public class Auction
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
-    public Auction(int id, ItemStack item, Player owner, long auctionEnd)
+    public Auction(ItemStack item, Player owner, long auctionEnd, double startBid)
     {
-        this.id = id;
-        this.item = item;
-        this.owner = owner;
-        this.auctionEnd = auctionEnd;
-        this.bids = new Stack<Bid>();
-    }
-    //Overload with StartBid
-    public Auction(int id, ItemStack item, Player owner, long auctionEnd, double startBid)
-    {
-        this.id = id;
+        this.id = 0;
         this.item = item;
         this.owner = owner;
         this.auctionEnd = auctionEnd;
