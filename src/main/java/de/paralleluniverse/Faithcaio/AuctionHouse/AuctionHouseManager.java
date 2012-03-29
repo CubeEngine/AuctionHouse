@@ -1,7 +1,8 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -66,11 +67,22 @@ public class AuctionHouseManager {
         for (int i = 1;i == this.auctions.size();i++)
         {
             if (this.auctions.get(i).auctionEnd - System.currentTimeMillis() <= 1000 * 60 * min)
+    
             { auctionlist.add( this.getAuction(i) ); }
         }
-        //Array Sortieren nach Datumsstempel?
-        return auctionlist;    
+        //Array Sortieren nach Datumsstempel? vorgefertigte Funktion
+        Collections.sort(auctionlist, Comparator<Auction.auctionEnd,Auction.auctionEnd>{
+   /*         public int compare(Auction a1,Auction a2){
+                if (a1.auctionEnd <= a2.auctionEnd) return 1;
+                //else
+                return -1;
+            } */ 
+        });
+        return auctionlist; 
     }
+    
+
+
             
     public boolean addAuction(ItemStack item, Player owner, long auctionEnd)
     {
