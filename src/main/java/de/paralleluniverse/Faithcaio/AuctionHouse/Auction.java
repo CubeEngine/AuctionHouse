@@ -38,8 +38,8 @@ public class Auction
         this.bids.push(new Bid(owner, startBid));
     }
     
-    //Remove Auction
-    public boolean AbortAuction()
+    //Abort Auction
+    public boolean AbortAuction() throws Throwable
     {
         //Rechte zum Abbrechen ?
         //return false;
