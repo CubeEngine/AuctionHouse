@@ -71,8 +71,8 @@ public class Auction
           { return false; }
         
         //calculate UndoTime from config
-        long undoTime = config.auction_UndoTimer / 1000;
-        if (config.auction_UndoTimer < 0) //Infinite UndoTime
+        long undoTime = config.auction_undoTimer / 1000;
+        if (config.auction_undoTimer < 0) //Infinite UndoTime
           { undoTime = this.auctionEnd - this.bids.peek().getTimestamp(); }
         
         //undoTime ok?
