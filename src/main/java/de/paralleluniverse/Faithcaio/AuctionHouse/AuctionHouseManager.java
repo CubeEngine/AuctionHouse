@@ -71,16 +71,17 @@ public class AuctionHouseManager {
             { auctionlist.add( this.getAuction(i) ); }
         }
         //Array Sortieren nach Datumsstempel? vorgefertigte Funktion
-        Collections.sort(auctionlist, Comparator<Auction.auctionEnd,Auction.auctionEnd>{
-   /*         public int compare(Auction a1,Auction a2){
-                if (a1.auctionEnd <= a2.auctionEnd) return 1;
+        Collections.sort(auctionlist, new Comparator()
+           {   
+                public int compare(Object a1,Object a2){
+                if (((Auction)a1).auctionEnd <= ((Auction)a2).auctionEnd) return 1;
                 //else
                 return -1;
-            } */ 
-        });
+            } 
+        }); 
         return auctionlist; 
+
     }
-    
 
 
             
