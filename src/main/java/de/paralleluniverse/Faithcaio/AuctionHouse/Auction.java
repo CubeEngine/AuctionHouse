@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Auction
 {
-    public final int id;
+    public int id;
     public final ItemStack item;
     public final Player owner;
     public final long auctionEnd;
@@ -39,17 +39,16 @@ public class Auction
     }
     
     //Abort Auction
-    public boolean AbortAuction() throws Throwable
+    public boolean abortAuction()
     {
         //Rechte zum Abbrechen ?
         //return false;
         //
         while (!(this.bids.isEmpty()))
         {
-            //Geld zurückgeben & Meldung wenn online sonst per mail ?
-            this.bids.pop();            
+            //TODO Geld zurückgeben & Meldung wenn online sonst per mail ?
+            this.bids.pop();
         }
-        super.finalize();
         return true;
     }
     

@@ -1,10 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,12 +15,18 @@ public class AuctionManager
     private static AuctionManager instance = null;
 
     public final List<Auction> auctions;
+    public final Stack<Integer> freeIds;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
     private AuctionManager()
     {
-        this.auctions = new ArrayList<Auction>() {};
+        this.auctions = new ArrayList<Auction>();
+        this.freeIds = new Stack<Integer>();
+        for (int i=config.auction_maxAuctions; i > 0; --i)
+        {
+           this.freeIds.push(i); 
+        }
     }
 
     public static AuctionManager getInstance()
@@ -71,55 +73,38 @@ public class AuctionManager
         }); 
         return auctionlist;
     }
-            
-    public boolean addAuction(ItemStack item, Player owner, long auctionEnd)
+    
+        public boolean cancelAuction(Auction auction)
+    {
+        //TODO
+        this.freeIds.push(auction.id);        
+        auction.abortAuction();
+        return true;   
+    }
+    
+    public boolean addAuction(Auction auction)
     {
         //Rechte zum Starten ?
         //return false;
-        
-        //####################################################################
-        //################ZU BEARBEITEN#######################################
-        int id;
-        //Suche nach erstem freien Slot?? 
-        id = this.auctions.size();
-        //oder Random im fester Menge wenn nicht voll             
+        //TODO
+        /*
         if (this.auctions.size() >= config.auction_maxAuctions) {return false;}
         Random generator = new Random();
         do { id = generator.nextInt(config.auction_maxAuctions); }    
         while (this.auctions.get(id)!= null);
-        
-        //####################################################################
-        this.auctions.add(new Auction(id,item,owner,auctionEnd));
+        */
+        auction.id = this.freeIds.peek();
+        this.freeIds.pop();
+        this.auctions.add(auction);
         return true;   
     }
-    //overloaded
-    public boolean addAuction(ItemStack item, Player owner, long auctionEnd, double startBid)
-    {
-        //Rechte zum Starten ?
-        //return false;
-        //inherit addAuction;//von oben
-        int id=this.auctions.size(); //Suche nach erstem freien Slot??
-        this.auctions.add(new Auction(id,item,owner,auctionEnd,startBid));
-        return true;   
-    }
-    //multiple Auctions
-    public boolean addMultiAuction(ItemStack item, Player owner, long auctionEnd, double startBid, int multiAuction)
-    {
+    public boolean addMultiAuction(Auction auction, int quantity)
+    {  
         //Rechte zum Starten ?
         //return false; 
-        for (int i=1; i == multiAuction; i++)
+        for (int i=0; i < quantity; ++i)
         {
-          this.addAuction(item, owner, auctionEnd, startBid);    
-        }
-        return true;   
-    }
-    public boolean addMultiAuction(ItemStack item, Player owner, long auctionEnd, int multiAuction)
-    {
-        //Rechte zum Starten ?
-        //return false; 
-        for (int i=1; i == multiAuction; i++)
-        {
-          this.addAuction(item, owner, auctionEnd);    
+          this.addAuction(auction);    
         }
         return true;   
     }
