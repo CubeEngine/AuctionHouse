@@ -70,7 +70,6 @@ public class AuctionHouseManager {
     
             { auctionlist.add( this.getAuction(i) ); }
         }
-        //Array Sortieren nach Datumsstempel? vorgefertigte Funktion
         Collections.sort(auctionlist, new Comparator()
            {   
                 public int compare(Object a1,Object a2){
@@ -79,11 +78,8 @@ public class AuctionHouseManager {
                 return -1;
             } 
         }); 
-        return auctionlist; 
-
+        return auctionlist;
     }
-
-
             
     public boolean addAuction(ItemStack item, Player owner, long auctionEnd)
     {
