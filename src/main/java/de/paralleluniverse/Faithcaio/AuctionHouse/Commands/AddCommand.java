@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AddCommand extends AbstractCommand{
     
+    private static AddCommand instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
@@ -22,7 +23,16 @@ public class AddCommand extends AbstractCommand{
         super("add", base);
     }
 
-
+    public static AddCommand getInstance()
+    {
+        if (instance == null)
+        {
+            BaseCommand base = new BaseCommand(plugin);
+            instance = new AddCommand(base);
+        }
+        return instance;
+    }
+    
     public boolean execute(CommandSender sender, String[] args)
     {
         sender.sendMessage("Debug: Added nothing yet");
@@ -116,6 +126,13 @@ public class AddCommand extends AbstractCommand{
         sender.sendMessage("Debug: Bidder OK");
 
         sender.sendMessage("Info: Auction added succesfully!");
+        return true;
+    }
+    
+    public boolean execute(CommandSender sender, String[] args,int quantity)
+    {
+        for (int i=0;i<quantity;++i)
+          this.execute(sender, args);
         return true;
     }
 
