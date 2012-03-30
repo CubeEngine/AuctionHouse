@@ -31,8 +31,11 @@ public class RemoveCommand extends AbstractCommand
         try {id = Integer.parseInt(args[0]); }
         catch (NumberFormatException ex) 
         { 
-            if ( (args[0] != "all") || (args.length < 2) )
-                return false; 
+            if ( (!(args[0].equalsIgnoreCase("all"))) || (args.length == 1) )
+            {
+            sender.sendMessage("Debug:Wrong command or too few Parameter");
+            return false;  
+            }
             //else check Player...
             Player player = plugin.getServer().getPlayer(args[1]);
             if (player == null) return false;
@@ -41,15 +44,16 @@ public class RemoveCommand extends AbstractCommand
             if(!(Bidder.getInstance(player).activeBids.isEmpty()))
             {    
                 int bids = Bidder.getInstance(player).activeBids.size();
+                if (bids == 0) return false;
                 for (int i=0; i<bids; ++i)
-                    Bidder.getInstance(player).activeBids.get(i).abortAuction();
+                    AuctionManager.getInstance().cancelAuction(Bidder.getInstance(player).getAuctions(player).get(i));
                 sender.sendMessage("Info:Deleted "+String.valueOf(bids)+" auctions of "+player.toString());
                 return true;
             }
         }
         //TODO Permission
         sender.sendMessage("Debug:delete per Id");
-        AuctionManager.getInstance().getAuction(id).abortAuction();      
+        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
         sender.sendMessage("Info:Deleted auction #"+String.valueOf(id));
         return true;
     }

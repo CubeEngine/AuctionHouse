@@ -21,8 +21,8 @@ public class Bidder {
        this.player = player;  
        this.activeBids = new ArrayList<Auction>();
    }
-   
-     public static Bidder getInstance(Player player)
+    
+    public static Bidder getInstance(Player player)
     {
         Bidder instance;
         if (bidderInstances.isEmpty()) instance = null;
@@ -31,6 +31,11 @@ public class Bidder {
           bidderInstances.put(player, new Bidder(player));
         instance = bidderInstances.get(player);
         return instance;
+    }
+    
+    public boolean removeAuction(Auction auction)
+    {
+        return activeBids.remove(auction);
     }
     
     public List<Auction> getLeadingAuctions(Player player)

@@ -117,7 +117,7 @@ public class AddCommand extends AbstractCommand
         sender.sendMessage("Debug: Auction init complete");
         if (AuctionManager.getInstance().freeIds.isEmpty())
         {
-            sender.sendMessage("Info: Max Auctions reached! ("+config.auction_maxAuctions+")");
+            sender.sendMessage("Info: Max Auctions reached! ("+config.auction_maxAuctions_overall+")");
             return false;
         }
         AuctionManager.getInstance().addAuction(newAuction);        //Give Auction to Manager

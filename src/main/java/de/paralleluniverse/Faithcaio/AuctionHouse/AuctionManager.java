@@ -24,7 +24,7 @@ public class AuctionManager
     
     private AuctionManager()
     {
-        int maxAuctions = config.auction_maxAuctions;
+        int maxAuctions = config.auction_maxAuctions_overall;
         if (!(maxAuctions > 0 )) maxAuctions = 1;
         this.auctions = new ArrayList<Auction>();
         this.freeIds = new Stack<Integer>();
@@ -45,16 +45,24 @@ public class AuctionManager
     
     public Auction getAuction(int id) //Get Auction with ID
     {
-        return this.auctions.get(id);
+        Auction auction = null;
+        int size = this.auctions.size();
+        for (int i = 0;i < size;i++)
+        {
+            if (this.auctions.get(i).id == id)
+               auction = this.auctions.get(i);
+        }
+        return auction;
     }
 
     public List<Auction> getAuctionItems(ItemStack item) //Get all Auctions with item
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
-        for (int i = 1;i == this.auctions.size();i++)
+        int size = this.auctions.size();
+        for (int i = 0;i < size;i++)
         {
             if (this.auctions.get(i).item == item)
-            { auctionlist.add( this.getAuction(i) ); }
+            { auctionlist.add( this.auctions.get(i) ); }
         } 
         return auctionlist;    
     }
@@ -62,11 +70,12 @@ public class AuctionManager
     public List<Auction> getEndingAuctions(int min) //Get soon Ending Auctions
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
-        for (int i = 1;i == this.auctions.size();i++)
+        int size = this.auctions.size();
+        for (int i = 0;i < size;i++)
         {
             if (this.auctions.get(i).auctionEnd - System.currentTimeMillis() <= 1000 * 60 * min)
     
-            { auctionlist.add( this.getAuction(i) ); }
+            { auctionlist.add( this.auctions.get(i) ); }
         }
         Collections.sort(auctionlist, new Comparator()
            {   
@@ -81,7 +90,15 @@ public class AuctionManager
     
         public boolean cancelAuction(Auction auction)
     {
-        this.freeIds.push(auction.id);        
+        this.freeIds.push(auction.id); 
+        //TODO delete Auction
+        Bidder.getInstance(auction.owner).removeAuction(auction);
+        while (!(auction.bids.isEmpty()))
+        {
+            Bidder.getInstance( auction.bids.peek().getBidder() ).removeAuction(auction);
+            auction.bids.pop();        
+        }
+        this.auctions.remove(auction);
         auction.abortAuction();
         return true;   
     }
@@ -93,16 +110,4 @@ public class AuctionManager
         this.auctions.add(auction);
         return true;   
     }
-    /* entfällt wegen MAddCommand
-    public boolean addMultiAuction(Auction auction, int quantity)
-    {  
-        //Rechte zum Starten ?
-        //return false; 
-        for (int i=0; i < quantity; ++i)
-        {
-          this.addAuction(auction);    
-        }
-        return true;   
-    }
-    */
 }
