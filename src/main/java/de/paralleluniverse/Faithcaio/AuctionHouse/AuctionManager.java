@@ -81,7 +81,6 @@ public class AuctionManager
     
         public boolean cancelAuction(Auction auction)
     {
-        //TODO
         this.freeIds.push(auction.id);        
         auction.abortAuction();
         return true;   
@@ -89,20 +88,12 @@ public class AuctionManager
     
     public boolean addAuction(Auction auction)
     {
-        //Rechte zum Starten ?
-        //return false;
-        //TODO
-        /*
-        if (this.auctions.size() >= config.auction_maxAuctions) {return false;}
-        Random generator = new Random();
-        do { id = generator.nextInt(config.auction_maxAuctions); }    
-        while (this.auctions.get(id)!= null);
-        */
         auction.id = this.freeIds.peek();
         this.freeIds.pop();
         this.auctions.add(auction);
         return true;   
     }
+    /* entfällt wegen MAddCommand
     public boolean addMultiAuction(Auction auction, int quantity)
     {  
         //Rechte zum Starten ?
@@ -113,4 +104,5 @@ public class AuctionManager
         }
         return true;   
     }
+    */
 }

@@ -45,8 +45,7 @@ public class Bidder {
             }
         } 
         return auctionlist;
-    }
-    
+    }    
     
     public List<Auction> getAuctions() //Get all Auctions with player involved
     {

@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class AddCommand extends AbstractCommand{
-    
+public class AddCommand extends AbstractCommand
+{    
     private static AddCommand instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
@@ -35,13 +35,13 @@ public class AddCommand extends AbstractCommand{
     
     public boolean execute(CommandSender sender, String[] args)
     {
-        sender.sendMessage("Debug: Added nothing yet");
         int quantity = 1;
         double startBid = 0;
         long auctionEnd = 1;
         ItemStack newItem;
 
-        if (args.length < 2){
+        if (args.length < 2)
+        {
             sender.sendMessage("/ah add <Item> <Amount> (<StartBid> <Length>)");
             return false;
         }
@@ -82,7 +82,7 @@ public class AddCommand extends AbstractCommand{
             sender.sendMessage("Debug: Console creates Auction...");
         }        
         //TODO Take Items from Inventory ERROR takes all Items
-        if ((!((Player)sender).isOp())||(((Player)sender).hasPermission("CheatedItems")))//TODO permission Check OP does not work
+        if ((!((Player)sender).isOp())||(((Player)sender).hasPermission("CheatedItems")))//TODO permission Check / OP does not work
         {  if(!(((Player)sender).getInventory().contains(newItem))) 
            {
                sender.sendMessage("Info: Not enough Items");
