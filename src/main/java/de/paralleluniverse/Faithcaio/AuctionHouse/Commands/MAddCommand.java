@@ -11,42 +11,50 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class AddCommand extends AbstractCommand{
-    
+public class MAddCommand extends AbstractCommand
+{
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
-    
-    public AddCommand(BaseCommand base)
+    public MAddCommand(BaseCommand base)
     {
-        super("add", base);
+        super("madd", base);
     }
 
 
     public boolean execute(CommandSender sender, String[] args)
     {
         sender.sendMessage("Debug: Added nothing yet");
-        int quantity = 1;
+        int amount = 1;
         double startBid = 0;
         long auctionEnd = 1;
         ItemStack newItem;
+        int auctionAmount;
 
-        if (args.length < 2){
-            sender.sendMessage("/ah add <Item> <Amount> (<StartBid> <Length>)");
+        if (args.length < 3){
+            sender.sendMessage("/ah madd <Item> <Amount> <Auctions> (<StartBid> <Length>)");
             return false;
         }
             Material newMaterial = Material.getMaterial(args[0]);
             if (newMaterial == null) return false;
             sender.sendMessage("Debug: MaterialDetection OK");
         
-            try {quantity = Integer.parseInt(args[1]); }
+            try {amount = Integer.parseInt(args[1]); }
             catch (NumberFormatException ex) { return false; }
             sender.sendMessage("Debug: AmountDetection OK");
-        newItem = new ItemStack(Material.getMaterial(args[0]),quantity);                    
+        newItem = new ItemStack(Material.getMaterial(args[0]),amount);                    
         sender.sendMessage("Debug: "+newItem.toString());
-        if (args.length >= 3)
+            try { auctionAmount = Integer.parseInt(args[2]); }
+            catch (NumberFormatException ex) { return false; }
+            if (auctionAmount < 1 )
+            {
+                sender.sendMessage("Info: AuctionAmount muss be greater than 1");
+                return false;
+            }
+            sender.sendMessage("Debug: AuctionAmount OK");
+        if (args.length >= 4)
         {
-            try { startBid = Double.parseDouble(args[2]); }
+            try { startBid = Double.parseDouble(args[3]); }
             catch (NumberFormatException ex) { return false; }
             sender.sendMessage("Debug: StartBid OK");
         }
@@ -54,9 +62,9 @@ public class AddCommand extends AbstractCommand{
         {
             sender.sendMessage("Debug: No StartBid Set to 0");
         }
-        if (args.length >= 4)
+        if (args.length >= 5)
         {
-            try { auctionEnd = (System.currentTimeMillis()+Integer.parseInt(args[3])*60*60*1000); }
+            try { auctionEnd = (System.currentTimeMillis()+Integer.parseInt(args[4])*60*60*1000); }
             catch (NumberFormatException ex)  { return false; }
             sender.sendMessage("Debug: AuctionLentgh OK");
         }
@@ -98,6 +106,9 @@ public class AddCommand extends AbstractCommand{
                ((Player)sender).getInventory().remove(newItem); //OP has Item -> removeIt
            } 
         }
+        //TODO multiple Auctions so läufts nicht denk ich
+        for (int i=0;i<auctionAmount;++i)
+        {
         Auction newAuction;
         if (sender instanceof ConsoleCommandSender)
             newAuction = new Auction(newItem,(Player)sender.getServer().getPlayer("Server"),auctionEnd,startBid); //Created Auction as FakePlayer: "Server"
@@ -114,14 +125,14 @@ public class AddCommand extends AbstractCommand{
         sender.sendMessage("Debug: Manager OK");
         Bidder.getInstance((Player)sender).addAuction(newAuction);  //Give Auction to Bidder
         sender.sendMessage("Debug: Bidder OK");
-
-        sender.sendMessage("Info: Auction added succesfully!");
+        sender.sendMessage("Info: Auction added succesfully!"+String.valueOf(i+1));        }
         return true;
+        
     }
 
     @Override
     public String getDescription()
     {
-        return "Adds an auction";
+        return "Adds multiple acutions.";
     }
 }
