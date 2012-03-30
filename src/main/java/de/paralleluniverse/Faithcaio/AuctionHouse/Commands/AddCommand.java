@@ -13,6 +13,10 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AddCommand extends AbstractCommand{
     
+    private static final AuctionHouse plugin = AuctionHouse.getInstance();
+    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
+    
     public AddCommand(BaseCommand base)
     {
         super("add", base);
@@ -102,12 +106,17 @@ public class AddCommand extends AbstractCommand{
             newAuction = new Auction(newItem,(Player)sender,auctionEnd,startBid);//Created Auction
         sender.sendMessage("Debug: Auction init complete");
         //TODO Peak gives Exception in Manager / NullPointer in Bidder
+        if (AuctionManager.getInstance().freeIds.isEmpty())
+        {
+            sender.sendMessage("Info: Max Auctions reached! ("+config.auction_maxAuctions+")");
+            return false;
+        }
         AuctionManager.getInstance().addAuction(newAuction);        //Give Auction to Manager
         sender.sendMessage("Debug: Manager OK");
         Bidder.getInstance((Player)sender).addAuction(newAuction);  //Give Auction to Bidder
         sender.sendMessage("Debug: Bidder OK");
 
-        sender.sendMessage("Info: Auction added succesfully!?");
+        sender.sendMessage("Info: Auction added succesfully!");
 /*
         for (AbstractCommand command : getBase().getRegisteredCommands())
         {

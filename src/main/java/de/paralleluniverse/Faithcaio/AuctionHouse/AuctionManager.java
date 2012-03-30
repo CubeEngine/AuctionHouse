@@ -24,9 +24,11 @@ public class AuctionManager
     
     private AuctionManager()
     {
+        int maxAuctions = config.auction_maxAuctions;
+        if (!(maxAuctions > 0 )) maxAuctions = 1;
         this.auctions = new ArrayList<Auction>();
         this.freeIds = new Stack<Integer>();
-        for (int i=config.auction_maxAuctions; i > 0; --i)
+        for (int i = maxAuctions; i > 0; --i)
         {
            this.freeIds.push(i); 
         }

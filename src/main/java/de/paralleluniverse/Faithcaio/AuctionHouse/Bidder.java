@@ -25,9 +25,11 @@ public class Bidder {
      public static Bidder getInstance(Player player)
     {
         Bidder instance;
-        instance = bidderInstances.get(player);
+        if (bidderInstances.isEmpty()) instance = null;
+        else instance = bidderInstances.get(player);
         if (instance == null)
-        bidderInstances.put(player, new Bidder(player));
+          bidderInstances.put(player, new Bidder(player));
+        instance = bidderInstances.get(player);
         return instance;
     }
     
