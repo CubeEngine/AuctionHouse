@@ -24,23 +24,17 @@ public class RemoveCommand extends AbstractCommand
         if (args.length < 1)
         {
             sender.sendMessage("/ah remove <AuctionID>");
-            sender.sendMessage("/ah remove all <Player>");
+            sender.sendMessage("/ah remove all <Player>");//TODO /ah confirm
             return false;
         }
-        int id = 0;
-        try {id = Integer.parseInt(args[0]); }
-        catch (NumberFormatException ex) 
-        { 
-            if ( (!(args[0].equalsIgnoreCase("all"))) || (args.length == 1) )
-            {
-            sender.sendMessage("Debug:Wrong command or too few Parameter");
-            return false;  
-            }
-            //else check Player...
-            Player player = plugin.getServer().getPlayer(args[1]);
+        Arguments arguments = new Arguments(args);
+        
+        if (arguments.getString("1").equalsIgnoreCase("all"))
+        {
+            Player player = arguments.getPlayer("2");
             if (player == null) return false;
             sender.sendMessage("Debug:delete per Player");
-            //TODO Permission
+            
             if(!(Bidder.getInstance(player).activeBids.isEmpty()))
             {    
                 int bids = Bidder.getInstance(player).activeBids.size();
@@ -51,7 +45,9 @@ public class RemoveCommand extends AbstractCommand
                 return true;
             }
         }
-        //TODO Permission
+        
+        int id =  arguments.getInt("1");
+        if (id == -1) return false;
         sender.sendMessage("Debug:delete per Id");
         AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
         sender.sendMessage("Info:Deleted auction #"+String.valueOf(id));

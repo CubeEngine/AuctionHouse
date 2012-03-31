@@ -2,7 +2,6 @@ package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.AddCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.HelpCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.MAddCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.RemoveCommand;
 import java.io.File;
 import java.util.logging.Level;

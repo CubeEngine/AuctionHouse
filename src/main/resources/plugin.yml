@@ -21,7 +21,19 @@ permissions:
     default: op
     children:
       auctionhouse.cheatItems.*: true
+      auctionhouse.use.*: true
       
+  auctionhouse.use.*:
+    description: "Allows the player to use all normal AuctionHouse Commands"
+    children:
+      auctionhouse.use.bid: true
+      auctionhouse.use.add: true
+      
+  auctionhouse.use.bid:    
+    description: "Allows the player to bid"
+  auctionhouse.use.add:
+    description: "Allows the player to add his own auctions"
+    
   auctionhouse.cheatItems:
     description: "Allows the player to cheat Items when needed"
 

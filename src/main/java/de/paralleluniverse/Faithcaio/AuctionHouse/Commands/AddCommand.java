@@ -1,7 +1,10 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
+import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -54,48 +57,45 @@ public class AddCommand extends AbstractCommand
             }
             Arguments arguments = new Arguments(args);
 
-            if (arguments.getParam("1").equalsIgnoreCase("hand"))
+            if (arguments.getString("1").equalsIgnoreCase("hand"))
             {
                 newItem = ((Player)sender).getItemInHand();
-                sender.sendMessage("Debug: Hand ItemDetection OK");
+                sender.sendMessage("Debug: Hand ItemDetection OK: "+newItem.toString());
             }
             else 
             {    
-                newMaterial = Material.matchMaterial(arguments.getParam("1"));
+                newMaterial = Material.matchMaterial(arguments.getString("1"));
                 if (newMaterial == null) return false;
                 sender.sendMessage("Debug: Item MaterialDetection OK: "+newMaterial.toString());
 
-                try {amount = Integer.parseInt(arguments.getParam("2")); }
-                catch (NumberFormatException ex) {return false; }
-                sender.sendMessage("Debug: Quantity MaterialDetection OK");   
+                amount = arguments.getInt("2");
+                if (amount == -1) return false;
+                sender.sendMessage("Debug: Quantity MaterialDetection OK: "+String.valueOf(amount));   
 
                 newItem = new ItemStack(newMaterial,amount);
-                sender.sendMessage("Debug: Separate ItemDetection OK"); 
+                sender.sendMessage("Debug: Separate ItemDetection OK: "+newItem.toString()); 
             }
 
-            if (arguments.getParam("3")!=null) 
+            if (arguments.getString("3")!=null) 
             {
-                try {startBid = Integer.parseInt(arguments.getParam("3")); }
-                catch (NumberFormatException ex) {return false; }
+                startBid = arguments.getInt("3");
+                if (startBid == -1) return false;
                 sender.sendMessage("Debug: StartBid OK");
             }
             else sender.sendMessage("Debug: No StartBid Set to 0");
 
-            if (arguments.getParam("4")!=null)
+            if (arguments.getString("4")!=null)
             {
-                try 
-                { 
-                    auctionEnd = (System.currentTimeMillis()+Integer.parseInt(arguments.getParam("4"))*60*60*1000);
-                }
-                catch (NumberFormatException ex)  { return false; }
+                if (arguments.getInt("4") == -1) return false;
+                auctionEnd = (System.currentTimeMillis()+arguments.getInt("4")*60*60*1000);
                 sender.sendMessage("Debug: AuctionLentgh OK");
             }
             else sender.sendMessage("Debug: No Auction Length Set to 1h");
 
-            if (arguments.getParam("m")!=null)
+            if (arguments.getString("m")!=null)
             {
-                try {multiAuction = Integer.parseInt(arguments.getParam("m")); }
-                catch (NumberFormatException ex) {return false; }
+                multiAuction = arguments.getInt("m");
+                if (multiAuction == -1) return false;
                 sender.sendMessage("Debug: MultiAuction: "+String.valueOf(multiAuction));
             }
         }
@@ -106,53 +106,70 @@ public class AddCommand extends AbstractCommand
             //else | is Console-Command
             sender.sendMessage("Info: Creating Auction as Server...");   
         }
-
-                
-        //TODO Take Items from Inventory ERROR takes all Items
-        if ((!((Player)sender).isOp())||(((Player)sender).hasPermission("CheatedItems")))//TODO permission Check / OP does not work
-        {  if(!(((Player)sender).getInventory().contains(newItem))) 
-           {
-               sender.sendMessage("Info: Not enough Items");
-               return false;//Player has not enough Items and is not OP or CheatPermission
-           }
-           else
-           {
-               sender.sendMessage("Debug: Items were added to Auction");
-               ((Player)sender).getInventory().remove(newItem); //Player has Item -> removeIt
-           }//TODO not remove ALL newItem
-        //TODO Check if greater Stacks are availible
-        }
-        else
-        {   
-            if(!(((Player)sender).getInventory().contains(newItem))) 
-           {
-               sender.sendMessage("Info: Not enough Items! Items were cheated!");
-               //OP/CheatPerm has not Item -> CheatIt
-           }
-           else
-           {    
-               sender.sendMessage("Info: OP but Items were added to Auction");
-               ((Player)sender).getInventory().remove(newItem); //OP has Item -> removeIt
-           } 
-        }
-        Auction newAuction;
-        if (sender instanceof ConsoleCommandSender)
-            newAuction = new Auction(newItem,(Player)sender.getServer().getPlayer("Server"),auctionEnd,startBid); //Created Auction as FakePlayer: "Server"
-           //TODO anders Server als Player übergeben? vlt Rasselbande als ServerBank (einstellbar in Config)
-        else
-            newAuction = new Auction(newItem,(Player)sender,auctionEnd,startBid);//Created Auction
-        sender.sendMessage("Debug: Auction init complete");
-        if (AuctionManager.getInstance().freeIds.isEmpty())
+        //Command segmented .. 
+        //Start Checking Permissions etc.
+        if (sender.hasPermission("auctionhouse.use.add"))
         {
-            sender.sendMessage("Info: Max Auctions reached! ("+config.auction_maxAuctions_overall+")");
-            return false;
+            if (!(sender instanceof ConsoleCommandSender))
+            {
+                if (((Player)sender).getInventory().contains(newItem.getType(),newItem.getAmount()))
+                {
+                    ((Player)sender).getInventory().removeItem(newItem);
+                    //TODO funktioniert nicht richtig!
+                    sender.sendMessage("Debug: Items were added to Auction");    
+                }
+                else
+                {
+                    if (sender.hasPermission("auctionhouse.cheatItems"))
+                    {
+                        sender.sendMessage("Info: Not enough Items! Items were cheated!");
+                    }
+                    else
+                    {
+                        sender.sendMessage("Info: Not enough Items");
+                        return false;
+                    }
+                }
+            }
         }
-        AuctionManager.getInstance().addAuction(newAuction);        //Give Auction to Manager
+        //Permission passed ..
+        //Start Creating / Register Auction
+        Auction newAuction;
+        for (int i=0; i<multiAuction; i++)
+        {
+            if (sender instanceof ConsoleCommandSender)
+                newAuction = new Auction(newItem,sender.getServer().getPlayer("Server"),auctionEnd,startBid); 
+                //Created Auction as FakePlayer: "Server" //TODO
+            else
+                newAuction = new Auction(newItem,(Player)sender,auctionEnd,startBid);//Created Auction
+            sender.sendMessage("Debug: Auction #"+String.valueOf(i+1)+" init complete");
+            
+            if (!(this.RegisterAuction(newAuction, sender)))
+            {
+                sender.sendMessage("Info: Couldn't add all Auctions!"); 
+                sender.sendMessage("Info: Max Auctions reached! ("+config.auction_maxAuctions_overall+")"); 
+                return false;
+            }
+        }
+                sender.sendMessage("Info: Auction(s) added succesfully!");
+                sender.sendMessage(
+                  "AuctionHouse: Started "+String.valueOf(multiAuction)+
+                  " Auction(s) with "+newItem.toString()+
+                  ". StartBid: "+String.valueOf(startBid)+
+                  ". Auction ends: "+DateFormatUtils.format(auctionEnd, "dd/MM/yy HH:mm")
+                  );
+        return true;
+    }
+    
+    private boolean RegisterAuction(Auction auction,CommandSender sender)
+    {
+        if (AuctionManager.getInstance().freeIds.isEmpty())
+            return false;
+        
+        AuctionManager.getInstance().addAuction(auction);        //Give Auction to Manager
         sender.sendMessage("Debug: Manager OK");
-        Bidder.getInstance((Player)sender).addAuction(newAuction);  //Give Auction to Bidder
+        Bidder.getInstance((Player)sender).addAuction(auction);  //Give Auction to Bidder
         sender.sendMessage("Debug: Bidder OK");
-
-        sender.sendMessage("Info: Auction added succesfully!");
         return true;
     }
     

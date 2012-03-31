@@ -2,6 +2,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -24,18 +25,27 @@ public class Arguments {
                j++;
            }
            else
-               this.arguments.put(args[i].substring(0, parambreak - 1),args[i].substring(parambreak+1) );
+               this.arguments.put(args[i].substring(0, parambreak),args[i].substring(parambreak+1) );
        }
     }
     
-    public String getParam(String name)
+    public String getString(String name)
     {
         return arguments.get(name);
     }
-
-    public boolean addParam(String name,String param)
+    
+    public int getInt(String name)
     {
-        arguments.put(name,param);
-        return true;
+        int intArg = -1;
+        try {intArg = Integer.parseInt(this.getString(name)); }
+        catch (NumberFormatException ex) {return -1; }
+        return intArg;
     }
+   
+    public Player getPlayer(String name)
+    {
+        Player player =  AuctionHouse.getInstance().server.getPlayer(name);
+        return player;
+    }
+    
 }
