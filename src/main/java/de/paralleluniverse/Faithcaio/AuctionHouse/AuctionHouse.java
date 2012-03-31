@@ -52,7 +52,6 @@ public class AuctionHouse extends JavaPlugin
         baseCommand
             .registerSubCommand(new   HelpCommand(baseCommand))
             .registerSubCommand(new    AddCommand(baseCommand))
-            .registerSubCommand(new   MAddCommand(baseCommand))
             .registerSubCommand(new RemoveCommand(baseCommand))
             .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);

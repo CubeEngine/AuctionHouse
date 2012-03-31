@@ -1,1 +1,10 @@
 debug: true
+auction:
+  maxAuctions:
+    player: 3
+    overall: 3
+    opIgnore: true
+  undoTime: 20 //in seconds
+  maxLength: 24 //in hours
+  opCanCheat: true
+  blacklist: []

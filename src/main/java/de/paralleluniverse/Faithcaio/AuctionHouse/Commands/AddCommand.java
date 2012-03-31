@@ -1,6 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -35,52 +36,78 @@ public class AddCommand extends AbstractCommand
     
     public boolean execute(CommandSender sender, String[] args)
     {
-        int quantity = 1;
+        ItemStack newItem = null;
+        Material newMaterial;
+        int amount = 1;
         double startBid = 0;
         long auctionEnd = 1;
-        ItemStack newItem;
-
-        if (args.length < 2)
-        {
-            sender.sendMessage("/ah add <Item> <Amount> (<StartBid> <Length>)");
-            return false;
-        }
-            Material newMaterial = Material.getMaterial(args[0]);
-            if (newMaterial == null) return false;
-            sender.sendMessage("Debug: MaterialDetection OK");
+        int multiAuction = 1;
         
-            try {quantity = Integer.parseInt(args[1]); }
-            catch (NumberFormatException ex) { return false; }
-            sender.sendMessage("Debug: AmountDetection OK");
-        newItem = new ItemStack(Material.getMaterial(args[0]),quantity);                    
-        sender.sendMessage("Debug: "+newItem.toString());
-        if (args.length >= 3)
+        if (sender instanceof Player)
         {
-            try { startBid = Double.parseDouble(args[2]); }
-            catch (NumberFormatException ex) { return false; }
-            sender.sendMessage("Debug: StartBid OK");
+            if (args.length < 1)
+            {
+                sender.sendMessage("/ah add hand [StartBid] [Length]");
+                sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length]");
+                sender.sendMessage("/ah add [m:<quantity>] <Item> <Amount> [StartBid] [Length]");
+                return false;
+            }
+            Arguments arguments = new Arguments(args);
+
+            if (arguments.getParam("1").equalsIgnoreCase("hand"))
+            {
+                newItem = ((Player)sender).getItemInHand();
+                sender.sendMessage("Debug: Hand ItemDetection OK");
+            }
+            else 
+            {    
+                newMaterial = Material.matchMaterial(arguments.getParam("1"));
+                if (newMaterial == null) return false;
+                sender.sendMessage("Debug: Item MaterialDetection OK: "+newMaterial.toString());
+
+                try {amount = Integer.parseInt(arguments.getParam("2")); }
+                catch (NumberFormatException ex) {return false; }
+                sender.sendMessage("Debug: Quantity MaterialDetection OK");   
+
+                newItem = new ItemStack(newMaterial,amount);
+                sender.sendMessage("Debug: Separate ItemDetection OK"); 
+            }
+
+            if (arguments.getParam("3")!=null) 
+            {
+                try {startBid = Integer.parseInt(arguments.getParam("3")); }
+                catch (NumberFormatException ex) {return false; }
+                sender.sendMessage("Debug: StartBid OK");
+            }
+            else sender.sendMessage("Debug: No StartBid Set to 0");
+
+            if (arguments.getParam("4")!=null)
+            {
+                try 
+                { 
+                    auctionEnd = (System.currentTimeMillis()+Integer.parseInt(arguments.getParam("4"))*60*60*1000);
+                }
+                catch (NumberFormatException ex)  { return false; }
+                sender.sendMessage("Debug: AuctionLentgh OK");
+            }
+            else sender.sendMessage("Debug: No Auction Length Set to 1h");
+
+            if (arguments.getParam("m")!=null)
+            {
+                try {multiAuction = Integer.parseInt(arguments.getParam("m")); }
+                catch (NumberFormatException ex) {return false; }
+                sender.sendMessage("Debug: MultiAuction: "+String.valueOf(multiAuction));
+            }
         }
-        else
-        {
-            sender.sendMessage("Debug: No StartBid Set to 0");
-        }
-        if (args.length >= 4)
-        {
-            try { auctionEnd = (System.currentTimeMillis()+Integer.parseInt(args[3])*60*60*1000); }
-            catch (NumberFormatException ex)  { return false; }
-            sender.sendMessage("Debug: AuctionLentgh OK");
-        }
-        else
-        {
-            sender.sendMessage("Debug: No Auction Length Set to 1h");
-        }  
-        if (!(sender instanceof Player))
+        else 
         {
             if (!(sender instanceof ConsoleCommandSender))
-              return false; //Invalid Sender
-            //else | Console-Command Cheat Items...
-            sender.sendMessage("Debug: Console creates Auction...");
-        }        
+                return false; //Invalid Sender
+            //else | is Console-Command
+            sender.sendMessage("Info: Creating Auction as Server...");   
+        }
+
+                
         //TODO Take Items from Inventory ERROR takes all Items
         if ((!((Player)sender).isOp())||(((Player)sender).hasPermission("CheatedItems")))//TODO permission Check / OP does not work
         {  if(!(((Player)sender).getInventory().contains(newItem))) 

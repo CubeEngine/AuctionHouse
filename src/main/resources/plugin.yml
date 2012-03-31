@@ -15,4 +15,13 @@ description: ""
 authors:
   - "Faithcaio"
   - "Quick_Wango"
-#permissions:
+permissions:
+  auctionhouse.*:
+    description: "Allows the player to do everything"
+    default: op
+    children:
+      auctionhouse.cheatItems.*: true
+      
+  auctionhouse.cheatItems:
+    description: "Allows the player to cheat Items when needed"
+

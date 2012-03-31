@@ -24,7 +24,6 @@ public class AuctionHouseConfiguration
         this.auction_maxLength = config.getInt("auction.maxLength");
         this.auction_opCanCheat = config.getBoolean("auction.opCanCheat");
         this.auction_blacklist = config.getStringList("auction.blacklist");
-        //TODO autocreate default Config
         //TODO Preis fuer AuktionsErstellung (Formel mit Startgebot?)
         
     }
