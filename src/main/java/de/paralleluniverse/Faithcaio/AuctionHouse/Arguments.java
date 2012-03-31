@@ -48,4 +48,12 @@ public class Arguments {
         return player;
     }
     
+    public double getDouble(String name)
+    {
+        double dubArg = -1;
+        try {dubArg = Double.parseDouble(this.getString(name)); }
+        catch (NumberFormatException ex) {return -1; }
+        return dubArg;
+    }
+    
 }

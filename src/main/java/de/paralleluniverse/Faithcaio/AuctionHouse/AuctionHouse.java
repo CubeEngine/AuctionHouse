@@ -1,8 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.AddCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.HelpCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.RemoveCommand;
+import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,6 +50,8 @@ public class AuctionHouse extends JavaPlugin
             .registerSubCommand(new   HelpCommand(baseCommand))
             .registerSubCommand(new    AddCommand(baseCommand))
             .registerSubCommand(new RemoveCommand(baseCommand))
+            .registerSubCommand(new    BidCommand(baseCommand))
+            .registerSubCommand(new   InfoCommand(baseCommand))
             .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);
 

@@ -10,14 +10,10 @@ import org.bukkit.entity.Player;
  */
 public class RemoveCommand extends AbstractCommand
 {    
-    private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    
     public RemoveCommand(BaseCommand base)
     {
         super("remove", base);
     }
-
 
     public boolean execute(CommandSender sender, String[] args)
     {

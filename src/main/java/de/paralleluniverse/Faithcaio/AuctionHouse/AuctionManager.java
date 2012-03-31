@@ -91,7 +91,6 @@ public class AuctionManager
         public boolean cancelAuction(Auction auction)
     {
         this.freeIds.push(auction.id); 
-        //TODO delete Auction
         Bidder.getInstance(auction.owner).removeAuction(auction);
         while (!(auction.bids.isEmpty()))
         {
@@ -99,6 +98,7 @@ public class AuctionManager
             auction.bids.pop();        
         }
         this.auctions.remove(auction);
+        //TODO delete Auction completly
         auction.abortAuction();
         return true;   
     }
