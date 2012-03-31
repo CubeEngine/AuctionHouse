@@ -35,6 +35,8 @@ public class BidCommand extends AbstractCommand
                auction.bid((Player)sender, bidAmount);
                sender.sendMessage("You just bid "+String.valueOf(bidAmount)+
                                   " on "+auction.item.toString());
+               if (auction.owner.isOnline())
+               auction.owner.sendMessage("Somone bid on your auction #"+String.valueOf(auction.id)+"!");
                return true;
            }
         }

@@ -46,6 +46,7 @@ public class AddCommand extends AbstractCommand
         long auctionEnd = 1;
         int multiAuction = 1;
         
+        
         if (sender instanceof Player)
         {
             if (args.length < 1)
@@ -60,43 +61,47 @@ public class AddCommand extends AbstractCommand
             if (arguments.getString("1").equalsIgnoreCase("hand"))
             {
                 newItem = ((Player)sender).getItemInHand();
-                sender.sendMessage("Debug: Hand ItemDetection OK: "+newItem.toString());
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Hand ItemDetection OK: "+newItem.toString());
             }
             else 
             {    
                 newMaterial = Material.matchMaterial(arguments.getString("1"));
                 if (newMaterial == null) return false;
-                sender.sendMessage("Debug: Item MaterialDetection OK: "+newMaterial.toString());
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Item MaterialDetection OK: "+newMaterial.toString());
 
                 amount = arguments.getInt("2");
                 if (amount == -1) return false;
-                sender.sendMessage("Debug: Quantity MaterialDetection OK: "+String.valueOf(amount));   
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Quantity MaterialDetection OK: "+String.valueOf(amount));   
 
                 newItem = new ItemStack(newMaterial,amount);
-                sender.sendMessage("Debug: Separate ItemDetection OK: "+newItem.toString()); 
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Separate ItemDetection OK: "+newItem.toString()); 
             }
 
             if (arguments.getString("3")!=null) 
             {
                 startBid = arguments.getInt("3");
                 if (startBid == -1) return false;
-                sender.sendMessage("Debug: StartBid OK");
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: StartBid OK");
             }
-            else sender.sendMessage("Debug: No StartBid Set to 0");
+            else if (AuctionHouse.debugMode)
+            {
+                startBid = 0;
+                sender.sendMessage("Debug: No StartBid Set to 0");
+            }
 
             if (arguments.getString("4")!=null)
             {
                 if (arguments.getInt("4") == -1) return false;
                 auctionEnd = (System.currentTimeMillis()+arguments.getInt("4")*60*60*1000);
-                sender.sendMessage("Debug: AuctionLentgh OK");
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: AuctionLentgh OK");
             }
-            else sender.sendMessage("Debug: No Auction Length Set to 1h");
+            else if (AuctionHouse.debugMode) sender.sendMessage("Debug: No Auction Length Set to 1h");
 
             if (arguments.getString("m")!=null)
             {
                 multiAuction = arguments.getInt("m");
                 if (multiAuction == -1) return false;
-                sender.sendMessage("Debug: MultiAuction: "+String.valueOf(multiAuction));
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: MultiAuction: "+String.valueOf(multiAuction));
             }
         }
         else 
@@ -116,7 +121,7 @@ public class AddCommand extends AbstractCommand
                 {
                     ((Player)sender).getInventory().removeItem(newItem);
                     //TODO funktioniert nicht richtig!
-                    sender.sendMessage("Debug: Items were added to Auction");    
+                    if (AuctionHouse.debugMode) sender.sendMessage("Debug: Items were added to Auction");    
                 }
                 else
                 {
@@ -142,7 +147,7 @@ public class AddCommand extends AbstractCommand
                 //Created Auction as FakePlayer: "Server" //TODO
             else
                 newAuction = new Auction(newItem,(Player)sender,auctionEnd,startBid);//Created Auction
-            sender.sendMessage("Debug: Auction #"+String.valueOf(i+1)+" init complete");
+            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Auction #"+String.valueOf(i+1)+" init complete");
             
             if (!(this.RegisterAuction(newAuction, sender)))
             {
@@ -167,9 +172,9 @@ public class AddCommand extends AbstractCommand
             return false;
         
         AuctionManager.getInstance().addAuction(auction);        //Give Auction to Manager
-        sender.sendMessage("Debug: Manager OK");
+        if (AuctionHouse.debugMode) sender.sendMessage("Debug: Manager OK");
         Bidder.getInstance((Player)sender).addAuction(auction);  //Give Auction to Bidder
-        sender.sendMessage("Debug: Bidder OK");
+        if (AuctionHouse.debugMode) sender.sendMessage("Debug: Bidder OK");
         return true;
     }
     

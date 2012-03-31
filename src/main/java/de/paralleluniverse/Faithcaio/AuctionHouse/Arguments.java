@@ -44,7 +44,8 @@ public class Arguments {
    
     public Player getPlayer(String name)
     {
-        Player player =  AuctionHouse.getInstance().server.getPlayer(name);
+        
+        Player player =  AuctionHouse.getInstance().server.getPlayer(arguments.get(name));
         return player;
     }
     

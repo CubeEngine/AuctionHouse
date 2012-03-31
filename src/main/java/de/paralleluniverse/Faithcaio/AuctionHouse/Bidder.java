@@ -60,7 +60,8 @@ public class Bidder {
     public List<Auction> getAuctions(Player player) //Get all Auctions started by player
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};  
-        for (int i = 1;i == this.activeBids.size();i++)
+        final int length = this.activeBids.size();
+        for (int i = 0;i < length;i++)
         {
             if (this.activeBids.get(i).owner == player)
             { auctionlist.add( this.activeBids.get(i) ); }     

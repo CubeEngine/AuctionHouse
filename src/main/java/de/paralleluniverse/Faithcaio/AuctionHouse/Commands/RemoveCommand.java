@@ -29,7 +29,7 @@ public class RemoveCommand extends AbstractCommand
         {
             Player player = arguments.getPlayer("2");
             if (player == null) return false;
-            sender.sendMessage("Debug:delete per Player");
+            if (AuctionHouse.debugMode) sender.sendMessage("Debug:delete per Player");
             
             if(!(Bidder.getInstance(player).activeBids.isEmpty()))
             {    
@@ -44,7 +44,7 @@ public class RemoveCommand extends AbstractCommand
         
         int id =  arguments.getInt("1");
         if (id == -1) return false;
-        sender.sendMessage("Debug:delete per Id");
+        if (AuctionHouse.debugMode) sender.sendMessage("Debug:delete per Id");
         AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
         sender.sendMessage("Info:Deleted auction #"+String.valueOf(id));
         return true;
