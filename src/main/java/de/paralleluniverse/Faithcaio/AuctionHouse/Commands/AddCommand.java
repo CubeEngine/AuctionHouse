@@ -46,7 +46,6 @@ public class AddCommand extends AbstractCommand
         long auctionEnd = 1;
         int multiAuction = 1;
         
-        
         if (sender instanceof Player)
         {
             if (args.length < 1)
@@ -83,10 +82,10 @@ public class AddCommand extends AbstractCommand
                 if (startBid == -1) return false;
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: StartBid OK");
             }
-            else if (AuctionHouse.debugMode)
+            else 
             {
                 startBid = 0;
-                sender.sendMessage("Debug: No StartBid Set to 0");
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: No StartBid Set to 0");
             }
 
             if (arguments.getString("4")!=null)
@@ -95,7 +94,8 @@ public class AddCommand extends AbstractCommand
                 auctionEnd = (System.currentTimeMillis()+arguments.getInt("4")*60*60*1000);
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: AuctionLentgh OK");
             }
-            else if (AuctionHouse.debugMode) sender.sendMessage("Debug: No Auction Length Set to 1h");
+            else 
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: No Auction Length Set to 1h");
 
             if (arguments.getString("m")!=null)
             {
@@ -170,7 +170,6 @@ public class AddCommand extends AbstractCommand
     {
         if (AuctionManager.getInstance().freeIds.isEmpty())
             return false;
-        
         AuctionManager.getInstance().addAuction(auction);        //Give Auction to Manager
         if (AuctionHouse.debugMode) sender.sendMessage("Debug: Manager OK");
         Bidder.getInstance((Player)sender).addAuction(auction);  //Give Auction to Bidder

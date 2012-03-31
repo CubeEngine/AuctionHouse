@@ -34,12 +34,28 @@ public class Arguments {
         return arguments.get(name);
     }
     
-    public int getInt(String name)
+    public Integer getInt(String name)
     {
-        int intArg = -1;
-        try {intArg = Integer.parseInt(this.getString(name)); }
-        catch (NumberFormatException ex) {return -1; }
-        return intArg;
+        try
+        {
+            return Integer.parseInt(this.getString(name));    
+        }
+        catch (NumberFormatException ex)
+        {
+            return null;
+        }
+    }
+    
+    public Double getDouble(String name)
+    {
+        try
+        {
+            return Double.parseDouble(this.getString(name));    
+        }
+        catch (NumberFormatException ex)
+        {
+            return null;
+        }
     }
    
     public Player getPlayer(String name)
@@ -48,13 +64,7 @@ public class Arguments {
         Player player =  AuctionHouse.getInstance().server.getPlayer(arguments.get(name));
         return player;
     }
-    
-    public double getDouble(String name)
-    {
-        double dubArg = -1;
-        try {dubArg = Double.parseDouble(this.getString(name)); }
-        catch (NumberFormatException ex) {return -1; }
-        return dubArg;
-    }
+
+
     
 }

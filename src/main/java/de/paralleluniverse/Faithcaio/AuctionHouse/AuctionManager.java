@@ -74,17 +74,20 @@ public class AuctionManager
         for (int i = 0;i < size;i++)
         {
             if (this.auctions.get(i).auctionEnd - System.currentTimeMillis() <= 1000 * 60 * min)
-    
-            { auctionlist.add( this.auctions.get(i) ); }
+            {
+                auctionlist.add( this.auctions.get(i) );
+            }
         }
-        Collections.sort(auctionlist, new Comparator()
-           {   
-                public int compare(Object a1,Object a2){
-                if (((Auction)a1).auctionEnd <= ((Auction)a2).auctionEnd) return 1;
-                //else
-                return -1;
-            } 
-        }); 
+        Collections.sort(auctionlist, 
+             new Comparator()
+             {   
+                public int compare(Object a1,Object a2)
+                {
+                  if (((Auction)a1).auctionEnd <= ((Auction)a2).auctionEnd) return 1;
+                  //else
+                  return -1;
+                }
+             }); 
         return auctionlist;
     }
     
