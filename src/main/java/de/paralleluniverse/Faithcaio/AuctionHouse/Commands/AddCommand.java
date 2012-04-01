@@ -44,7 +44,7 @@ public class AddCommand extends AbstractCommand
         //TODO /ah confirm
         ItemStack newItem = null;
         Material newMaterial;
-        int amount = 1;
+        Integer amount = 1;
         Double startBid = 0.0;
         long auctionEnd = 1;
         Integer multiAuction = 1;
@@ -56,7 +56,8 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage("/ah add hand [StartBid] [Length]");
                 sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length]");
                 sender.sendMessage("/ah add [m:<quantity>] <Item> <Amount> [StartBid] [Length]");
-                return false;
+                //TODO Length mit d h m s
+                return true;
             }
             Arguments arguments = new Arguments(args);
 
@@ -65,46 +66,62 @@ public class AddCommand extends AbstractCommand
                 newItem = ((Player)sender).getItemInHand();
                 if (newItem.getType()==Material.AIR)
                 {
-                    sender.sendMessage("ProTipp: You can NOT sell your hands!");
+                    sender.sendMessage("ProTip: You can NOT sell your hands!");
                     return true;
                 }
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Hand ItemDetection OK: "+newItem.toString());
+                AuctionHouse.debug("Hand ItemDetection OK: "+newItem.toString());
             }
             else 
             {    
                 newMaterial = Material.matchMaterial(arguments.getString("1"));
-                if (newMaterial == null) return false;
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Item MaterialDetection OK: "+newMaterial.toString());
+                if (newMaterial == null)
+                {
+                    sender.sendMessage("Info: "+arguments.getString("1")+" is not a valid Item");
+                    return true;
+                }
+                AuctionHouse.debug("Item MaterialDetection OK: "+newMaterial.toString());
                 if (newMaterial.equals(Material.AIR))
                 {
-                    sender.sendMessage("Info: AIR ist not a valid Block!");
+                    sender.sendMessage("Info: AIR ist not a valid Item!");
                     return true;
                 }
                 amount = arguments.getInt("2");
-                if (amount == -1) return false;
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Quantity MaterialDetection OK: "+String.valueOf(amount));   
+                if (amount == null)
+                {    
+                    sender.sendMessage("Info: No Amount given");
+                    return true;
+                }
+                AuctionHouse.debug("Quantity MaterialDetection OK: "+amount);   
 
                 newItem = new ItemStack(newMaterial,amount);
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: Separate ItemDetection OK: "+newItem.toString()); 
+                AuctionHouse.debug("Separate ItemDetection OK: "+newItem.toString()); 
             }
 
             if (arguments.getString("3")!=null) 
             {
                 startBid = arguments.getDouble("3");
-                if (startBid == -1) return false;
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: StartBid OK");
+                if (startBid == null)
+                {
+                    sender.sendMessage("Info: Invalid Start Bid Format!");
+                    return true;
+                }
+                AuctionHouse.debug("StartBid OK");
             }
             else 
             {
                 startBid = 0.0;
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: No StartBid Set to 0");
+                AuctionHouse.debug("No StartBid Set to 0");
             }
 
             if (arguments.getString("4")!=null)
             {
-                if (arguments.getInt("4") == null) return false;
+                if (arguments.getInt("4") == null)
+                {
+                    sender.sendMessage("Info: Invalid TimeFormat!");
+                    return true;
+                }
                 auctionEnd = (System.currentTimeMillis()+arguments.getInt("4")*60*60*1000);
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: AuctionLentgh OK");
+                AuctionHouse.debug("AuctionLentgh OK");
             }
             else 
                 if (AuctionHouse.debugMode) 
@@ -117,8 +134,12 @@ public class AddCommand extends AbstractCommand
             if (arguments.getString("m")!=null)
             {
                 multiAuction = arguments.getInt("m");
-                if (multiAuction == -1) return false;
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: MultiAuction: "+String.valueOf(multiAuction));
+                if (multiAuction == null)
+                {
+                    sender.sendMessage("Info: MultiAuction m: must be an Number!");
+                    return true;
+                }
+                AuctionHouse.debug("MultiAuction: "+multiAuction);
             }
         }
         else 
@@ -139,7 +160,7 @@ public class AddCommand extends AbstractCommand
                 if (((Player)sender).getInventory().contains(newItem.getType(),newItem.getAmount()))
                 {
                     //TODO funktioniert nicht richtig!
-                    if (AuctionHouse.debugMode) sender.sendMessage("Debug: Item Amount OK");    
+                    AuctionHouse.debug("Item Amount OK");    
                 }
                 else
                 {
@@ -150,7 +171,7 @@ public class AddCommand extends AbstractCommand
                     else
                     {
                         sender.sendMessage("Info: Not enough Items");
-                        return false;
+                        return true;
                     }
                 }
             }
@@ -161,11 +182,16 @@ public class AddCommand extends AbstractCommand
         for (int i=0; i<multiAuction; i++)
         {
             if (sender instanceof ConsoleCommandSender)
-                newAuction = new Auction(newItem,sender.getServer().getPlayer("Server"),auctionEnd,startBid); 
-                //Created Auction as FakePlayer: "Server" //TODO
+            {
+                AuctionHouse.log("Console cannot add Auctions (yet)");
+                return true;
+            
+                //    newAuction = new Auction(newItem,sender.getServer().getOfflinePlayer("Server"),auctionEnd,startBid); 
+                //TODO Create Auction as FakePlayer: "Server"
+            }
             else
                 newAuction = new Auction(newItem,(Player)sender,auctionEnd,startBid);//Created Auction
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Auction #"+String.valueOf(i+1)+" init complete");
+            AuctionHouse.debug("Auction #"+(i+1)+" init complete");
             
             if (!(this.RegisterAuction(newAuction, sender)))
             {
@@ -180,10 +206,10 @@ public class AddCommand extends AbstractCommand
         }
                 sender.sendMessage("Info: Auction(s) added succesfully!");
                 sender.sendMessage(
-                  "AuctionHouse: Started "+String.valueOf(multiAuction)+
+                  "AuctionHouse: Started "+multiAuction+
                   " Auction(s) with "+newItem.toString()+
-                  ". StartBid: "+String.valueOf(startBid)+
-                  ". Auction ends: "+DateFormatUtils.format(auctionEnd, "dd/MM/yy HH:mm")
+                  ". StartBid: "+startBid+
+                  ". Auction ends: "+DateFormatUtils.format(auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)
                   );
         return true;
     }
@@ -193,9 +219,9 @@ public class AddCommand extends AbstractCommand
         if (AuctionManager.getInstance().freeIds.isEmpty())
             return false;
         AuctionManager.getInstance().addAuction(auction);        //Give Auction to Manager
-        if (AuctionHouse.debugMode) sender.sendMessage("Debug: Manager OK");
+        AuctionHouse.debug("Manager OK");
         Bidder.getInstance((Player)sender).addAuction(auction);  //Give Auction to Bidder
-        if (AuctionHouse.debugMode) sender.sendMessage("Debug: Bidder OK");
+        AuctionHouse.debug("Bidder OK");
         return true;
     }
     

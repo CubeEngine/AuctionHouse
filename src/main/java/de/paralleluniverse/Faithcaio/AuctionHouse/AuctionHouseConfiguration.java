@@ -14,6 +14,7 @@ public class AuctionHouseConfiguration
     public final int      auction_maxLength;            //in hours
     public final boolean  auction_opCanCheat;           //Op can Cheat Items for Auction
     public final List<String> auction_blacklist;        //Blacklist Materials
+    public final String   auction_timeFormat;           //Time Format Output
     //TODO blacklist einbauen
     public AuctionHouseConfiguration(Configuration config)
     {
@@ -24,6 +25,7 @@ public class AuctionHouseConfiguration
         this.auction_maxLength = config.getInt("auction.maxLength");
         this.auction_opCanCheat = config.getBoolean("auction.opCanCheat");
         this.auction_blacklist = config.getStringList("auction.blacklist");
+        this.auction_timeFormat = config.getString("auction.timeFormat");
         //TODO Preis fuer AuktionsErstellung (Formel mit Startgebot?)
         
     }

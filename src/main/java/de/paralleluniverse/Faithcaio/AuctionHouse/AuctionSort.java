@@ -4,6 +4,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -14,6 +15,7 @@ public class AuctionSort {
     Comparator compareId;
     Comparator comparePrice;
     Comparator compareDate;
+    Comparator compareQuantity;
     
     public AuctionSort()
     {
@@ -44,6 +46,15 @@ public class AuctionSort {
                 return -1;
                 }
             };
+        compareQuantity = new Comparator()
+            {
+                public int compare(Object a1,Object a2)
+                {
+                if (((Auction)a1).item.getAmount() <= ((Auction)a2).item.getAmount()) return 1;
+                //else
+                return -1;
+                }
+            };
     }
     
     public List<Auction> SortAuction (List<Auction> auctionlist,String type)
@@ -54,6 +65,24 @@ public class AuctionSort {
             Collections.sort(auctionlist,comparePrice);
         if (type.equalsIgnoreCase("date"))   
             Collections.sort(auctionlist,compareDate);
+        if (type.equalsIgnoreCase("quantity"))
+            Collections.sort(auctionlist, compareQuantity);
         return auctionlist;    
     }
+    public List<Auction> SortAuction (List<Auction> auctionlist,String type,int quantity)
+    {
+        this.SortAuction(auctionlist, type);
+        
+        if (type.equalsIgnoreCase("quantity"))
+        {
+            if (auctionlist.size() == 0) return null;
+            while (auctionlist.get(auctionlist.size()-1).item.getAmount() < quantity)
+            {
+                AuctionHouse.debug("removing low quantity remain:"+auctionlist.size());
+                auctionlist.remove(auctionlist.size()-1);
+                if (auctionlist.size() == 0) return null;
+            }
+        }
+        return auctionlist;
+    }    
 }

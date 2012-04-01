@@ -23,28 +23,48 @@ public class UndoBidCommand extends AbstractCommand
         {
             sender.sendMessage("/ah undoBid last");
             sender.sendMessage("/ah undoBid <AuctionID>");
-            return false;
+            return true;
         }
         Arguments arguments = new Arguments(args);
         Player psender = (Player)sender;
         if (arguments.getString("1").equals("last"))
         {
+            if (Bidder.getInstance(psender).getlastAuction(psender)==null)
+            {
+                sender.sendMessage("ProTip: You have to bid to undo it!");
+                return true;
+            }
             if (Bidder.getInstance(psender).getlastAuction(psender).undobid(psender))
             {
-                sender.sendMessage("Info: Bid on last Auction redeemed");
+                sender.sendMessage("Info: Bid on last Auction redeemed!");
+                return true;
+            }
+            else
+            {
+                sender.sendMessage("ProTip: You have to bid to undo it!");
                 return true;
             }
         }
         if (arguments.getInt("1")!=null)
         {
+            if (AuctionManager.getInstance().getAuction(arguments.getInt("1"))==null)
+            {
+                sender.sendMessage("Info: Auction #"+arguments.getInt("1")+" does not exist!");
+                return true;
+            }
             if (AuctionManager.getInstance().getAuction(arguments.getInt("1")).undobid(psender))
             {    
-                sender.sendMessage("Info: Bid on Auction redeemed");
+                sender.sendMessage("Info: Bid on Auction #"+arguments.getInt("1")+" redeemed!");
+                return true;
+            }
+            else
+            {
+                sender.sendMessage("Info: You are not the highest Bidder!");
                 return true;
             }
         }
         sender.sendMessage("Info: Couldn't undo Bid!");
-        return false;
+        return true;
     }
 
     @Override

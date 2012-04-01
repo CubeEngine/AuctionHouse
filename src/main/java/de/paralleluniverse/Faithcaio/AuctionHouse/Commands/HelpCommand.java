@@ -20,7 +20,7 @@ public class HelpCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        sender.sendMessage("Here is a list of the available commands and their usage:");
+        sender.sendMessage("AuctionHouse Commandlist:");
         sender.sendMessage("");
 
         for (AbstractCommand command : getBase().getRegisteredCommands())
@@ -36,6 +36,6 @@ public class HelpCommand extends AbstractCommand
     @Override
     public String getDescription()
     {
-        return "Prints this help message.";
+        return "Prints this message.";
     }
 }

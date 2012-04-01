@@ -48,7 +48,7 @@ public class BaseCommand implements CommandExecutor
         this.label = label;
         if (args.length > 0)
         {
-            AbstractCommand cmd = this.subCommands.get(args[0]);
+            AbstractCommand cmd = this.subCommands.get(args[0].toLowerCase());
             if (cmd != null)
             {
                 return executeSub(sender, cmd, args);
@@ -94,7 +94,7 @@ public class BaseCommand implements CommandExecutor
      */
     public BaseCommand registerSubCommand(AbstractCommand command)
     {
-        this.subCommands.put(command.getLabel(), command);
+        this.subCommands.put(command.getLabel().toLowerCase(), command);
         final Permission perm = command.getPermission();
         try
         {
@@ -142,6 +142,7 @@ public class BaseCommand implements CommandExecutor
      */
     public BaseCommand setDefaultCommand(String name)
     {
+        name = name.toLowerCase();
         if (this.subCommands.containsKey(name))
         {
             this.defaultCommand = name;

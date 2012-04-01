@@ -22,47 +22,71 @@ public class RemoveCommand extends AbstractCommand
         if (args.length < 1)
         {
             sender.sendMessage("/ah remove <AuctionID>");
-            sender.sendMessage("/ah remove all <Player>");//TODO /ah confirm
-            //TODO remove all und all from player
-            return false;
+            sender.sendMessage("/ah remove p:<Player>");//TODO /ah confirm
+            sender.sendMessage("/ah remove all");
+            return true;
         }
         Arguments arguments = new Arguments(args);
         
-        if (arguments.getString("1").equalsIgnoreCase("all"))
+        if (arguments.getString("1")!=null)
         {
-            Bidder player = arguments.getBidder("2");
-            if (player == null)
+            if (arguments.getString("1").equalsIgnoreCase("all"))
             {
-                sender.sendMessage("Info: Player \""+arguments.getString("2")+"\" does not exist or has no Auction!");
-                return false;
-            }
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug:Remove per Player");
-            
-            if(!(player.activeBids.isEmpty()))
-            {    
-                int bids = player.activeBids.size();
-                while (player.activeBids.size()>0)
+                //TODO permission
+                int max = AuctionManager.getInstance().auctions.size();
+                if (max == 0) sender.sendMessage("Info: No Auctions detected!");
+                for (int i=max-1;i>=0;--i)
                 {
-                     AuctionManager.getInstance().cancelAuction(player.getAuctions(player.player).get(0));
+                    AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().auctions.get(i));
                 }
-                sender.sendMessage("Info:Removed "+String.valueOf(bids)+" auctions of "+player.player.toString());
+                sender.sendMessage("Info: All Auctions deleted!");
                 return true;
             }
-            sender.sendMessage("Info: Player \""+arguments.getString("2")+"\" has no Auctions!");
-            return true;
+            else
+            {
+                Integer id = arguments.getInt("1");
+                if (id != null)
+                {
+                    if (AuctionManager.getInstance().getAuction(id)==null)
+                    {
+                        sender.sendMessage("Error: Auction"+id+"does not exist!");
+                        return true;    
+                    }
+                    AuctionHouse.debug("Remove per Id");
+                        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
+                    sender.sendMessage("Info:Removed auction #"+id);
+                    return true;
+                }
+                sender.sendMessage("Error: Invalid Command!");
+                return true;
+            }
         }
-        
-        Integer id = arguments.getInt("1");
-        if (id == null) return false;
-        if (AuctionManager.getInstance().getAuction(id)==null)
+        else
         {
-            sender.sendMessage("Info: Auction"+String.valueOf(id)+"does not exist!");
-            return true;
+            Bidder player = arguments.getBidder("p");
+            if (player == null)
+            {
+                sender.sendMessage("Info: Player \""+arguments.getString("p")+"\" does not exist or has no Auction!");
+                return true;
+            }
+            else
+            {
+                AuctionHouse.debug("Remove per Player");
+
+                if(!(player.activeBids.isEmpty()))
+                {    
+                    int bids = player.activeBids.size();    
+                    while (player.activeBids.size()>0)
+                    {
+                        AuctionManager.getInstance().cancelAuction(player.getAuctions(player.player).get(0));
+                    }
+                    sender.sendMessage("Info:Removed "+bids+" auctions of "+player.player.toString());
+                    return true;
+                }
+                sender.sendMessage("Info: Player \""+arguments.getString("p")+"\" has no Auctions!");
+                return true;
+            }
         }
-        if (AuctionHouse.debugMode) sender.sendMessage("Debug:Remove per Id");
-        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
-        sender.sendMessage("Info:Removed auction #"+String.valueOf(id));
-        return true;
     }
 
     @Override

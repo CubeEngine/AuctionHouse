@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 public class Bidder {
    public final Player player;
    public final ArrayList<Auction> activeBids;
+   public boolean playerNotification = false;
    
    private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
    
@@ -81,21 +82,22 @@ public class Bidder {
         return auctionlist;
     }
     
-    public Auction getlastAuction(Player player) //Get all Auctions started by player
+    public Auction getlastAuction(Player player) //Get last Auction Bid on
     {
         
         final int length = this.activeBids.size();
         int auctionIndex = -1;
         for (int i = 0;i < length;i++)
         {
+            
             if (this.activeBids.get(i).bids.peek().getBidder() == player)
             {
                 if (auctionIndex == -1)
                     auctionIndex = i;                    
                 if (this.activeBids.get(i).bids.peek().getTimestamp()
-                   >this.activeBids.get(auctionIndex).bids.peek().getTimestamp()     
-                        )
-                    auctionIndex = i;
+                   >this.activeBids.get(auctionIndex).bids.peek().getTimestamp())
+                    if (this.activeBids.get(i).owner != player)
+                        auctionIndex = i;
             }     
         }
         if (auctionIndex == -1) return null;

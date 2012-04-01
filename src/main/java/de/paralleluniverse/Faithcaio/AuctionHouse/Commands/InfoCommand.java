@@ -29,7 +29,7 @@ public class InfoCommand extends AbstractCommand
             sender.sendMessage("/ah info Bids");
             sender.sendMessage("/ah info Leading");
             sender.sendMessage("/ah info Auctions");
-            return false;
+            return true;
         }
         Arguments arguments = new Arguments(args);
                 
@@ -38,7 +38,8 @@ public class InfoCommand extends AbstractCommand
             if (AuctionHouse.debugMode) sender.sendMessage("Debug: Bids");
             List<Auction> auctions = Bidder.getInstance((Player)sender).getAuctions();
             int max = auctions.size();
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+String.valueOf(max));
+            if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
+            if (max == 0) sender.sendMessage("Info: No Bids yet!"); 
             for (int i=0;i<max;++i)
             {
                 Auction auction = auctions.get(i);
@@ -46,55 +47,72 @@ public class InfoCommand extends AbstractCommand
                    this.sendInfo(sender, auction);    
             }
         }
-        
-        if (arguments.getString("1").equalsIgnoreCase("Auctions"))//own auctions
+        else
         {
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: own Auctions");
-            List<Auction> auctions = Bidder.getInstance((Player)sender).getAuctions((Player)sender);
-            int max = auctions.size();
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+String.valueOf(max));
-            for (int i=0;i<max;++i)
+            if (arguments.getString("1").equalsIgnoreCase("Auctions"))//own auctions
             {
-                Auction auction = auctions.get(i);
-                this.sendInfo(sender, auction);
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: own Auctions");
+                List<Auction> auctions = Bidder.getInstance((Player)sender).getAuctions((Player)sender);
+                int max = auctions.size();
+                if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
+                if (max == 0) sender.sendMessage("Info: No own Auctions started!"); 
+                for (int i=0;i<max;++i)
+                {
+                    Auction auction = auctions.get(i);
+                    this.sendInfo(sender, auction);
+                }
             }
-        }
-        
-        if (arguments.getString("1").equalsIgnoreCase("Leading"))
-        {
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Leading Auctions");
-            List<Auction> auctions = Bidder.getInstance((Player)sender).getLeadingAuctions((Player)sender);
-            int max = auctions.size();
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+String.valueOf(max));
-            for (int i=0;i<max;++i)
+            else
             {
-                Auction auction = auctions.get(i);
-                this.sendInfo(sender, auction);
-            }
-        }
-        
-        Integer id = arguments.getInt("1");
-        if (id != null)
-        {
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Id Auction");
-            if (AuctionManager.getInstance().getAuction(id) !=null)
-            this.sendInfo(sender, AuctionManager.getInstance().getAuction(id));
-        }
-        
-        Bidder player = arguments.getBidder("1");
-        if (player != null)
-        {
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Player Auction");
-            List<Auction> auctions = player.getAuctions(player.player);
-            int max = auctions.size();
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+String.valueOf(max));
-            for (int i=0;i<max;++i)
-            {
-                Auction auction = auctions.get(i);
-                this.sendInfo(sender, auction);
-            }       
-        }
 
+                if (arguments.getString("1").equalsIgnoreCase("Leading"))
+                {
+                    if (AuctionHouse.debugMode) sender.sendMessage("Debug: Leading Auctions");
+                    List<Auction> auctions = Bidder.getInstance((Player)sender).getLeadingAuctions((Player)sender);
+                    int max = auctions.size();
+                    if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
+                    if (max == 0) sender.sendMessage("Info: No Leading Auctions!"); 
+                    for (int i=0;i<max;++i)
+                    {
+                        Auction auction = auctions.get(i);
+                        this.sendInfo(sender, auction);
+                    }
+                }
+                else
+                {
+                    Integer id = arguments.getInt("1");
+                    if (id != null)
+                    {
+                        if (AuctionHouse.debugMode) sender.sendMessage("Debug: Id Auction");
+                        if (AuctionManager.getInstance().getAuction(id) !=null)
+                            this.sendInfo(sender, AuctionManager.getInstance().getAuction(id));
+                        else
+                            sender.sendMessage("Info: Auction #"+id+" does not exist!");
+                    }
+                    else
+                    {
+                        Bidder player = arguments.getBidder("1");
+                        if (player != null)
+                        {
+                            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Player Auction");
+                            List<Auction> auctions = player.getAuctions(player.player);
+                            int max = auctions.size();
+                            if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
+                            if (max == 0) sender.sendMessage("Info: "+player.player.getName()+" has no Auctions!"); 
+                            for (int i=0;i<max;++i)
+                            {
+                                Auction auction = auctions.get(i);
+                                this.sendInfo(sender, auction);
+                            }
+                        }
+                        else
+                        {
+                            sender.sendMessage("Info: Player \""+arguments.getString("1")+"\" does not exist or has no Auction!");
+                        }
+                    }
+                }
+            }
+        }
         return true;
     }
     
@@ -102,11 +120,11 @@ public class InfoCommand extends AbstractCommand
     {
      sender.sendMessage("#"+auction.id+": "+auction.item.toString()+
                                    " Leading Bidder: "+auction.bids.peek().getBidder().toString()+
-                                   "with "+String.valueOf(auction.bids.peek().getAmount())+
-                                   "Auction ends: "+DateFormatUtils.format(auction.auctionEnd, "dd/MM/yy HH:mm")
+                                   "with "+auction.bids.peek().getAmount()+
+                                   "Auction ends: "+
+                                   DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)
                                   );       
     }
-
     @Override
     public String getUsage()
     {

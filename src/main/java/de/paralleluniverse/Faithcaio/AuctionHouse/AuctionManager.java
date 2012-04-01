@@ -58,10 +58,11 @@ public class AuctionManager
 
     public List<Auction> getAuctionItems(Material material) //Get all Auctions with material
     {
-        ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
+        ArrayList<Auction> auctionlist = new ArrayList<Auction>();
         int size = this.auctions.size();
         for (int i = 0;i < size;i++)
         {
+            if (this.auctions.get(i)==null) return null;
             if (this.auctions.get(i).item.getType() == material)
             { auctionlist.add( this.auctions.get(i) ); }
         } 

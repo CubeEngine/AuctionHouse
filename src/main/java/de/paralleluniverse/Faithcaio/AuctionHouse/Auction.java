@@ -46,7 +46,7 @@ public class Auction
     public boolean bid(final Player bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
     {
         if (amount <= 0) return false;         //Bid cannot be 0 or less !
-        if (amount < this.bids.peek().getAmount())//Bid is too low !
+        if (amount <= this.bids.peek().getAmount())//Bid is too low !
             return false;
         //Ueberbotener bekommt Geld zurück?
         this.bids.push(new Bid(bidder, amount));
@@ -54,9 +54,13 @@ public class Auction
     }
     public boolean undobid(final Player bidder)//evtl nicht bool / bessere Unterscheidung
     {
-        //is last bidder?
+        AuctionHouse.debug("UndoBid Checking...");
         if (bidder != this.bids.peek().getBidder()) 
-          { return false; }
+            return false;
+        AuctionHouse.debug("LastBidder OK");
+        if (bidder == this.owner)
+            return false;
+        AuctionHouse.debug("NoOwner OK");
         
         //calculate UndoTime from config
         long undoTime = config.auction_undoTime / 1000;

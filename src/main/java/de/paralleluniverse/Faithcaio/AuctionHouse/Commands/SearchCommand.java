@@ -21,16 +21,20 @@ public class SearchCommand extends AbstractCommand
         if (args.length < 1)
         {
             sender.sendMessage("/ah search <Item> [s:<date|id|price>]");
-            return false;
+            return true;
         }
         Arguments arguments = new Arguments(args);
         List<Auction> auctionlist;
         
-        if (arguments.getString("1") == null) return false;
-        if (AuctionHouse.debugMode) sender.sendMessage("Debug: Search for: "+arguments.getString("1"));
+        if (arguments.getString("1") == null) 
+        {
+            sender.sendMessage("ProTip: You can NOT sort nothing! Item is missing.");
+            return true;
+        }   
+        AuctionHouse.debug("Search for: "+arguments.getString("1"));
         if (arguments.getMaterial("1") != null)
         {
-            if (AuctionHouse.debugMode) sender.sendMessage("Debug: Item detected: "+arguments.getMaterial("1").toString());
+            AuctionHouse.debug("Item detected: "+arguments.getMaterial("1").toString());
             auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("1"));
         }
         else
@@ -41,14 +45,15 @@ public class SearchCommand extends AbstractCommand
         if (arguments.getString("s")!=null)
         {
             AuctionSort sorter = new AuctionSort();
-            //TODO anders
             if (arguments.getString("s").equalsIgnoreCase("date"))
                 sorter.SortAuction(auctionlist, "date");   
             if (arguments.getString("s").equalsIgnoreCase("id"))
                 sorter.SortAuction(auctionlist, "id");   
             if (arguments.getString("s").equalsIgnoreCase("price"))
                 sorter.SortAuction(auctionlist, "price"); 
-        }        
+        }   
+        if (auctionlist.isEmpty())
+            sender.sendMessage("Info: No Auction found!");
         this.sendInfo(sender, auctionlist);
         return true;    
     }
@@ -60,9 +65,9 @@ public class SearchCommand extends AbstractCommand
         {
         sender.sendMessage("#"+auctionlist.get(i).id+": "+auctionlist.get(i).item.toString()+
                            " Leading Bidder: "+auctionlist.get(i).bids.peek().getBidder().toString()+
-                           "with "+String.valueOf(auctionlist.get(i).bids.peek().getAmount())+
-                           "Auction ends: "+DateFormatUtils.format(auctionlist.get(i).auctionEnd, "dd/MM/yy HH:mm")
-                //TODO TimeString in config
+                           "with "+auctionlist.get(i).bids.peek().getAmount()+
+                           "Auction ends: "+
+                           DateFormatUtils.format(auctionlist.get(i).auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)
                           );       
         }
     }
@@ -73,6 +78,7 @@ public class SearchCommand extends AbstractCommand
         return "Finds Auctions with Item in it. Sorting optional.";
     }
     
+    @Override
     public String getUsage()
     {
         return "/ah search <Item> [s:<date|id|price>]";
