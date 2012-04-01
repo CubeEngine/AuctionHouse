@@ -1,5 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
+import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -39,12 +41,13 @@ public class AddCommand extends AbstractCommand
     
     public boolean execute(CommandSender sender, String[] args)
     {
+        //TODO /ah confirm
         ItemStack newItem = null;
         Material newMaterial;
         int amount = 1;
-        double startBid = 0;
+        Double startBid = 0.0;
         long auctionEnd = 1;
-        int multiAuction = 1;
+        Integer multiAuction = 1;
         
         if (sender instanceof Player)
         {
@@ -60,6 +63,11 @@ public class AddCommand extends AbstractCommand
             if (arguments.getString("1").equalsIgnoreCase("hand"))
             {
                 newItem = ((Player)sender).getItemInHand();
+                if (newItem.getType()==Material.AIR)
+                {
+                    sender.sendMessage("ProTipp: You can NOT sell your hands!");
+                    return true;
+                }
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: Hand ItemDetection OK: "+newItem.toString());
             }
             else 
@@ -67,7 +75,11 @@ public class AddCommand extends AbstractCommand
                 newMaterial = Material.matchMaterial(arguments.getString("1"));
                 if (newMaterial == null) return false;
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: Item MaterialDetection OK: "+newMaterial.toString());
-
+                if (newMaterial.equals(Material.AIR))
+                {
+                    sender.sendMessage("Info: AIR ist not a valid Block!");
+                    return true;
+                }
                 amount = arguments.getInt("2");
                 if (amount == -1) return false;
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: Quantity MaterialDetection OK: "+String.valueOf(amount));   
@@ -78,24 +90,29 @@ public class AddCommand extends AbstractCommand
 
             if (arguments.getString("3")!=null) 
             {
-                startBid = arguments.getInt("3");
+                startBid = arguments.getDouble("3");
                 if (startBid == -1) return false;
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: StartBid OK");
             }
             else 
             {
-                startBid = 0;
+                startBid = 0.0;
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: No StartBid Set to 0");
             }
 
             if (arguments.getString("4")!=null)
             {
-                if (arguments.getInt("4") == -1) return false;
+                if (arguments.getInt("4") == null) return false;
                 auctionEnd = (System.currentTimeMillis()+arguments.getInt("4")*60*60*1000);
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: AuctionLentgh OK");
             }
             else 
-                if (AuctionHouse.debugMode) sender.sendMessage("Debug: No Auction Length Set to 1h");
+                if (AuctionHouse.debugMode) 
+                {
+                    auctionEnd = (System.currentTimeMillis()+1*60*60*1000);
+                    //TODO Auction Standardlänge in config
+                    sender.sendMessage("Debug: No Auction Length Set to 1h");
+                }
 
             if (arguments.getString("m")!=null)
             {
@@ -110,6 +127,8 @@ public class AddCommand extends AbstractCommand
                 return false; //Invalid Sender
             //else | is Console-Command
             sender.sendMessage("Info: Creating Auction as Server...");   
+            //TODO ServerBefehle
+            
         }
         //Command segmented .. 
         //Start Checking Permissions etc.
@@ -119,15 +138,14 @@ public class AddCommand extends AbstractCommand
             {
                 if (((Player)sender).getInventory().contains(newItem.getType(),newItem.getAmount()))
                 {
-                    ((Player)sender).getInventory().removeItem(newItem);
                     //TODO funktioniert nicht richtig!
-                    if (AuctionHouse.debugMode) sender.sendMessage("Debug: Items were added to Auction");    
+                    if (AuctionHouse.debugMode) sender.sendMessage("Debug: Item Amount OK");    
                 }
                 else
                 {
                     if (sender.hasPermission("auctionhouse.cheatItems"))
                     {
-                        sender.sendMessage("Info: Not enough Items! Items were cheated!");
+                        sender.sendMessage("Info: Not enough Items! Cheat Items...");
                     }
                     else
                     {
@@ -153,7 +171,11 @@ public class AddCommand extends AbstractCommand
             {
                 sender.sendMessage("Info: Couldn't add all Auctions!"); 
                 sender.sendMessage("Info: Max Auctions reached! ("+config.auction_maxAuctions_overall+")"); 
-                return false;
+                return true;
+            }
+            else //TODO Auktion Start... remove Items...
+            {
+                ((Player)sender).getInventory().removeItem(newItem);
             }
         }
                 sender.sendMessage("Info: Auction(s) added succesfully!");
@@ -185,6 +207,10 @@ public class AddCommand extends AbstractCommand
     }
 
     @Override
+    public String getUsage()
+    {
+        return "/ah add <hand|<<Item><Amount>>> [StartBid] [Length] [m:<quantity>]";
+    }
     public String getDescription()
     {
         return "Adds an auction";

@@ -45,11 +45,9 @@ public class Auction
     
     public boolean bid(final Player bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
     {
-        if (amount <= 0) { return false;}         //Bid cannot be 0 or less !
+        if (amount <= 0) return false;         //Bid cannot be 0 or less !
         if (amount < this.bids.peek().getAmount())//Bid is too low !
-        {
             return false;
-        }
         //Ueberbotener bekommt Geld zurück?
         this.bids.push(new Bid(bidder, amount));
         return true;

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -55,13 +56,13 @@ public class AuctionManager
         return auction;
     }
 
-    public List<Auction> getAuctionItems(ItemStack item) //Get all Auctions with item
+    public List<Auction> getAuctionItems(Material material) //Get all Auctions with material
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
         int size = this.auctions.size();
         for (int i = 0;i < size;i++)
         {
-            if (this.auctions.get(i).item == item)
+            if (this.auctions.get(i).item.getType() == material)
             { auctionlist.add( this.auctions.get(i) ); }
         } 
         return auctionlist;    

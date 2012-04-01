@@ -1,7 +1,9 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
+import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -60,9 +62,17 @@ public class Arguments {
    
     public Player getPlayer(String name)
     {
-        
-        Player player =  AuctionHouse.getInstance().server.getPlayer(arguments.get(name));
-        return player;
+        return AuctionHouse.getInstance().getServer().getPlayer(this.getString(name));
+    }
+    
+    public Bidder getBidder(String name)
+    {
+        return Bidder.getInstance(AuctionHouse.getInstance().getServer().getOfflinePlayer(this.getString(name)));
+    }
+    
+    public Material getMaterial(String name)
+    {
+        return Material.matchMaterial(this.getString(name));
     }
 
 
