@@ -123,7 +123,6 @@ public class AddCommand extends AbstractCommand
                                 DateFormatUtils.format(config.auction_maxLength,"dd:hh:mm:ss" ));
                         return true;
                     }
-
                 }
                 else
                 {
@@ -283,6 +282,13 @@ public class AddCommand extends AbstractCommand
         else
             Bidder.getInstance((Player)sender).addAuction(auction);  //Give Auction to Bidder
         AuctionHouse.debug("Bidder OK");
+        
+        for (Bidder bidder : Bidder.getInstances().values())        //Add Material Subscriptions
+        {
+            if (bidder.materialSub.contains(auction.item.getType()))
+                bidder.addSubscription(auction);
+        }
+        
         return true;
     }
     

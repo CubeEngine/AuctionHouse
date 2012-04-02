@@ -45,7 +45,6 @@ public class BidCommand extends AbstractCommand
         if (arguments.getString("i") != null)
         if (arguments.getMaterial("i") != null)
         {
-            
             if (arguments.getString("q") == null)
             {
                 quantity = arguments.getMaterial("i").getMaxStackSize();
@@ -96,7 +95,7 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
                 }
-                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))//TODO Geld
+                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))
                 {
                     AuctionHouse.debug("Item Bid OK");
                     Bidder.getInstance((Player)sender).addAuction(auction);
@@ -132,7 +131,7 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
                 }
-                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))//TODO Geld
+                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))
                 {
                     AuctionHouse.debug("Id Bid OK");
                     Bidder.getInstance((Player)sender).addAuction(auction);

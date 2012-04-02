@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -15,6 +16,8 @@ public class Bidder {
    public final OfflinePlayer player;
    public final ArrayList<Auction> activeBids;
    public final ItemContainer itemContainer;
+   public final ArrayList<Auction> subscriptions;
+   public final ArrayList<Material> materialSub;
    public boolean playerNotification = false;
    
    private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
@@ -24,6 +27,8 @@ public class Bidder {
        this.player = player;  
        this.activeBids = new ArrayList<Auction>();
        this.itemContainer = new ItemContainer(this);
+       this.subscriptions = new ArrayList<Auction>(); //TODO command
+       this.materialSub = new ArrayList<Material>();  //TODO command      
    }
     
     public static Bidder getInstance(Player player)
@@ -35,6 +40,10 @@ public class Bidder {
           bidderInstances.put(player, new Bidder(player));
         instance = bidderInstances.get(player);
         return instance;
+    }
+    public static Map<Player, Bidder> getInstances()
+    {
+        return bidderInstances;
     }
     
     public static Bidder getInstance(OfflinePlayer player)
@@ -60,7 +69,17 @@ public class Bidder {
     
     public boolean removeAuction(Auction auction)
     {
+        subscriptions.remove(auction);
         return activeBids.remove(auction);
+        
+    }
+    public boolean removeSubscription(Auction auction)
+    {
+        return subscriptions.remove(auction);
+    }
+    public boolean removeSubscription(Material mat)
+    {
+        return materialSub.remove(mat);
     }
     
     public List<Auction> getLeadingAuctions(Bidder player)
@@ -119,6 +138,17 @@ public class Bidder {
     public Bidder addAuction(Auction auction)
     {
         this.activeBids.add(auction);
+        this.subscriptions.add(auction);
+        return this;
+    }
+    public Bidder addSubscription(Auction auction)
+    {
+        this.subscriptions.add(auction);
+        return this;
+    }
+    public Bidder addSubscription(Material material)
+    {
+        this.materialSub.add(material);
         return this;
     }
    

@@ -9,5 +9,6 @@ auction:
   standardLength: 30m
   opCanCheat: true
   timeFormat: "dd/MM/yy HH:mm"
+  notifyTime: [1m,10s,3s,2s,1s]
   blacklist: []
 

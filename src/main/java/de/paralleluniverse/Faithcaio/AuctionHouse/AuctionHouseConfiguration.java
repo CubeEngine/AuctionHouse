@@ -19,6 +19,7 @@ public class AuctionHouseConfiguration
     public final List<String> auction_blacklist;        //Blacklist Materials
     public final String   auction_timeFormat;           //Time Format Output
     public final long     auction_standardLength;       //in d h m s
+    public final List<Integer>   auction_notifyTime;       //List with time in d h m s
     //TODO blacklist einbauen
     public AuctionHouseConfiguration(Configuration config)
     {
@@ -33,7 +34,19 @@ public class AuctionHouseConfiguration
         this.auction_undoTime = this.convert(config.getString("auction.undoTime"));
         this.auction_maxLength = this.convert(config.getString("auction.maxLength"));
         this.auction_standardLength = this.convert(config.getString("auction.standardLength"));
+        
+        this.auction_notifyTime = this.convertlist(config.getStringList("auction.notifyTime"));
     }
+    
+    private List<Integer> convertlist(List<String> str)
+    {
+        List<Integer> list = null;
+        for (int i=0;i<str.size();++i)
+            list.add(this.convert(str.get(i)));
+        return list;
+        
+    }
+    
     public Integer convert(String str) //ty quick_wango
     {
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);

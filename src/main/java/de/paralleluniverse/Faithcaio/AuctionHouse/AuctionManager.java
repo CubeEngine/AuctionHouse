@@ -15,6 +15,7 @@ public class AuctionManager
 
     public final List<Auction> auctions;
     public final Stack<Integer> freeIds;
+    
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
@@ -50,6 +51,11 @@ public class AuctionManager
         }
         return auction;
     }
+    
+    public List<Auction> getAuctions()
+    {
+        return auctions;
+    }
 
     public List<Auction> getAuctionItems(Material material) //Get all Auctions with material
     {
@@ -64,17 +70,12 @@ public class AuctionManager
         return auctionlist;    
     }
     
-    public List<Auction> getEndingAuctions(int min) //Get soon Ending Auctions
+    public List<Auction> getEndingAuctions() //Get soon Ending Auctions
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};
         int size = this.auctions.size();
         for (int i = 0;i < size;i++)
-        {
-            if (this.auctions.get(i).auctionEnd - System.currentTimeMillis() <= 1000 * 60 * min)
-            {
-                auctionlist.add( this.auctions.get(i) );
-            }
-        }
+            auctionlist.add( this.auctions.get(i) );
         Collections.sort(auctionlist, 
              new Comparator()
              {   
