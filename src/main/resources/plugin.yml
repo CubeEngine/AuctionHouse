@@ -29,49 +29,81 @@ permissions:
       auctionhouse.notify.*: true
       auctionhouse.help: true
       auctionhouse.search: true
-      
+
   auctionhouse.use.*:
+    description: ""
     children:
       auctionhouse.use.bid: true
       auctionhouse.use.add: true
       auctionhouse.use.add.multi: true
       auctionhouse.use.undobid: true
-      
-  auctionhouse.use.bid:    
+    
+
+  auctionhouse.use.bid:
+    description: ""
+    
   auctionhouse.use.add:
+    description: ""
+    
   auctionhouse.use.add.multi:
+    description: ""
+    
   auctionhouse.use.undobid:
-  
+    description: ""
+
   auctionhouse.delete.*:
+    description: ""
     children:
       auctionhouse.delete.all: true
       auctionhouse.delete.player: true
       auctionhouse.delete.player.other: true
       auctionhouse.delete.id: true
     
+
   auctionhouse.delete.all:
-  auctionhouse.delete.player:
-  auctionhouse.delete.id:
-  auctionhouse.delete.player.other: 
+    description: ""
     
+  auctionhouse.delete.player:
+    description: ""
+    
+  auctionhouse.delete.id:
+    description: ""
+    
+  auctionhouse.delete.player.other:
+    description: ""
+
   auctionhouse.cheatItems:
-  
+    description: ""
+
   auctionhouse.info.*:
+    description: ""
     children:
       auctionhouse.info: true
       auctionhouse.info.others: true
 
   auctionhouse.info:
+    description: ""
+    
   auctionhouse.info.others:
+    description: ""
 
   auctionhouse.notify.*:
+    description: ""
     children:
       auctionhouse.notify.command: true
       auctionhouse.notify: true
-  
+
   auctionhouse.notify.command:
-  auctionhouse.notify:
+    description: ""
     
+  auctionhouse.notify:
+    description: ""
+
   auctionhouse.help:
+    description: ""
+    
   auctionhouse.search:
-  auctionhouse.getItems.command:  
+    description: ""
+    
+  auctionhouse.getItems.command:
+    description: ""

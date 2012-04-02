@@ -89,7 +89,7 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
                 }
-                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))
+                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))//TODO Geld
                 {
                     AuctionHouse.debug("Item Bid OK");
                     Bidder.getInstance((Player)sender).addAuction(auction);
@@ -128,7 +128,7 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
                 }
-                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))
+                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))//TODO Geld
                 {
                     AuctionHouse.debug("Id Bid OK");
                     Bidder.getInstance((Player)sender).addAuction(auction);

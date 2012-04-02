@@ -1,11 +1,8 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -61,7 +58,7 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage("/ah add hand [StartBid] [Length] [m:<quantity>]");
                 sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length]");
                 sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length] [m:<quantity>]");
-                //TODO Length mit d h m s
+                sender.sendMessage("Length is in d|h|m|s");
                 return true;
             }
             Arguments arguments = new Arguments(args);
@@ -120,22 +117,30 @@ public class AddCommand extends AbstractCommand
 
             if (arguments.getString("4")!=null)
             {
-                if (arguments.getInt("4") == null)
+                Integer length = this.convert(arguments.getString("4"));
+                if (length == null)
                 {
-                    sender.sendMessage("Info: Invalid TimeFormat!");
+                    sender.sendMessage("Error: Invalid Length Format");
                     return true;
                 }
-                auctionEnd = (System.currentTimeMillis()+arguments.getInt("4")*60*60*1000);
-                AuctionHouse.debug("AuctionLentgh OK");
-            }
-            else 
-                if (AuctionHouse.debugMode) 
+                if(length<config.auction_maxLength)                        
                 {
-                    auctionEnd = (System.currentTimeMillis()+1*60*60*1000);
-                    //TODO Auction Standardlänge in config
-                    sender.sendMessage("Debug: No Auction Length Set to 1h");
+                    auctionEnd = (System.currentTimeMillis()+length);
+                    AuctionHouse.debug("AuctionLentgh OK");
                 }
-
+                else
+                {
+                    sender.sendMessage("Info: AuctionLength too high! Max: "+
+                            DateFormatUtils.format(config.auction_maxLength,"dd:hh:mm:ss" ));
+                    return true;
+                }
+                
+            }
+            else
+            {
+                auctionEnd = (System.currentTimeMillis()+config.auction_standardLength);
+                AuctionHouse.debug("No Auction Length Set to default");
+            }
             if (arguments.getString("m")!=null)
             {
                 multiAuction = arguments.getInt("m");
@@ -216,7 +221,7 @@ public class AddCommand extends AbstractCommand
                   "AuctionHouse: Started "+multiAuction+
                   " Auction(s) with "+newItem.toString()+
                   ". StartBid: "+startBid+
-                  ". Auction ends: "+DateFormatUtils.format(auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)
+                  ". Auction ends: "+DateFormatUtils.format(auctionEnd, config.auction_timeFormat)
                   );
         return true;
     }
@@ -247,5 +252,43 @@ public class AddCommand extends AbstractCommand
     public String getDescription()
     {
         return "Adds an auction";
+    }
+    
+        public Integer convert(String str) //ty quick_wango
+    {
+        Pattern pattern = Pattern.compile("^(\\d+)([tsmhd])?$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(str);
+        matcher.find();
+        int tmp = 0;
+        try
+        {
+            tmp = Integer.valueOf(String.valueOf(matcher.group(1)));
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
+        catch (IllegalStateException ex)
+        {
+            return null;
+        }
+        if (tmp==-1) return -1;
+        String unitSuffix = matcher.group(2);
+        if (unitSuffix == null)
+        {
+            unitSuffix = "m";
+        }
+        switch (unitSuffix.toLowerCase().charAt(0))
+        {
+            case 'd':
+                tmp *= 24;
+            case 'h':
+                tmp *= 60;
+            case 'm':
+                tmp *= 60;
+            case 's':
+                tmp *= 1000;
+        }
+        return tmp;
     }
 }

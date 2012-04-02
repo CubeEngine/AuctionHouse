@@ -62,13 +62,11 @@ public class Auction
         AuctionHouse.debug("NoOwner OK");
         
         //calculate UndoTime from config
-        long undoTime = config.auction_undoTime / 1000;
-        if (config.auction_undoTime < 0) //Infinite UndoTime
+        long undoTime = config.auction_undoTime;
+        if (undoTime < 0) //Infinite UndoTime
           { undoTime = this.auctionEnd - this.bids.peek().getTimestamp(); }
-        
-        //undoTime ok?
         if ((System.currentTimeMillis() - this.bids.peek().getTimestamp()) < undoTime)
-          { return false; }
+            return false;
         //else: Undo Last Bid
         this.bids.pop();
         return true;

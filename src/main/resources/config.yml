@@ -4,8 +4,10 @@ auction:
     player: 10
     overall: 20
     opIgnore: true
-  undoTime: 20 //in seconds
-  maxLength: 24 //in hours
+  undoTime: 20s
+  maxLength: 24h
+  standardLength: 30m
   opCanCheat: true
-  blacklist: []
   timeFormat: "dd/MM/yy HH:mm"
+  blacklist: []
+
