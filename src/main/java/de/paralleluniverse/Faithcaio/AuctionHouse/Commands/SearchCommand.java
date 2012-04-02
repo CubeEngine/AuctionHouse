@@ -18,6 +18,11 @@ public class SearchCommand extends AbstractCommand
     }
     public boolean execute(CommandSender sender, String[] args)
     {
+        if (!(sender.hasPermission("auctionhouse.search")))
+        {
+            sender.sendMessage("You are not allowed to search for Auctions!");
+            return true;
+        } 
         if (args.length < 1)
         {
             sender.sendMessage("/ah search <Item> [s:<date|id|price>]");
@@ -64,7 +69,7 @@ public class SearchCommand extends AbstractCommand
         for (int i=0;i<max;++i)
         {
         sender.sendMessage("#"+auctionlist.get(i).id+": "+auctionlist.get(i).item.toString()+
-                           " Leading Bidder: "+auctionlist.get(i).bids.peek().getBidder().toString()+
+                           " Leading Bidder: "+auctionlist.get(i).bids.peek().getBidder().player.getName()+
                            "with "+auctionlist.get(i).bids.peek().getAmount()+
                            "Auction ends: "+
                            DateFormatUtils.format(auctionlist.get(i).auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)

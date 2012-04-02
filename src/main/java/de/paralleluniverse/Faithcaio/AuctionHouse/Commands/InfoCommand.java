@@ -32,7 +32,12 @@ public class InfoCommand extends AbstractCommand
             return true;
         }
         Arguments arguments = new Arguments(args);
-                
+        if (!(sender.hasPermission("auctionhouse.info")))
+        {
+            sender.sendMessage("You do not have Permission to get Info about Auctions!");
+            return true;
+        }
+        
         if (arguments.getString("1").equalsIgnoreCase("Bids"))//bidding
         {
             if (AuctionHouse.debugMode) sender.sendMessage("Debug: Bids");
@@ -52,7 +57,7 @@ public class InfoCommand extends AbstractCommand
             if (arguments.getString("1").equalsIgnoreCase("Auctions"))//own auctions
             {
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: own Auctions");
-                List<Auction> auctions = Bidder.getInstance((Player)sender).getAuctions((Player)sender);
+                List<Auction> auctions = Bidder.getInstance((Player)sender).getAuctions(Bidder.getInstance((Player)sender));
                 int max = auctions.size();
                 if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
                 if (max == 0) sender.sendMessage("Info: No own Auctions started!"); 
@@ -68,7 +73,7 @@ public class InfoCommand extends AbstractCommand
                 if (arguments.getString("1").equalsIgnoreCase("Leading"))
                 {
                     if (AuctionHouse.debugMode) sender.sendMessage("Debug: Leading Auctions");
-                    List<Auction> auctions = Bidder.getInstance((Player)sender).getLeadingAuctions((Player)sender);
+                    List<Auction> auctions = Bidder.getInstance((Player)sender).getLeadingAuctions(Bidder.getInstance((Player)sender));
                     int max = auctions.size();
                     if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
                     if (max == 0) sender.sendMessage("Info: No Leading Auctions!"); 
@@ -91,11 +96,16 @@ public class InfoCommand extends AbstractCommand
                     }
                     else
                     {
+                        if (!(sender.hasPermission("auctionhouse.info.others")))
+                        {
+                            sender.sendMessage("You do not have Permission to get Info about other Players Auctions!");
+                            return true;
+                        }
                         Bidder player = arguments.getBidder("1");
                         if (player != null)
                         {
                             if (AuctionHouse.debugMode) sender.sendMessage("Debug: Player Auction");
-                            List<Auction> auctions = player.getAuctions(player.player);
+                            List<Auction> auctions = player.getAuctions(player);
                             int max = auctions.size();
                             if (AuctionHouse.debugMode) sender.sendMessage("Debug: max: "+max);
                             if (max == 0) sender.sendMessage("Info: "+player.player.getName()+" has no Auctions!"); 
@@ -119,7 +129,7 @@ public class InfoCommand extends AbstractCommand
     public void sendInfo(CommandSender sender,Auction auction)
     {
      sender.sendMessage("#"+auction.id+": "+auction.item.toString()+
-                                   " Leading Bidder: "+auction.bids.peek().getBidder().toString()+
+                                   " Leading Bidder: "+auction.bids.peek().getBidder().player.getName()+
                                    "with "+auction.bids.peek().getAmount()+
                                    "Auction ends: "+
                                    DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)

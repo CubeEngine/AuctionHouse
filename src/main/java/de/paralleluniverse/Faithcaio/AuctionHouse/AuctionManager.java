@@ -1,12 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
 
 
 /**
@@ -96,10 +91,10 @@ public class AuctionManager
         public boolean cancelAuction(Auction auction)
     {
         this.freeIds.push(auction.id); 
-        Bidder.getInstance(auction.owner).removeAuction(auction);
+        Bidder.getInstance(auction.owner.player.getPlayer()).removeAuction(auction);
         while (!(auction.bids.isEmpty()))
         {
-            Bidder.getInstance( auction.bids.peek().getBidder() ).removeAuction(auction);
+            Bidder.getInstance( auction.bids.peek().getBidder().player.getPlayer() ).removeAuction(auction);
             auction.bids.pop();        
         }
         this.auctions.remove(auction);

@@ -51,11 +51,16 @@ public class AddCommand extends AbstractCommand
         
         if (sender instanceof Player)
         {
+            if (!(sender.hasPermission("auctionhouse.use.add")))
+            {
+                sender.sendMessage("You are not allowed to add an Auction!");
+                return true;
+            }
             if (args.length < 1)
             {
-                sender.sendMessage("/ah add hand [StartBid] [Length]");
+                sender.sendMessage("/ah add hand [StartBid] [Length] [m:<quantity>]");
                 sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length]");
-                sender.sendMessage("/ah add [m:<quantity>] <Item> <Amount> [StartBid] [Length]");
+                sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length] [m:<quantity>]");
                 //TODO Length mit d h m s
                 return true;
             }
@@ -140,6 +145,11 @@ public class AddCommand extends AbstractCommand
                     return true;
                 }
                 AuctionHouse.debug("MultiAuction: "+multiAuction);
+                if (!(sender.hasPermission("auctionhouse.use.add.multi")))
+                {
+                    sender.sendMessage("You are not allowed to add multiple Auctions!");
+                    return true;
+                }
             }
         }
         else 
@@ -152,27 +162,24 @@ public class AddCommand extends AbstractCommand
             
         }
         //Command segmented .. 
-        //Start Checking Permissions etc.
-        if (sender.hasPermission("auctionhouse.use.add"))
+
+        if (!(sender instanceof ConsoleCommandSender))
         {
-            if (!(sender instanceof ConsoleCommandSender))
+            if (((Player)sender).getInventory().contains(newItem.getType(),newItem.getAmount()))
             {
-                if (((Player)sender).getInventory().contains(newItem.getType(),newItem.getAmount()))
+                //TODO funktioniert nicht richtig!
+                AuctionHouse.debug("Item Amount OK");    
+            }
+            else
+            {
+                if (sender.hasPermission("auctionhouse.cheatItems"))
                 {
-                    //TODO funktioniert nicht richtig!
-                    AuctionHouse.debug("Item Amount OK");    
+                    sender.sendMessage("Info: Not enough Items! Cheat Items...");
                 }
                 else
                 {
-                    if (sender.hasPermission("auctionhouse.cheatItems"))
-                    {
-                        sender.sendMessage("Info: Not enough Items! Cheat Items...");
-                    }
-                    else
-                    {
-                        sender.sendMessage("Info: Not enough Items");
-                        return true;
-                    }
+                    sender.sendMessage("Info: Not enough Items");
+                    return true;
                 }
             }
         }
@@ -190,7 +197,7 @@ public class AddCommand extends AbstractCommand
                 //TODO Create Auction as FakePlayer: "Server"
             }
             else
-                newAuction = new Auction(newItem,(Player)sender,auctionEnd,startBid);//Created Auction
+                newAuction = new Auction(newItem,Bidder.getInstance((Player)sender),auctionEnd,startBid);//Created Auction
             AuctionHouse.debug("Auction #"+(i+1)+" init complete");
             
             if (!(this.RegisterAuction(newAuction, sender)))

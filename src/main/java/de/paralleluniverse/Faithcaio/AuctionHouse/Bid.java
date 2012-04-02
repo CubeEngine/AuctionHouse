@@ -10,10 +10,10 @@ import org.bukkit.entity.Player;
 public class Bid
 {
     private final double amount;
-    private final Player bidder;
+    private final Bidder bidder;
     private final long timestamp;
 
-    public Bid(Player bidder, double amount)
+    public Bid(Bidder bidder, double amount)
     {
        this.amount = amount;
        this.bidder = bidder;
@@ -25,7 +25,7 @@ public class Bid
         return this.amount;
     }
     
-    public Player getBidder()
+    public Bidder getBidder()
     {
         return this.bidder;
     }

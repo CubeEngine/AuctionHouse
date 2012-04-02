@@ -20,7 +20,11 @@ public class BidCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        
+        if (!(sender.hasPermission("auctionhouse.use.bid")))
+        {
+            sender.sendMessage("You are not allowed to bid on Auctions!");
+            return true;
+        }
         Double bidAmount;
         Auction auction;
         Integer quantity = null;
@@ -85,7 +89,7 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
                 }
-                if (auction.bid((Player)sender, bidAmount))
+                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))
                 {
                     AuctionHouse.debug("Item Bid OK");
                     Bidder.getInstance((Player)sender).addAuction(auction);
@@ -124,7 +128,7 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
                 }
-                if (auction.bid((Player)sender, bidAmount))
+                if (auction.bid(Bidder.getInstance((Player)sender), bidAmount))
                 {
                     AuctionHouse.debug("Id Bid OK");
                     Bidder.getInstance((Player)sender).addAuction(auction);
@@ -145,8 +149,8 @@ public class BidCommand extends AbstractCommand
                        " on "+auction.item.toString()+
                        " | Auction ID:"
             );
-    if (auction.owner.isOnline())
-        auction.owner.sendMessage("Somone bid on your auction #"+auction.id+"!");    
+    if (auction.owner.player.isOnline())
+        auction.owner.player.getPlayer().sendMessage("Somone bid on your auction #"+auction.id+"!");    
     }
 
     @Override

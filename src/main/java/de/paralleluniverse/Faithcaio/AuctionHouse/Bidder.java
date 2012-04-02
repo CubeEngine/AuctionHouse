@@ -12,8 +12,9 @@ import org.bukkit.entity.Player;
  * @author Faithcaio
  */
 public class Bidder {
-   public final Player player;
+   public final OfflinePlayer player;
    public final ArrayList<Auction> activeBids;
+   public final ItemContainer itemContainer;
    public boolean playerNotification = false;
    
    private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
@@ -22,6 +23,7 @@ public class Bidder {
    {
        this.player = player;  
        this.activeBids = new ArrayList<Auction>();
+       this.itemContainer = new ItemContainer(this);
    }
     
     public static Bidder getInstance(Player player)
@@ -51,7 +53,7 @@ public class Bidder {
         return activeBids.remove(auction);
     }
     
-    public List<Auction> getLeadingAuctions(Player player)
+    public List<Auction> getLeadingAuctions(Bidder player)
     {
         List<Auction> auctionlist = new ArrayList<Auction>();
         final int length = this.activeBids.size();
@@ -70,7 +72,7 @@ public class Bidder {
         return activeBids;
     }
     
-    public List<Auction> getAuctions(Player player) //Get all Auctions started by player
+    public List<Auction> getAuctions(Bidder player) //Get all Auctions started by player
     {
         ArrayList<Auction> auctionlist = new ArrayList<Auction>() {};  
         final int length = this.activeBids.size();
@@ -82,7 +84,7 @@ public class Bidder {
         return auctionlist;
     }
     
-    public Auction getlastAuction(Player player) //Get last Auction Bid on
+    public Auction getlastAuction(Bidder player) //Get last Auction Bid on
     {
         
         final int length = this.activeBids.size();

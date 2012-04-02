@@ -1,7 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import java.util.Stack;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -13,13 +12,13 @@ public class Auction
 {
     public int id;
     public final ItemStack item;
-    public final Player owner;
+    public final Bidder owner;
     public final long auctionEnd;
     public final Stack<Bid> bids;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
-    public Auction(ItemStack item, Player owner, long auctionEnd, double startBid)
+    public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
         this.id = 0;
         this.item = item;
@@ -43,7 +42,7 @@ public class Auction
         return true;
     }
     
-    public boolean bid(final Player bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
+    public boolean bid(final Bidder bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
     {
         if (amount <= 0) return false;         //Bid cannot be 0 or less !
         if (amount <= this.bids.peek().getAmount())//Bid is too low !
@@ -52,7 +51,7 @@ public class Auction
         this.bids.push(new Bid(bidder, amount));
         return true;
     }
-    public boolean undobid(final Player bidder)//evtl nicht bool / bessere Unterscheidung
+    public boolean undobid(final Bidder bidder)//evtl nicht bool / bessere Unterscheidung
     {
         AuctionHouse.debug("UndoBid Checking...");
         if (bidder != this.bids.peek().getBidder()) 

@@ -32,14 +32,18 @@ public class RemoveCommand extends AbstractCommand
         {
             if (arguments.getString("1").equalsIgnoreCase("all"))
             {
-                //TODO permission
-                int max = AuctionManager.getInstance().auctions.size();
-                if (max == 0) sender.sendMessage("Info: No Auctions detected!");
-                for (int i=max-1;i>=0;--i)
+                if (sender.hasPermission("auctionhouse.delete.all"))
                 {
-                    AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().auctions.get(i));
+                    int max = AuctionManager.getInstance().auctions.size();
+                    if (max == 0) sender.sendMessage("Info: No Auctions detected!");
+                    for (int i=max-1;i>=0;--i)
+                    {
+                        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().auctions.get(i));
+                    }
+                    sender.sendMessage("Info: All Auctions deleted!");
+                    return true;
                 }
-                sender.sendMessage("Info: All Auctions deleted!");
+                sender.sendMessage("You do not have Permission to delete all Auctions!");
                 return true;
             }
             else
@@ -51,6 +55,11 @@ public class RemoveCommand extends AbstractCommand
                     {
                         sender.sendMessage("Error: Auction"+id+"does not exist!");
                         return true;    
+                    }
+                    if (!(sender.hasPermission("auctionhouse.delete.id")))
+                    {
+                        sender.sendMessage("You do not have Permission to delete Auctions!");
+                        return true;
                     }
                     AuctionHouse.debug("Remove per Id");
                         AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
@@ -72,13 +81,25 @@ public class RemoveCommand extends AbstractCommand
             else
             {
                 AuctionHouse.debug("Remove per Player");
-
+                if (player.player.getPlayer().equals((Player)sender))
+                {   if (!(sender.hasPermission("auctionhouse.delete.player")))
+                    {
+                        sender.sendMessage("You do not have Permission to delete all your Auctions at once!");
+                        return true;
+                    }}
+                else
+                {    if (!(sender.hasPermission("auctionhouse.delete.player.other")))
+                    {
+                        sender.sendMessage("You do not have Permission to delete all Auctions of a Player!");
+                        return true;
+                    }}
+                
                 if(!(player.activeBids.isEmpty()))
                 {    
                     int bids = player.activeBids.size();    
                     while (player.activeBids.size()>0)
                     {
-                        AuctionManager.getInstance().cancelAuction(player.getAuctions(player.player).get(0));
+                        AuctionManager.getInstance().cancelAuction(player.getAuctions(player).get(0));
                     }
                     sender.sendMessage("Info:Removed "+bids+" auctions of "+player.player.toString());
                     return true;

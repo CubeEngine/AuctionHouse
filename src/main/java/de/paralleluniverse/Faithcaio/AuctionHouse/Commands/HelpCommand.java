@@ -20,6 +20,12 @@ public class HelpCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
+        if (!(sender.hasPermission("auctionhouse.help")))
+        {
+            sender.sendMessage("You are not allowed to show AuctionHouse Help!");
+            return true;
+        }
+        
         sender.sendMessage("AuctionHouse Commandlist:");
         sender.sendMessage("");
 

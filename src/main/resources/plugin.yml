@@ -20,20 +20,58 @@ permissions:
     description: "Allows the player to do everything"
     default: op
     children:
-      auctionhouse.cheatItems.*: true
+      auctionhouse.cheatItems: true
       auctionhouse.use.*: true
+      auctionhouse.delete.*: true
+      auctionhouse.info.*: true
+      auctionhouse.getItems.command: true
+      auctionhouse.help: true
+      auctionhouse.notify.*: true
+      auctionhouse.help: true
+      auctionhouse.search: true
       
   auctionhouse.use.*:
-    description: "Allows the player to use all normal AuctionHouse Commands"
     children:
       auctionhouse.use.bid: true
       auctionhouse.use.add: true
+      auctionhouse.use.add.multi: true
+      auctionhouse.use.undobid: true
       
   auctionhouse.use.bid:    
-    description: "Allows the player to bid"
   auctionhouse.use.add:
-    description: "Allows the player to add his own auctions"
+  auctionhouse.use.add.multi:
+  auctionhouse.use.undobid:
+  
+  auctionhouse.delete.*:
+    children:
+      auctionhouse.delete.all: true
+      auctionhouse.delete.player: true
+      auctionhouse.delete.player.other: true
+      auctionhouse.delete.id: true
+    
+  auctionhouse.delete.all:
+  auctionhouse.delete.player:
+  auctionhouse.delete.id:
+  auctionhouse.delete.player.other: 
     
   auctionhouse.cheatItems:
-    description: "Allows the player to cheat Items when needed"
+  
+  auctionhouse.info.*:
+    children:
+      auctionhouse.info: true
+      auctionhouse.info.others: true
 
+  auctionhouse.info:
+  auctionhouse.info.others:
+
+  auctionhouse.notify.*:
+    children:
+      auctionhouse.notify.command: true
+      auctionhouse.notify: true
+  
+  auctionhouse.notify.command:
+  auctionhouse.notify:
+    
+  auctionhouse.help:
+  auctionhouse.search:
+  auctionhouse.getItems.command:  

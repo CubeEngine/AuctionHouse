@@ -21,10 +21,15 @@ public class NotifyCommand extends AbstractCommand{
     
     public boolean execute(CommandSender sender, String[] args)
     {
-         if (args.length < 1)
+        if (args.length < 1)
         {
             sender.sendMessage("/ah notify true|false|toggle");
             sender.sendMessage("/ah notify on|off|t");
+            return true;
+        }
+        if (!(sender.hasPermission("auctionhouse.notify.command")))
+        {
+            sender.sendMessage("You do not have Permission to change whether to be notified!");
             return true;
         }
         Arguments arguments = new Arguments(args);
