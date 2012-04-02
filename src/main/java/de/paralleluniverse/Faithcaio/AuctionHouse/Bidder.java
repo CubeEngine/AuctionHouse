@@ -49,6 +49,15 @@ public class Bidder {
         return instance; //instance ist null wenn offline Player AuctionHouse nicht genutzt hat
     }
     
+    public double getTotalBidAmount()
+    {
+        double total = 0;
+        List<Auction> auctionlist = this.getLeadingAuctions(this);
+        for (int i=0;i<auctionlist.size();++i)
+            total += auctionlist.get(i).bids.peek().getAmount();
+        return total;
+    }
+    
     public boolean removeAuction(Auction auction)
     {
         return activeBids.remove(auction);

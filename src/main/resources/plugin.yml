@@ -29,6 +29,7 @@ permissions:
       auctionhouse.notify.*: true
       auctionhouse.help: true
       auctionhouse.search: true
+      auctionhouse.use.bid.infinite: true
 
   auctionhouse.use.*:
     description: ""
@@ -40,6 +41,9 @@ permissions:
     
 
   auctionhouse.use.bid:
+    description: ""
+    
+  auctionhouse.use.bid.infinite:
     description: ""
     
   auctionhouse.use.add:
@@ -106,4 +110,7 @@ permissions:
     
   auctionhouse.getItems.command:
     description: ""
+  
+
+    
     

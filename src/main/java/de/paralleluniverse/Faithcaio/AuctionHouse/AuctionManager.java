@@ -104,7 +104,6 @@ public class AuctionManager
         else
             ServerBidder.getInstance().removeAuction(auction);
         this.auctions.remove(auction);
-        //TODO delete Auction completly
         auction.abortAuction();
         return true;   
     }

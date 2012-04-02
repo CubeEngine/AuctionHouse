@@ -44,14 +44,34 @@ public class Auction
     
     public boolean bid(final Bidder bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
     {
-        if (amount <= 0) return false;         //Bid cannot be 0 or less !
-        if (amount <= this.bids.peek().getAmount())//Bid is too low !
+        if (amount <= 0) 
+        {
+            bidder.player.getPlayer().sendMessage("Error: Bid must be greater than 0!");
             return false;
-        //Ueberbotener bekommt Geld zurück?
-        this.bids.push(new Bid(bidder, amount));
-        return true;
+        }
+        if (amount <= this.bids.peek().getAmount())
+        {
+            bidder.player.getPlayer().sendMessage("Info: Bid is too low!");
+            return false;
+        }
+        if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.player.getName())>=amount)
+           ||bidder.player.getPlayer().hasPermission("auctionhouse.use.bid.infinite"))
+        {
+            if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.player.getName()) - bidder.getTotalBidAmount() >= amount
+              ||bidder.player.getPlayer().hasPermission("auctionhouse.use.bid.infinite"))
+            {
+                this.bids.push(new Bid(bidder, amount));
+                return true;
+            }//TODO für später   getEconomy().withdrawPlayer(player.getName(), price).transactionSuccess()
+            bidder.player.getPlayer().sendMessage("Error: You already bid too much. You would not have enough money to buy everything.");
+            return false;
+        }
+        bidder.player.getPlayer().sendMessage("Error: Not enough money");
+        return false;
+        
     }
-    public boolean undobid(final Bidder bidder)//evtl nicht bool / bessere Unterscheidung
+    
+    public boolean undobid(final Bidder bidder)
     {
         AuctionHouse.debug("UndoBid Checking...");
         if (bidder != this.bids.peek().getBidder()) 

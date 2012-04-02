@@ -103,7 +103,6 @@ public class BidCommand extends AbstractCommand
                     this.SendInfo(auction, sender);
                     return true;
                 }
-                sender.sendMessage("Info: Bid is too low!");
                 return true;
             }
         }
@@ -140,7 +139,6 @@ public class BidCommand extends AbstractCommand
                     this.SendInfo(auction, sender);
                     return true;
                 }
-                sender.sendMessage("Info: Bid is too low!");
                 return true;
             }
         }

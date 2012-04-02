@@ -4,9 +4,11 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.*;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Server;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AuctionHouse extends JavaPlugin
@@ -19,6 +21,7 @@ public class AuctionHouse extends JavaPlugin
     protected PluginManager pm;
     protected AuctionHouseConfiguration config;
     protected File dataFolder;
+    private Economy economy = null;
 
     public AuctionHouse()
     {
@@ -45,6 +48,8 @@ public class AuctionHouse extends JavaPlugin
         
         this.saveConfig();
         
+        this.economy = this.setupEconomy();
+        
         BaseCommand baseCommand = new BaseCommand(this);
         baseCommand
             .registerSubCommand(new     HelpCommand(baseCommand))
@@ -67,6 +72,28 @@ public class AuctionHouse extends JavaPlugin
         log("Version " + this.getDescription().getVersion() + " disabled");
     }
     
+    private Economy setupEconomy()
+    {
+        if (this.pm.getPlugin("Vault") != null)
+        {
+            RegisteredServiceProvider<Economy> rsp = this.server.getServicesManager().getRegistration(Economy.class);
+            if (rsp != null)
+            {
+                Economy eco = rsp.getProvider();
+                if (eco != null)
+                {
+                    return eco;
+                }
+            }
+        }
+        throw new IllegalStateException("Failed to initialize with Vault!");
+    }
+    
+    public Economy getEconomy()
+    {
+        return this.economy;
+    }
+       
     public AuctionHouseConfiguration getConfigurations()
     {
         return this.config;
