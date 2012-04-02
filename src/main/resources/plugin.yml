@@ -22,7 +22,7 @@ permissions:
     children:
       auctionhouse.cheatItems: true
       auctionhouse.use.*: true
-      auctionhouse.delete.*: true
+      auctionhouse.delete.all: true
       auctionhouse.info.*: true
       auctionhouse.getItems.command: true
       auctionhouse.help: true
@@ -51,18 +51,14 @@ permissions:
   auctionhouse.use.undobid:
     description: ""
 
-  auctionhouse.delete.*:
+  auctionhouse.delete.all:
     description: ""
     children:
-      auctionhouse.delete.all: true
       auctionhouse.delete.player: true
       auctionhouse.delete.player.other: true
       auctionhouse.delete.id: true
-    
+      auctionhouse.delete.server: true
 
-  auctionhouse.delete.all:
-    description: ""
-    
   auctionhouse.delete.player:
     description: ""
     
@@ -70,6 +66,9 @@ permissions:
     description: ""
     
   auctionhouse.delete.player.other:
+    description: ""
+
+  auctionhouse.delete.server:
     description: ""
 
   auctionhouse.cheatItems:
@@ -107,3 +106,4 @@ permissions:
     
   auctionhouse.getItems.command:
     description: ""
+    

@@ -36,7 +36,8 @@ public class Bidder {
         instance = bidderInstances.get(player);
         return instance;
     }
-        public static Bidder getInstance(OfflinePlayer player)
+    
+    public static Bidder getInstance(OfflinePlayer player)
     {
         Bidder instance;
         if (bidderInstances.isEmpty()) instance = null;

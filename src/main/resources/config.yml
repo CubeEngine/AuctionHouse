@@ -5,7 +5,7 @@ auction:
     overall: 20
     opIgnore: true
   undoTime: 20s
-  maxLength: 24h
+  maxLength: 1d
   standardLength: 30m
   opCanCheat: true
   timeFormat: "dd/MM/yy HH:mm"

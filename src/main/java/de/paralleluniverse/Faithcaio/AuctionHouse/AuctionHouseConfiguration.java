@@ -36,7 +36,7 @@ public class AuctionHouseConfiguration
     }
     public Integer convert(String str) //ty quick_wango
     {
-        Pattern pattern = Pattern.compile("^(\\d+)([tsmhd])?$", Pattern.CASE_INSENSITIVE);
+        Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
         matcher.find();
         int tmp = 0;

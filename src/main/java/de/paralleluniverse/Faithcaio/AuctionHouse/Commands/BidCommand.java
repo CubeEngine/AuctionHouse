@@ -5,6 +5,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.List;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -24,7 +25,13 @@ public class BidCommand extends AbstractCommand
         {
             sender.sendMessage("You are not allowed to bid on Auctions!");
             return true;
+        }        
+        if (sender instanceof ConsoleCommandSender)
+        {
+            sender.sendMessage("Console can not bid on Auctions!");
+            return true;
         }
+        
         Double bidAmount;
         Auction auction;
         Integer quantity = null;
@@ -100,13 +107,11 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        else 
-            if (arguments.getString("i")!=null)
-            {
-                AuctionHouse.debug("return false in BidCommand");
-                return false;
-            }
-        
+        else
+        {
+            sender.sendMessage("Info: "+arguments.getString("i")+ "is not a valid item!");
+            return true;
+        }
         Integer id = arguments.getInt("1");
         if (id != null)
         {
@@ -139,18 +144,19 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        AuctionHouse.debug("return false in BidCommand");
-        return false;
+        sender.sendMessage("Info: "+arguments.getString("1")+ "is not a valid AuctionID!");
+        return true;
     }
     
     public void SendInfo (Auction auction,CommandSender sender)
     {
     sender.sendMessage("You just bid "+auction.bids.peek().getAmount()+
                        " on "+auction.item.toString()+
-                       " | Auction ID:"
+                       " | Auction ID:"+auction.id
             );
-    if (auction.owner.player.isOnline())
-        auction.owner.player.getPlayer().sendMessage("Somone bid on your auction #"+auction.id+"!");    
+    if (!(auction.owner instanceof ServerBidder)&&(auction.owner.player.isOnline()))
+        if (auction.owner.playerNotification)
+            auction.owner.player.getPlayer().sendMessage("Someone bid on your auction #"+auction.id+"!");    
     }
 
     @Override

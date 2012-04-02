@@ -5,6 +5,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -23,6 +24,7 @@ public class RemoveCommand extends AbstractCommand
         {
             sender.sendMessage("/ah remove <AuctionID>");
             sender.sendMessage("/ah remove p:<Player>");//TODO /ah confirm
+            sender.sendMessage("/ah remove Server");
             sender.sendMessage("/ah remove all");
             return true;
         }
@@ -35,7 +37,11 @@ public class RemoveCommand extends AbstractCommand
                 if (sender.hasPermission("auctionhouse.delete.all"))
                 {
                     int max = AuctionManager.getInstance().auctions.size();
-                    if (max == 0) sender.sendMessage("Info: No Auctions detected!");
+                    if (max == 0)
+                    {
+                        sender.sendMessage("Info: No Auctions detected!");
+                        return true;
+                    }
                     for (int i=max-1;i>=0;--i)
                     {
                         AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().auctions.get(i));
@@ -47,6 +53,28 @@ public class RemoveCommand extends AbstractCommand
                 return true;
             }
             else
+            {
+            if (arguments.getString("1").equalsIgnoreCase("Server"))
+            {
+                if (sender.hasPermission("auctionhouse.delete.server"))
+                {
+                    int max = ServerBidder.getInstance().getAuctions().size();
+                    if (max == 0)
+                    {
+                        sender.sendMessage("Info: No ServerAuctions detected!");
+                        return true;
+                    }
+                    for (int i=max-1;i>=0;--i)
+                    {
+                        AuctionManager.getInstance().cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
+                    }
+                    sender.sendMessage("Info: All ServerAuctions deleted!");
+                    return true;
+                }
+                sender.sendMessage("You do not have Permission to delete all ServerAuctions!");
+                return true;
+            }    
+            }
             {
                 Integer id = arguments.getInt("1");
                 if (id != null)
@@ -61,9 +89,16 @@ public class RemoveCommand extends AbstractCommand
                         sender.sendMessage("You do not have Permission to delete Auctions!");
                         return true;
                     }
+                    if(AuctionManager.getInstance().getAuction(id).owner instanceof ServerBidder)
+                        if (!(sender.hasPermission("auctionhouse.delete.server")))
+                        {
+                            sender.sendMessage("You do not have Permission to delete ServerAuctions!");
+                            return true;
+                        }
                     AuctionHouse.debug("Remove per Id");
-                        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
-                    sender.sendMessage("Info:Removed auction #"+id);
+                    ItemStack item=AuctionManager.getInstance().getAuction(id).item;
+                    AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));      
+                    sender.sendMessage("Info: Removed auction #"+id+" "+item.toString());
                     return true;
                 }
                 sender.sendMessage("Error: Invalid Command!");
@@ -88,20 +123,25 @@ public class RemoveCommand extends AbstractCommand
                         return true;
                     }}
                 else
-                {    if (!(sender.hasPermission("auctionhouse.delete.player.other")))
+                {   if (!(sender.hasPermission("auctionhouse.delete.player.other")))
                     {
                         sender.sendMessage("You do not have Permission to delete all Auctions of a Player!");
                         return true;
                     }}
                 
-                if(!(player.activeBids.isEmpty()))
+                if(!(player.getAuctions().isEmpty()))
                 {    
                     int bids = player.activeBids.size();    
-                    while (player.activeBids.size()>0)
-                    {
-                        AuctionManager.getInstance().cancelAuction(player.getAuctions(player).get(0));
-                    }
-                    sender.sendMessage("Info:Removed "+bids+" auctions of "+player.player.toString());
+                    for (int i=bids;i >=0 ;--i)
+                        {
+                            if (player.activeBids.get(i).owner==player)
+                            {
+                                AuctionManager.getInstance().cancelAuction(player.getAuctions(player).get(0));
+                                AuctionHouse.debug("Remove per Player");
+                            }
+                        }
+                    sender.sendMessage("Info:Removed "+(player.activeBids.size()-bids)+
+                                       " auctions of "+player.player.getName());
                     return true;
                 }
                 sender.sendMessage("Info: Player \""+arguments.getString("p")+"\" has no Auctions!");

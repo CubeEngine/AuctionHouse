@@ -27,23 +27,32 @@ public class ItemContainer {
         this.itemList.add(new AuctionItem(auction));
     }
 
-    public void giveNextItem ()
+    public boolean giveNextItem ()
     {
         Player player = this.bidder.player.getPlayer();
         AuctionItem auctionItem = this.itemList.pollFirst();
+        if (auctionItem == null)
+            return false;
+        if (auctionItem.bidder == this.bidder)
+            player.sendMessage("Info: Receiving aborted Auction with "+auctionItem.item.toString());
+        else   
+            player.sendMessage("Info: Receiving "+auctionItem.item.toString()+
+                            " for "+auctionItem.price+
+                            " from "+auctionItem.owner+
+                            " at "+DateFormatUtils.formatUTC(auctionItem.date, "MMM dd"));
         
-        player.sendMessage("Info: Receiving "+auctionItem.item.toString()+
-                           " for "+auctionItem.price+
-                           " from "+auctionItem.owner+
-                           " at "+DateFormatUtils.formatUTC(auctionItem.date, "MMM dd"));
         ItemStack remain = player.getInventory().addItem(auctionItem.item).get(0);
         if (remain==null)
-            AuctionHouse.debug("Player: "+player.getName()+": all Items received");
-        else
         {
-            player.sendMessage("Info: Could not give all Items. Remains are stored again!");
-            itemList.add(new AuctionItem(remain,bidder));
+            AuctionHouse.debug("Player: "+player.getName()+": all Items received");
+            return true;
         }
             
+        else
+        {
+            player.sendMessage("Info: Could not retrieve all Items. Remains are stored again!");
+            itemList.addFirst(new AuctionItem(remain,bidder));
+            return true;
+        }
     }
 }

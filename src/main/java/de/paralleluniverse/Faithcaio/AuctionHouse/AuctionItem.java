@@ -16,11 +16,21 @@ public class AuctionItem {
     
     public AuctionItem (Auction auction)
     {
-        this.bidder = auction.bids.peek().getBidder();
-        this.item = auction.item;
+        if (auction.bids.isEmpty())
+        {
+            this.bidder = auction.owner;
+            this.price = 0.0;
+        } 
+        else
+        {
+          this.bidder = auction.bids.peek().getBidder();
+          this.price = auction.bids.peek().getAmount();
+        }
+        this.item= auction.item.clone();// = new ItemStack(auction.item.getType(),auction.item.getAmount());
         this.date = System.currentTimeMillis();
         this.owner = auction.owner.player.getName();
-        this.price = auction.bids.peek().getAmount();
+        AuctionHouse.debug("ItemContainer Filled with: "+this.item.toString());
+        
     }
     public AuctionItem (ItemStack item, Bidder bidder)
     {

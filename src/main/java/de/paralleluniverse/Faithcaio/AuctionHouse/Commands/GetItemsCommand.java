@@ -1,6 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
+import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
 import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,9 @@ public class GetItemsCommand extends AbstractCommand{
             //TODO Use sign
             return true;
         }
-        Bidder.getInstance((Player)sender).itemContainer.giveNextItem();
+        AuctionHouse.debug(sender.getName()+": Receiving Items");
+        if (!(Bidder.getInstance((Player)sender).itemContainer.giveNextItem()))
+            sender.sendMessage("Your ItemContainer is empty!");   
         return true;
     }
     @Override

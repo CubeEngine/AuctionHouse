@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 
 /**
  *
@@ -68,12 +69,35 @@ public class SearchCommand extends AbstractCommand
         int max = auctionlist.size();
         for (int i=0;i<max;++i)
         {
-        sender.sendMessage("#"+auctionlist.get(i).id+": "+auctionlist.get(i).item.toString()+
-                           " Leading Bidder: "+auctionlist.get(i).bids.peek().getBidder().player.getName()+
-                           "with "+auctionlist.get(i).bids.peek().getAmount()+
-                           "Auction ends: "+
-                           DateFormatUtils.format(auctionlist.get(i).auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat)
-                          );       
+            Auction auction = auctionlist.get(i);
+            String output = "";
+            output += "#"+auction.id+": ";
+            output += auction.item.toString();
+            if (auction.item.getEnchantments().size()>0)
+            {
+                output += " Enchantments: ";
+                for (Enchantment enchantment : auction.item.getEnchantments().keySet())
+                {
+                    output += enchantment.toString() + ":";
+                    output += auction.item.getEnchantments().get(enchantment).toString() +" ";
+                }
+            }
+            if (auction.bids.peek().getBidder().equals(auction.owner))
+            {
+                output += "StartBid is: "+auction.bids.peek().getAmount();
+            }
+            else
+            {
+                if (auction.bids.peek().getBidder() instanceof ServerBidder)
+                    output += "Leading Bidder: Server";
+                else
+                    output += "Leading Bidder: "+auction.bids.peek().getBidder().player.getName();
+                output += " with "+auction.bids.peek().getAmount();
+            }
+            output += " Auction ends: ";
+            output += DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat);
+            
+            sender.sendMessage(output);
         }
     }
 

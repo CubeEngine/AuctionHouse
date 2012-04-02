@@ -91,12 +91,18 @@ public class AuctionManager
         public boolean cancelAuction(Auction auction)
     {
         this.freeIds.push(auction.id); 
-        Bidder.getInstance(auction.owner.player.getPlayer()).removeAuction(auction);
-        while (!(auction.bids.isEmpty()))
+        if (!(auction.owner instanceof ServerBidder))
         {
-            Bidder.getInstance( auction.bids.peek().getBidder().player.getPlayer() ).removeAuction(auction);
-            auction.bids.pop();        
+            Bidder.getInstance(auction.owner.player.getPlayer()).removeAuction(auction);
+            while (!(auction.bids.isEmpty()))
+            {
+                Bidder.getInstance( auction.bids.peek().getBidder().player.getPlayer() ).removeAuction(auction);
+                auction.bids.pop();        
+            }
+            auction.owner.itemContainer.addItem(auction);
         }
+        else
+            ServerBidder.getInstance().removeAuction(auction);
         this.auctions.remove(auction);
         //TODO delete Auction completly
         auction.abortAuction();
