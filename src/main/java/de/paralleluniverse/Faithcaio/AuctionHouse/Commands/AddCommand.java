@@ -288,6 +288,7 @@ public class AddCommand extends AbstractCommand
             if (bidder.materialSub.contains(auction.item.getType()))
                 bidder.addSubscription(auction);
         }
+        //AuctionTimer.getInstance().schedule(AuctionManager.getInstance());
         
         return true;
     }

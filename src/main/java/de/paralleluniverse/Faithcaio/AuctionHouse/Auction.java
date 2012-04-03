@@ -62,7 +62,7 @@ public class Auction
             {
                 this.bids.push(new Bid(bidder, amount));
                 return true;
-            }//TODO für später   getEconomy().withdrawPlayer(player.getName(), price).transactionSuccess()
+            }
             bidder.player.getPlayer().sendMessage("Error: You already bid too much. You would not have enough money to buy everything.");
             return false;
         }

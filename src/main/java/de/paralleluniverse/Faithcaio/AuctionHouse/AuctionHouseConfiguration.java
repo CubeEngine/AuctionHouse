@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,9 +41,11 @@ public class AuctionHouseConfiguration
     
     private List<Integer> convertlist(List<String> str)
     {
-        List<Integer> list = null;
+        List<Integer> list = new ArrayList<Integer>();
         for (int i=0;i<str.size();++i)
+        {
             list.add(this.convert(str.get(i)));
+        }
         return list;
         
     }

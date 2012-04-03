@@ -89,7 +89,7 @@ public class AuctionManager
         return auctionlist;
     }
     
-        public boolean cancelAuction(Auction auction)
+    public boolean cancelAuction(Auction auction)
     {
         this.freeIds.push(auction.id); 
         if (!(auction.owner instanceof ServerBidder))
@@ -106,6 +106,23 @@ public class AuctionManager
             ServerBidder.getInstance().removeAuction(auction);
         this.auctions.remove(auction);
         auction.abortAuction();
+        return true;   
+    }
+    
+    public boolean finishAuction(Auction auction)
+    {
+        this.freeIds.push(auction.id); 
+        if (!(auction.owner instanceof ServerBidder))
+        {
+            Bidder.getInstance(auction.owner.player.getPlayer()).removeAuction(auction);
+            while (!(auction.bids.isEmpty()))
+            {
+                Bidder.getInstance( auction.bids.peek().getBidder().player.getPlayer() ).removeAuction(auction);
+                auction.bids.pop();        
+            }
+        }
+        else
+            ServerBidder.getInstance().removeAuction(auction);
         return true;   
     }
     

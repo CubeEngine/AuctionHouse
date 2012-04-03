@@ -61,9 +61,13 @@ public class Bidder {
     public double getTotalBidAmount()
     {
         double total = 0;
-        List<Auction> auctionlist = this.getLeadingAuctions(this);
-        for (int i=0;i<auctionlist.size();++i)
+        List<Auction> auctionlist;
+        if (!(this.getLeadingAuctions(this).isEmpty()))
+        {   
+            auctionlist = this.getLeadingAuctions(this);
+            for (int i=0;i<auctionlist.size();++i)
             total += auctionlist.get(i).bids.peek().getAmount();
+        }
         return total;
     }
     
