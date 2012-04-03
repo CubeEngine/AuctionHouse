@@ -51,6 +51,8 @@ public class AuctionHouse extends JavaPlugin
         this.economy = this.setupEconomy();
         AuctionTimer.getInstance().firstschedule(AuctionManager.getInstance());
         
+        this.pm.registerEvents(new Events(),this);
+        
         BaseCommand baseCommand = new BaseCommand(this);
         baseCommand
             .registerSubCommand(new         HelpCommand(baseCommand))

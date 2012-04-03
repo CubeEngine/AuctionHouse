@@ -231,6 +231,14 @@ public class AddCommand extends AbstractCommand
             }
         }
 
+        for(ItemStack item : config.auction_blacklist)
+        {
+            if (item.getType().equals(newItem.getType()))
+            {
+                sender.sendMessage("Error: This Item is blacklisted!"); 
+                return true;
+            }    
+        }
         Auction newAuction;
         for (int i=0; i<multiAuction; i++)
         {

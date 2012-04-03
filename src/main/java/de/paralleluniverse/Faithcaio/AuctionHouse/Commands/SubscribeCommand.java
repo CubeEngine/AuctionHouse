@@ -12,7 +12,7 @@ public class SubscribeCommand extends AbstractCommand{
 
     public SubscribeCommand (BaseCommand base) 
     {
-        super("Sub",base);//TODO auf subscription ändern mit aliases
+        super("Sub",base);//TODO auf subscribe ändern mit aliases
     }
     public boolean execute(CommandSender sender, String[] args)
     {

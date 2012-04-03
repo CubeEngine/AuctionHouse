@@ -1,6 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
+import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -128,13 +129,14 @@ public class RemoveCommand extends AbstractCommand
                 
                 if(!(player.getAuctions().isEmpty()))
                 {    
-                    int bids = player.getActiveBids().size();    
-                    for (int i=bids;i >=0 ;--i)
+                    int bids = player.getActiveBids().size();
+                    List<Auction> auctions = player.getActiveBids();
+                    for (int i=0;i<bids;++i)
                         {
-                            if (player.getActiveBids().get(i).owner==player)
+                            if (auctions.get(i).owner == player)
                             {
-                                AuctionManager.getInstance().cancelAuction(player.getAuctions(player).get(0));
                                 AuctionHouse.debug("Remove per Player");
+                                AuctionManager.getInstance().cancelAuction(auctions.get(i));
                             }
                         }
                     sender.sendMessage("Info:Removed "+(player.getActiveBids().size()-bids)+

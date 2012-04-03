@@ -36,7 +36,9 @@ public class AuctionTimer
                     int size = auctionlist.size();
                     for (int i=0;i<size;++i)
                     {
+                        
                         Auction auction = auctionlist.get(i);
+                        AuctionHouse.debug("Auction Endcheck #"+auction.id);
                         if ((System.currentTimeMillis()+600>auction.auctionEnd)
                           &&(System.currentTimeMillis()-600<auction.auctionEnd)) 
                         {
@@ -60,26 +62,27 @@ public class AuctionTimer
                                     if (winner.isOnline())
                                         winner.getPlayer().sendMessage("Congratulations! You just bought: "+auction.item.toString()+
                                                                             " for "+econ.format(auction.bids.peek().getAmount()));
-                                    //TODO Meldung beim Login für offline Player!
+                                    else
+                                        winner.notify = true;
                                     manager.finishAuction(auction);
-                                    break; //NPE Prevention
+                                    continue; //NPE Prevention
                                 }
                                 else
                                 {
                                     if (winner.isOnline())
-                                        winner.getPlayer().sendMessage("Not enough money to pay what you bid for!");
+                                    {   winner.getPlayer().sendMessage("&2Not enough money to pay what you bid for!");
+                                        winner.getPlayer().sendMessage("&4 You will be charged "+config.auction_punish+"% of your Bid.");
+                                        winner.getPlayer().sendMessage("&5 Next time do not bid if you know you can not spare the money!");
+                                    }
                                     rPlayer.add(winner);
                                     econ.withdrawPlayer(winner.getName(), auction.bids.peek().getAmount()*config.auction_punish / 100);
-                                    //TODO Strafe für zuwenig Geld haben aber voll viel bieten wollen
-                                    //TODO Strafe = 1/5 des Preises config!!!
-                                    //TODO wenn Strafe erhalten darf nicht Höchstbietender werden!!!! ok s.o.
                                     winner.removeAuction(auction);
                                     auction.bids.pop();
                                 }
                             }
                             if (auction.bids.peek().getBidder()==auction.owner)
                             {
-                                //TODO offline Meldung an Owner Auktion Failed
+                                auction.owner.notifyCancel = true;
                                 if (auction.owner instanceof ServerBidder)
                                     AuctionHouse.log("No Bids | Auction failed!");
                                 else

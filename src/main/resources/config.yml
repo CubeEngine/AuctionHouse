@@ -11,5 +11,7 @@ auction:
   timeFormat: "dd/MM/yy HH:mm"
   notifyTime: [5m,1m,30s,6s,4s,2s]
   punish: 20
-  blacklist: []
+  itemContainerLength: 2
+  blacklist: [7,8,9,10,11,26,34,36,51,52,55,59,60,63,64,68,71,74,75,83,90,92,93,94,104,105,115,117,118,119,120]
+  
 

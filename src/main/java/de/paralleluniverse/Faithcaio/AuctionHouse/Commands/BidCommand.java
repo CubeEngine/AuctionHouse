@@ -1,7 +1,5 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.List;
 import org.bukkit.command.CommandSender;
@@ -71,15 +69,19 @@ public class BidCommand extends AbstractCommand
             AuctionHouse.debug("Bid on Material");
             
             List<Auction> auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("i"));
-            AuctionSort sorter = new AuctionSort();
-            
             if (auctionlist.isEmpty())
             {
                 sender.sendMessage("Info: No Auctions with "+arguments.getMaterial("i").toString());
                 return true;
-            }   
+            } 
+            AuctionSort sorter = new AuctionSort();
             sorter.SortAuction(auctionlist, "quantity",quantity);
             sorter.SortAuction(auctionlist, "price");
+            for (Auction auction2 : auctionlist)
+            {
+                if (auction2.owner==Bidder.getInstance((Player)sender))
+                    auctionlist.remove(auction2);
+            }
             if (auctionlist.isEmpty())
             {
                 sender.sendMessage("Info: No Auctions with at least "+ quantity +" "+arguments.getMaterial("i").toString());
@@ -90,7 +92,7 @@ public class BidCommand extends AbstractCommand
             if (bidAmount != null)
             {
                 AuctionHouse.debug("BidAmount Set");
-                if (auction.owner==(Player)sender)
+                if (auction.owner==Bidder.getInstance((Player)sender))
                 {
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;
@@ -125,8 +127,7 @@ public class BidCommand extends AbstractCommand
                     return true;
                 }
                 auction = AuctionManager.getInstance().getAuction(id);
-                
-                if (auction.owner==(Player)sender)
+                if (auction.owner==Bidder.getInstance((Player)sender))
                 {
                     sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
                     return true;

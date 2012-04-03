@@ -17,9 +17,13 @@ public class Bidder {
    private final ArrayList<Auction> subscriptions;
    private final ArrayList<ItemStack> materialSub;
    private final OfflinePlayer player;
-   
+  
    private final ItemContainer itemContainer;
+   
    public boolean playerNotification = false;
+   public boolean notify = false;
+   public boolean notifyCancel = false;
+   public boolean notifyContainer = false;
    
    private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
    

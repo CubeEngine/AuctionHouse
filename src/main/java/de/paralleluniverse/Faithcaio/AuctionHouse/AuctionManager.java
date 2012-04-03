@@ -79,9 +79,11 @@ public class AuctionManager
         int size = this.auctions.size();
         for (int i = 0;i < size;i++)
         {
-            if (this.auctions.get(i)==null) return null;
-            if ((this.auctions.get(i).item.getType() == material.getType()
-              &&(this.auctions.get(i).item.getData()==material.getData())))
+            if (this.auctions.get(i)==null){
+                return null;
+            }
+            if ((this.auctions.get(i).item.getType()==material.getType()
+              &&(this.auctions.get(i).item.getDurability()==material.getDurability())))
             {
                 auctionlist.add( this.auctions.get(i) ); 
             }
@@ -100,7 +102,7 @@ public class AuctionManager
              {   
                 public int compare(Object a1,Object a2)
                 {
-                  if (((Auction)a1).auctionEnd <= ((Auction)a2).auctionEnd) return 1;
+                  if (((Auction)a1).auctionEnd >= ((Auction)a2).auctionEnd) return 1;
                   //else
                   return -1;
                 }

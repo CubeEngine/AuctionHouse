@@ -73,7 +73,6 @@ public class Arguments {
     {
         String tmp = this.getString(name);
         tmp = tmp.replace(".", ":");
-        
         int parambreak = tmp.indexOf(":");
         if (parambreak == -1)
         {
