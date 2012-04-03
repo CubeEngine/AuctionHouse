@@ -28,7 +28,10 @@ public class AuctionItem {
         }
         this.item= auction.item.clone();// = new ItemStack(auction.item.getType(),auction.item.getAmount());
         this.date = System.currentTimeMillis();
-        this.owner = auction.owner.player.getName();
+        if (auction.owner instanceof ServerBidder)
+           this.owner = "Server";
+        else
+            this.owner = auction.owner.player.getName();
         AuctionHouse.debug("ItemContainer Filled with: "+this.item.toString());
         
     }

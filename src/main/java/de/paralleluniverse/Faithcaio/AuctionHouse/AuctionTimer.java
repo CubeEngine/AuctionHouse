@@ -1,9 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -40,8 +37,8 @@ public class AuctionTimer
                     for (int i=0;i<size;++i)
                     {
                         Auction auction = auctionlist.get(i);
-                        if ((System.currentTimeMillis()+501>auction.auctionEnd)
-                          &&(System.currentTimeMillis()-500<auction.auctionEnd)) 
+                        if ((System.currentTimeMillis()+600>auction.auctionEnd)
+                          &&(System.currentTimeMillis()-600<auction.auctionEnd)) 
                         {
                             AuctionHouse.debug("Auction ended!");
                             while (auction.owner != auction.bids.peek().getBidder())
@@ -60,7 +57,10 @@ public class AuctionTimer
                                     manager.finishAuction(auction);
                                     break; //NPE Prevention
                                 }
+                                if (winner.player.isOnline())
+                                    winner.player.getPlayer().sendMessage("Not enough money to pay what you bid for!");
                                 //TODO Strafe für zuwenig Geld haben aber voll viel bieten wollen
+                                //TODO wenn Strafe erhalten darf nicht Höchstbietender werden!!!!
                                 winner.removeAuction(auction);
                                 auction.bids.pop();
                             }
@@ -92,51 +92,70 @@ public class AuctionTimer
                 AuctionManager manager = AuctionManager.getInstance();
                 if (!(manager.getAuctions().isEmpty()))
                 {
+                    List<Player> playerlist = new ArrayList<Player>();
+                    for (Bidder bidder : Bidder.getInstances().values())
+                    {
+                        if (bidder.player.isOnline() && bidder.playerNotification)
+                            playerlist.add(bidder.player.getPlayer());
+                    }
+                    if (playerlist.size()==0) return; //No Player online to notify
                     List<Auction> auctionlist = manager.getEndingAuctions();
-                    int size = auctionlist.size();
+                    int size = auctionlist.size();  
                     int note = config.auction_notifyTime.size();
-                    boolean breaker = false;
+                    long nextAuction = auctionlist.get(0).auctionEnd - System.currentTimeMillis();
+                    if (config.auction_notifyTime.get(0)+600<nextAuction) return; //No Notifications now
                     for (int i=0;i<size;++i)
                     {
-                        if (breaker) break; //last auction needed no Notification
-                        long nextAuction = auctionlist.get(i).auctionEnd - System.currentTimeMillis();
-                        for (int j=0;i<note;++i)
+                        
+                        Auction auction = auctionlist.get(i);
+                        nextAuction = auction.auctionEnd - System.currentTimeMillis();
+                        for (int j=0;j<note;++j)
                         {
-                            if((config.auction_notifyTime.get(j)+501>nextAuction)
-                             &&(config.auction_notifyTime.get(j)-500<nextAuction))
+                            if((config.auction_notifyTime.get(j)+600>nextAuction)
+                            &&(config.auction_notifyTime.get(j)-600<nextAuction))
                             {
-                                Auction auction = manager.getEndingAuctions().get(0);
-                                List<Player> playerlist  = Arrays.asList(plugin.server.getOnlinePlayers());
+                                note=j+1;
+                                AuctionHouse.debug("Notify Time!");
                                 int max=playerlist.size();
                                 for (int k = 0;k<max;++k)
                                 {
-                                    Bidder player = Bidder.getInstance(playerlist.get(k));
-                                    if (!player.playerNotification)
+                                    if (Bidder.getInstance(playerlist.get(k)).subscriptions.contains(auction))
                                     {
-                                        playerlist.remove(k);
-                                        continue;
-                                    }
-
-                                    if (!player.getAuctions().contains(auction))
-                                    {
-                                        playerlist.remove(k);
-                                        continue;
-                                    }
-                                    if (player==auction.owner)
-                                        playerlist.get(k).sendMessage("Your auction #"+auction.id+" is ending soon!");
-                                    else
-                                    {
-                                        if (player==auction.bids.peek().getBidder())
-                                            playerlist.get(k).sendMessage("Auction #"+auction.id+" is ending soon! You are the highest Bidder now!");
+                                        int last = config.auction_notifyTime.size()-j;
+                                        if (playerlist.get(k)==auction.owner)
+                                        {
+                                            if (last > 3)
+                                                playerlist.get(k).sendMessage("Your auction #"+auction.id+" is ending soon!");
+                                            else if (last == 3)
+                                                playerlist.get(k).sendMessage("Your auction #"+auction.id+" ends in 3...");
+                                            else if (last == 2)
+                                                playerlist.get(k).sendMessage("Your auction #"+auction.id+" ends in 2..");
+                                            else if (last == 1)
+                                                playerlist.get(k).sendMessage("Your auction #"+auction.id+" ends in 1.");
+                                        }
                                         else
-                                            playerlist.get(k).sendMessage("Auction #"+auction.id+" is ending soon! You are not the highest Bidder!");
+                                        {
+                                            String out = "Auction #"+auction.id;
+                                            if (last > 3)
+                                                out += " is ending soon!";
+                                            else if (last == 3)          
+                                                out += " ends in 3...";
+                                            else if (last == 2)          
+                                                out += " ends in 2..";
+                                            else if (last == 1)          
+                                                out += " ends in 1.";
+                                            
+                                            if (playerlist.get(k) ==auction.bids.peek().getBidder().player)
+                                                out += " You are the highest Bidder now!";
+                                            else
+                                                out += " You are not the highest Bidder!";
+                                            
+                                            playerlist.get(k).sendMessage(out);
+                                        }    
                                     }
                                 }
-                                AuctionHouse.debug("Notified Users!");
-                                breaker = false; //Go Notify Next Auction
-                                break;
+                                continue; // out of j-loop
                             }
-                            breaker = true;
                         }
                     }
                 }

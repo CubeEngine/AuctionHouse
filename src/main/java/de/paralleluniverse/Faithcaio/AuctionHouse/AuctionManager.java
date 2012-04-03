@@ -123,6 +123,7 @@ public class AuctionManager
         }
         else
             ServerBidder.getInstance().removeAuction(auction);
+        this.auctions.remove(auction);
         return true;   
     }
     

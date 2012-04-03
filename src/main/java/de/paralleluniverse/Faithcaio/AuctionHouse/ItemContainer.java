@@ -33,7 +33,7 @@ public class ItemContainer {
         AuctionItem auctionItem = this.itemList.pollFirst();
         if (auctionItem == null)
             return false;
-        if (auctionItem.bidder == this.bidder)
+        if (auctionItem.owner == this.bidder.player.getName())
             player.sendMessage("Info: Receiving aborted Auction with "+auctionItem.item.toString());
         else   
             player.sendMessage("Info: Receiving "+auctionItem.item.toString()+
