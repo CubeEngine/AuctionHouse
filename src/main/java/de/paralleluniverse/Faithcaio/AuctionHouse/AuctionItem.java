@@ -1,18 +1,17 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import org.bukkit.inventory.ItemStack;
-
 /**
  *
  * @author Faithcaio
  */
 public class AuctionItem {
 
-    Bidder bidder;
-    ItemStack item;
-    long date;
-    String owner;
-    Double price;
+    protected Bidder bidder;
+    protected ItemStack item;
+    protected long date;
+    protected String owner;
+    protected Double price;
     
     public AuctionItem (Auction auction)
     {
@@ -31,16 +30,16 @@ public class AuctionItem {
         if (auction.owner instanceof ServerBidder)
            this.owner = "Server";
         else
-            this.owner = auction.owner.player.getName();
+            this.owner = auction.owner.getName();
         AuctionHouse.debug("ItemContainer Filled with: "+this.item.toString());
-        
     }
+    
     public AuctionItem (ItemStack item, Bidder bidder)
     {
         this.bidder = bidder;
         this.item = item;
         this.date = System.currentTimeMillis();
-        this.owner = bidder.player.getName();
+        this.owner = bidder.getName();
         this.price = 0.0;
     }
 }

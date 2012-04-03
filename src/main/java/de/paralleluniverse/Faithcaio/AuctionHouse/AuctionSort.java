@@ -1,10 +1,8 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import org.bukkit.inventory.ItemStack;
 
 /**
  *
@@ -69,18 +67,19 @@ public class AuctionSort {
             Collections.sort(auctionlist, compareQuantity);
         return auctionlist;    
     }
+    
     public List<Auction> SortAuction (List<Auction> auctionlist,String type,int quantity)
     {
         this.SortAuction(auctionlist, type);
         
         if (type.equalsIgnoreCase("quantity"))
         {
-            if (auctionlist.size() == 0) return null;
+            if (auctionlist.isEmpty()) return null;
             while (auctionlist.get(auctionlist.size()-1).item.getAmount() < quantity)
             {
                 AuctionHouse.debug("removing low quantity remain:"+auctionlist.size());
                 auctionlist.remove(auctionlist.size()-1);
-                if (auctionlist.size() == 0) return null;
+                if (auctionlist.isEmpty()) return null;
             }
         }
         return auctionlist;

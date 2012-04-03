@@ -1,11 +1,10 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
+import org.bukkit.inventory.ItemStack;
 /**
  *
  * @author Faithcaio
@@ -70,9 +69,31 @@ public class Arguments {
         return Bidder.getInstance(AuctionHouse.getInstance().getServer().getOfflinePlayer(this.getString(name)));
     }
     
-    public Material getMaterial(String name)
+    public ItemStack getMaterial(String name)
     {
-        return Material.matchMaterial(this.getString(name));
+        String tmp = this.getString(name);
+        tmp = tmp.replace(".", ":");
+        
+        int parambreak = tmp.indexOf(":");
+        if (parambreak == -1)
+        {
+            return new ItemStack(Material.matchMaterial(tmp),1);
+        }
+        else
+        {
+            tmp  = tmp.substring(0, parambreak);
+            short tmp2;
+            try
+            {
+                tmp2 = Short.parseShort(tmp.substring(parambreak+1));
+            }
+            catch (NumberFormatException ex)
+            {
+                return null;
+            }
+            return new ItemStack(Material.matchMaterial(tmp),1,tmp2);
+        }
+           
     }
 
 

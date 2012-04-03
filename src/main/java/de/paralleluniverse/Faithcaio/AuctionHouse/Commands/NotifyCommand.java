@@ -1,10 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
-import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
+import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -54,6 +50,7 @@ public class NotifyCommand extends AbstractCommand{
     {
         return "/ah notify true|false|toggle";
     }
+    
     public String getDescription()
     {
         return "Changes weather Bidder receives automatic Notifications";

@@ -9,7 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 /**
  *
  * @author Faithcaio
@@ -19,8 +18,7 @@ public class AddCommand extends AbstractCommand
     private static AddCommand instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    
-    
+
     public AddCommand(BaseCommand base)
     {
         super("add", base);
@@ -41,7 +39,7 @@ public class AddCommand extends AbstractCommand
         //TODO /ah confirm
         ItemStack newItem = null;
         Material newMaterial;
-        Integer amount = 1;
+        Integer amount;
         Double startBid = 0.0;
         long auctionEnd = 1;
         Integer multiAuction = 1;
@@ -51,6 +49,7 @@ public class AddCommand extends AbstractCommand
             sender.sendMessage("You are not allowed to add an Auction!");
             return true;
         }
+        
         if (args.length < 1)
         {
             sender.sendMessage("/ah add hand [StartBid] [Length] [m:<quantity>]");
@@ -191,7 +190,6 @@ public class AddCommand extends AbstractCommand
                             DateFormatUtils.format(config.auction_maxLength,"dd:hh:mm:ss" ));
                     return true;
                 }
-
             }
             else
             {
@@ -199,6 +197,7 @@ public class AddCommand extends AbstractCommand
                 AuctionHouse.debug("No Auction Length Set to default");
             }
         }
+        
         if (sender instanceof ConsoleCommandSender)
         {
             sender.sendMessage("Info: Creating Auction as Server...");   
@@ -272,24 +271,22 @@ public class AddCommand extends AbstractCommand
     
     private boolean RegisterAuction(Auction auction,CommandSender sender)
     {
-        if (AuctionManager.getInstance().freeIds.isEmpty())
+        if (AuctionManager.getInstance().isEmpty())
             return false;
-        AuctionManager.getInstance().addAuction(auction);        //Give Auction to Manager
+        AuctionManager.getInstance().addAuction(auction);
         AuctionHouse.debug("Manager OK");
         
         if (sender instanceof ConsoleCommandSender)
             ServerBidder.getInstance().addAuction(auction);
         else
-            Bidder.getInstance((Player)sender).addAuction(auction);  //Give Auction to Bidder
+            Bidder.getInstance((Player)sender).addAuction(auction);
         AuctionHouse.debug("Bidder OK");
         
-        for (Bidder bidder : Bidder.getInstances().values())        //Add Material Subscriptions
+        for (Bidder bidder : Bidder.getInstances().values())
         {
-            if (bidder.materialSub.contains(auction.item.getType()))
+            if (bidder.getMatSub().contains(new ItemStack( auction.item.getType() , 1 , auction.item.getDurability())))
                 bidder.addSubscription(auction);
         }
-        //AuctionTimer.getInstance().schedule(AuctionManager.getInstance());
-        
         return true;
     }
     
@@ -305,6 +302,7 @@ public class AddCommand extends AbstractCommand
     {
         return "/ah add <hand|<<Item><Amount>>> [StartBid] [Length] [m:<quantity>]";
     }
+    
     public String getDescription()
     {
         return "Adds an auction";
@@ -315,7 +313,7 @@ public class AddCommand extends AbstractCommand
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
         matcher.find();
-        int tmp = 0;
+        int tmp;
         try
         {
             tmp = Integer.valueOf(String.valueOf(matcher.group(1)));

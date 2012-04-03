@@ -62,7 +62,8 @@ public class AuctionHouse extends JavaPlugin
             .registerSubCommand(new      UndoBidCommand(baseCommand))
             .registerSubCommand(new       NotifyCommand(baseCommand))
             .registerSubCommand(new     GetItemsCommand(baseCommand))
-            .registerSubCommand(new SubscribeCommand(baseCommand))
+            .registerSubCommand(new    SubscribeCommand(baseCommand))
+            .registerSubCommand(new         ListCommand(baseCommand))    
         .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);
 

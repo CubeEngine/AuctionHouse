@@ -19,8 +19,6 @@ public class InfoCommand extends AbstractCommand
     {
         super("info", base);
     }
-
-    
     public boolean execute(CommandSender sender, String[] args)
     {
         if (args.length < 1)
@@ -59,7 +57,7 @@ public class InfoCommand extends AbstractCommand
             if (arguments.getString("1").equalsIgnoreCase("Auctions"))//own auctions
             {
                 AuctionHouse.debug("own Auctions");
-                List<Auction> auctions = Bidder.getInstance((Player)sender).getAuctions(Bidder.getInstance((Player)sender));
+                List<Auction> auctions = Bidder.getInstance((Player)sender).getOwnAuctions();
                 int max = auctions.size();
                 AuctionHouse.debug("max: "+max);
                 if (max == 0) sender.sendMessage("Info: No own Auctions started!"); 
@@ -75,7 +73,7 @@ public class InfoCommand extends AbstractCommand
                 if (arguments.getString("1").equalsIgnoreCase("Leading"))
                 {
                     AuctionHouse.debug("Leading Auctions");
-                    List<Auction> auctions = Bidder.getInstance((Player)sender).getLeadingAuctions(Bidder.getInstance((Player)sender));
+                    List<Auction> auctions = Bidder.getInstance((Player)sender).getLeadingAuctions();
                     int max = auctions.size();
                     AuctionHouse.debug("max: "+max);
                     if (max == 0) sender.sendMessage("Info: No Leading Auctions!"); 
@@ -125,7 +123,7 @@ public class InfoCommand extends AbstractCommand
                                 List<Auction> auctions = player.getAuctions(player);
                                 int max = auctions.size();
                                 AuctionHouse.debug("max: "+max);
-                                if (max == 0) sender.sendMessage("Info: "+player.player.getName()+" has no Auctions!"); 
+                                if (max == 0) sender.sendMessage("Info: "+player.getName()+" has no Auctions!"); 
                                 for (int i=0;i<max;++i)
                                 {
                                     Auction auction = auctions.get(i);
@@ -134,7 +132,8 @@ public class InfoCommand extends AbstractCommand
                             }
                             else
                             {
-                                sender.sendMessage("Info: Player \""+arguments.getString("1")+"\" does not exist or has no Auction!");
+                                sender.sendMessage("Info: Player \""+arguments.getString("1")+
+                                                   "\" does not exist or has no Auction!");
                             }
                         }
                     }
@@ -167,7 +166,7 @@ public class InfoCommand extends AbstractCommand
             if (auction.bids.peek().getBidder() instanceof ServerBidder)
                 output += "Leading Bidder: Server";
             else
-                output += "Leading Bidder: "+auction.bids.peek().getBidder().player.getName();
+                output += "Leading Bidder: "+auction.bids.peek().getBidder().getName();
             output += " with "+auction.bids.peek().getAmount();
         }
         output += " Auction ends: ";
@@ -178,7 +177,7 @@ public class InfoCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return "/ah info <<AuctionId>|<Player>|<Bids>|<Leading>|<Auctions>>";
+        return "/ah info <<AuctionId>|<Player>|<Bids>|<Leading>|<Auctions>|*Server>";
     }
     public String getDescription()
     {

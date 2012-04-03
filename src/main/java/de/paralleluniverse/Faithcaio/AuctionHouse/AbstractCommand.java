@@ -1,6 +1,5 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionDefault;

@@ -3,7 +3,6 @@ package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.List;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 
@@ -91,7 +90,7 @@ public class SearchCommand extends AbstractCommand
                 if (auction.bids.peek().getBidder() instanceof ServerBidder)
                     output += "Leading Bidder: Server";
                 else
-                    output += "Leading Bidder: "+auction.bids.peek().getBidder().player.getName();
+                    output += "Leading Bidder: "+auction.bids.peek().getBidder().getName();
                 output += " with "+auction.bids.peek().getAmount();
             }
             output += " Auction ends: ";

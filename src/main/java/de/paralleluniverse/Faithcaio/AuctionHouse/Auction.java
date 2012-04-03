@@ -2,7 +2,6 @@ package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
-
 /**
  * Represents an auction
  *
@@ -28,15 +27,10 @@ public class Auction
         this.bids.push(new Bid(owner, startBid));
     }
     
-    //Abort Auction
     public boolean abortAuction()
     {
-        //Rechte zum Abbrechen ?
-        //return false;
-        //
         while (!(this.bids.isEmpty()))
         {
-            //TODO Geld zurückgeben & Meldung wenn online sonst per mail (Essentials)?
             this.bids.pop();
         }
         return true;
@@ -46,29 +40,28 @@ public class Auction
     {
         if (amount <= 0) 
         {
-            bidder.player.getPlayer().sendMessage("Error: Bid must be greater than 0!");
+            bidder.getPlayer().sendMessage("Error: Bid must be greater than 0!");
             return false;
         }
         if (amount <= this.bids.peek().getAmount())
         {
-            bidder.player.getPlayer().sendMessage("Info: Bid is too low!");
+            bidder.getPlayer().sendMessage("Info: Bid is too low!");
             return false;
         }
-        if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.player.getName())>=amount)
-           ||bidder.player.getPlayer().hasPermission("auctionhouse.use.bid.infinite"))
+        if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName())>=amount)
+           ||bidder.getPlayer().hasPermission("auctionhouse.use.bid.infinite"))
         {
-            if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.player.getName()) - bidder.getTotalBidAmount() >= amount
-              ||bidder.player.getPlayer().hasPermission("auctionhouse.use.bid.infinite"))
+            if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) - bidder.getTotalBidAmount() >= amount
+              ||bidder.getPlayer().hasPermission("auctionhouse.use.bid.infinite"))
             {
                 this.bids.push(new Bid(bidder, amount));
                 return true;
             }
-            bidder.player.getPlayer().sendMessage("Error: You already bid too much. You would not have enough money to buy everything.");
+            bidder.getPlayer().sendMessage("Error: You already bid too much. You would not have enough money to buy everything.");
             return false;
         }
-        bidder.player.getPlayer().sendMessage("Error: Not enough money");
+        bidder.getPlayer().sendMessage("Error: Not enough money");
         return false;
-        
     }
     
     public boolean undobid(final Bidder bidder)
@@ -80,11 +73,9 @@ public class Auction
         if (bidder == this.owner)
             return false;
         AuctionHouse.debug("NoOwner OK");
-        
-        //calculate UndoTime from config
         long undoTime = config.auction_undoTime;
         if (undoTime < 0) //Infinite UndoTime
-          { undoTime = this.auctionEnd - this.bids.peek().getTimestamp(); }
+            undoTime = this.auctionEnd - this.bids.peek().getTimestamp();
         if ((System.currentTimeMillis() - this.bids.peek().getTimestamp()) < undoTime)
             return false;
         //else: Undo Last Bid

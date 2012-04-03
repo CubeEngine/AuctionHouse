@@ -5,12 +5,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.InvalidConfigurationException;
 
 public class AuctionHouseConfiguration
 {
-
-
     public final long     auction_undoTime;             //in d h m s | -1 is infinite
     public final int      auction_maxAuctions_overall;  //Overall
     public final int      auction_maxAuctions_player;   //per Player
@@ -20,8 +17,10 @@ public class AuctionHouseConfiguration
     public final List<String> auction_blacklist;        //Blacklist Materials
     public final String   auction_timeFormat;           //Time Format Output
     public final long     auction_standardLength;       //in d h m s
-    public final List<Integer>   auction_notifyTime;       //List with time in d h m s
+    public final List<Integer>   auction_notifyTime;    //List with time in d h m s
+    public final int      auction_punish;               //Punishment in % of Bid 0-100
     //TODO blacklist einbauen
+    
     public AuctionHouseConfiguration(Configuration config)
     {
         this.auction_maxAuctions_player = config.getInt("auction.maxAuctions.player");
@@ -30,6 +29,7 @@ public class AuctionHouseConfiguration
         this.auction_opCanCheat = config.getBoolean("auction.opCanCheat");
         this.auction_blacklist = config.getStringList("auction.blacklist");
         this.auction_timeFormat = config.getString("auction.timeFormat");
+        this.auction_punish = config.getInt("auction.punish");
         //TODO Preis fuer AuktionsErstellung (Formel mit Startgebot?)
         
         this.auction_undoTime = this.convert(config.getString("auction.undoTime"));
@@ -55,7 +55,7 @@ public class AuctionHouseConfiguration
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
         matcher.find();
-        int tmp = 0;
+        int tmp;
         try
         {
             tmp = Integer.valueOf(String.valueOf(matcher.group(1)));

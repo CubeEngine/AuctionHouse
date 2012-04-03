@@ -1,7 +1,4 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
-
-import org.bukkit.entity.Player;
-
 /**
  * Represents a bid by a player
  *

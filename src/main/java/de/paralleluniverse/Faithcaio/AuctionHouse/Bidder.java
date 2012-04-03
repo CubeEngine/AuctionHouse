@@ -7,17 +7,18 @@ import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-
+import org.bukkit.inventory.ItemStack;
 /**
  *
  * @author Faithcaio
  */
 public class Bidder {
-   public final OfflinePlayer player;
-   public final ArrayList<Auction> activeBids;
-   public final ItemContainer itemContainer;
-   public final ArrayList<Auction> subscriptions;
-   public final ArrayList<Material> materialSub;
+   private final ArrayList<Auction> activeBids;
+   private final ArrayList<Auction> subscriptions;
+   private final ArrayList<ItemStack> materialSub;
+   private final OfflinePlayer player;
+   
+   private final ItemContainer itemContainer;
    public boolean playerNotification = false;
    
    private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
@@ -27,8 +28,8 @@ public class Bidder {
        this.player = player;  
        this.activeBids = new ArrayList<Auction>();
        this.itemContainer = new ItemContainer(this);
-       this.subscriptions = new ArrayList<Auction>(); //TODO command
-       this.materialSub = new ArrayList<Material>();  //TODO command      
+       this.subscriptions = new ArrayList<Auction>();
+       this.materialSub = new ArrayList<ItemStack>();    
    }
     
     public static Bidder getInstance(Player player)
@@ -41,6 +42,7 @@ public class Bidder {
         instance = bidderInstances.get(player);
         return instance;
     }
+    
     public static Map<Player, Bidder> getInstances()
     {
         return bidderInstances;
@@ -55,16 +57,59 @@ public class Bidder {
             Player onlinePlayer=AuctionHouse.getInstance().getServer().getPlayer(player.getName());
             instance = bidderInstances.get(onlinePlayer);
         }
-        return instance; //instance ist null wenn offline Player AuctionHouse nicht genutzt hat
+        return instance;
+    }
+    
+    public ItemContainer getContainer()
+    {
+       return itemContainer;
+    }
+    
+    public ArrayList<Auction> getActiveBids()
+    {
+        return activeBids;
+    }
+    
+    public ArrayList<Auction> getSubs()
+    {
+        return subscriptions;
+    }
+    
+    public ArrayList<ItemStack> getMatSub()
+    {
+        return materialSub;
+    }
+        
+    public Player getPlayer()
+    {
+        if (player.isOnline())
+            return player.getPlayer();
+        else
+            return null;
+    }
+            
+    public OfflinePlayer getOffPlayer()
+    {
+        return player;
+    }
+    
+    public String getName()
+    {
+        return player.getName();
+    }
+    
+    public boolean isOnline()
+    {
+        return player.isOnline();
     }
     
     public double getTotalBidAmount()
     {
         double total = 0;
         List<Auction> auctionlist;
-        if (!(this.getLeadingAuctions(this).isEmpty()))
+        if (!(this.getLeadingAuctions().isEmpty()))
         {   
-            auctionlist = this.getLeadingAuctions(this);
+            auctionlist = this.getLeadingAuctions();
             for (int i=0;i<auctionlist.size();++i)
             total += auctionlist.get(i).bids.peek().getAmount();
         }
@@ -75,13 +120,14 @@ public class Bidder {
     {
         subscriptions.remove(auction);
         return activeBids.remove(auction);
-        
     }
+    
     public boolean removeSubscription(Auction auction)
     {
         return subscriptions.remove(auction);
     }
-    public boolean removeSubscription(Material mat)
+    
+    public boolean removeSubscription(ItemStack mat)
     {
         return materialSub.remove(mat);
     }
@@ -98,7 +144,11 @@ public class Bidder {
             }
         } 
         return auctionlist;
-    }    
+    }
+    public List<Auction> getLeadingAuctions()
+    {
+        return this.getLeadingAuctions(this);
+    }
     
     public List<Auction> getAuctions() //Get all Auctions with player involved
     {
@@ -115,6 +165,10 @@ public class Bidder {
             { auctionlist.add( this.activeBids.get(i) ); }     
         }
         return auctionlist;
+    }
+    public List<Auction> getOwnAuctions() //Get all Auctions started yourself
+    {
+        return this.getAuctions(this);
     }
     
     public Auction getlastAuction(Bidder player) //Get last Auction Bid on
@@ -145,15 +199,16 @@ public class Bidder {
         this.subscriptions.add(auction);
         return this;
     }
+    
     public Bidder addSubscription(Auction auction)
     {
         this.subscriptions.add(auction);
         return this;
     }
-    public Bidder addSubscription(Material material)
+    
+    public Bidder addSubscription(ItemStack material)
     {
         this.materialSub.add(material);
         return this;
     }
-   
 }

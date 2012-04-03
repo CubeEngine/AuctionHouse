@@ -73,14 +73,14 @@ public class BidCommand extends AbstractCommand
             List<Auction> auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("i"));
             AuctionSort sorter = new AuctionSort();
             
-            if (auctionlist.size()==0)
+            if (auctionlist.isEmpty())
             {
                 sender.sendMessage("Info: No Auctions with "+arguments.getMaterial("i").toString());
                 return true;
             }   
             sorter.SortAuction(auctionlist, "quantity",quantity);
             sorter.SortAuction(auctionlist, "price");
-            if (auctionlist.size()==0)
+            if (auctionlist.isEmpty())
             {
                 sender.sendMessage("Info: No Auctions with at least "+ quantity +" "+arguments.getMaterial("i").toString());
                 return true;
@@ -151,9 +151,9 @@ public class BidCommand extends AbstractCommand
                        " on "+auction.item.toString()+
                        " | Auction ID:"+auction.id
             );
-    if (!(auction.owner instanceof ServerBidder)&&(auction.owner.player.isOnline()))
+    if (!(auction.owner instanceof ServerBidder)&&(auction.owner.isOnline()))
         if (auction.owner.playerNotification)
-            auction.owner.player.getPlayer().sendMessage("Someone bid on your auction #"+auction.id+"!");    
+            auction.owner.getPlayer().sendMessage("Someone bid on your auction #"+auction.id+"!");    
     }
 
     @Override

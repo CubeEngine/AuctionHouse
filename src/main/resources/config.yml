@@ -10,5 +10,6 @@ auction:
   opCanCheat: true
   timeFormat: "dd/MM/yy HH:mm"
   notifyTime: [5m,1m,30s,6s,4s,2s]
+  punish: 20
   blacklist: []
 

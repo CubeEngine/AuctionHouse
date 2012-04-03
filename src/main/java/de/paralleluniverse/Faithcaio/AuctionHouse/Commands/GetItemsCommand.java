@@ -6,7 +6,6 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 /**
  *
  * @author Faithcaio
@@ -26,7 +25,7 @@ public class GetItemsCommand extends AbstractCommand{
             return true;
         }
         AuctionHouse.debug(sender.getName()+": Receiving Items");
-        if (!(Bidder.getInstance((Player)sender).itemContainer.giveNextItem()))
+        if (!(Bidder.getInstance((Player)sender).getContainer().giveNextItem()))
             sender.sendMessage("Your ItemContainer is empty!");   
         return true;
     }

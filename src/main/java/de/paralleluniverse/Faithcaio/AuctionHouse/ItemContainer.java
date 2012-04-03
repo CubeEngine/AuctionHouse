@@ -1,9 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 /**
@@ -14,7 +12,6 @@ public class ItemContainer {
 
     LinkedList<AuctionItem> itemList;
     public final Bidder bidder;
-    
     
     public ItemContainer (Bidder bidder)
     {
@@ -29,11 +26,11 @@ public class ItemContainer {
 
     public boolean giveNextItem ()
     {
-        Player player = this.bidder.player.getPlayer();
+        Player player = this.bidder.getPlayer();
         AuctionItem auctionItem = this.itemList.pollFirst();
         if (auctionItem == null)
             return false;
-        if (auctionItem.owner == this.bidder.player.getName())
+        if (auctionItem.owner.equals(this.bidder.getName()))
             player.sendMessage("Info: Receiving aborted Auction with "+auctionItem.item.toString());
         else   
             player.sendMessage("Info: Receiving "+auctionItem.item.toString()+
@@ -47,7 +44,6 @@ public class ItemContainer {
             AuctionHouse.debug("Player: "+player.getName()+": all Items received");
             return true;
         }
-            
         else
         {
             player.sendMessage("Info: Could not retrieve all Items. Remains are stored again!");

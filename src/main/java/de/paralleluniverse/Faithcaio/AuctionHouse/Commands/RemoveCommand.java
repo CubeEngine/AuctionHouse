@@ -1,12 +1,9 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 /**
  *
  * @author Faithcaio
@@ -36,7 +33,7 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (sender.hasPermission("auctionhouse.delete.all"))
                 {
-                    int max = AuctionManager.getInstance().auctions.size();
+                    int max = AuctionManager.getInstance().size();
                     if (max == 0)
                     {
                         sender.sendMessage("Info: No Auctions detected!");
@@ -44,7 +41,7 @@ public class RemoveCommand extends AbstractCommand
                     }
                     for (int i=max-1;i>=0;--i)
                     {
-                        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().auctions.get(i));
+                        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getIndexAuction(i));
                     }
                     sender.sendMessage("Info: All Auctions deleted!");
                     return true;
@@ -116,7 +113,7 @@ public class RemoveCommand extends AbstractCommand
             else
             {
                 AuctionHouse.debug("Remove per Player");
-                if (player.player.getPlayer().equals((Player)sender))
+                if (player.getPlayer().equals((Player)sender))
                 {   if (!(sender.hasPermission("auctionhouse.delete.player")))
                     {
                         sender.sendMessage("You do not have Permission to delete all your Auctions at once!");
@@ -131,17 +128,17 @@ public class RemoveCommand extends AbstractCommand
                 
                 if(!(player.getAuctions().isEmpty()))
                 {    
-                    int bids = player.activeBids.size();    
+                    int bids = player.getActiveBids().size();    
                     for (int i=bids;i >=0 ;--i)
                         {
-                            if (player.activeBids.get(i).owner==player)
+                            if (player.getActiveBids().get(i).owner==player)
                             {
                                 AuctionManager.getInstance().cancelAuction(player.getAuctions(player).get(0));
                                 AuctionHouse.debug("Remove per Player");
                             }
                         }
-                    sender.sendMessage("Info:Removed "+(player.activeBids.size()-bids)+
-                                       " auctions of "+player.player.getName());
+                    sender.sendMessage("Info:Removed "+(player.getActiveBids().size()-bids)+
+                                       " auctions of "+player.getName());
                     return true;
                 }
                 sender.sendMessage("Info: Player \""+arguments.getString("p")+"\" has no Auctions!");

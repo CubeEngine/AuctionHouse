@@ -1,7 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
