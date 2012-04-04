@@ -23,7 +23,6 @@ public class BaseCommand implements CommandExecutor
     private final PluginManager pm;
     private final HashMap<String, AbstractCommand> subCommands;
     private final Permission parentPermission;
-
     private String defaultCommand;
     private String label;
 
@@ -40,7 +39,8 @@ public class BaseCommand implements CommandExecutor
             this.pm.addPermission(this.parentPermission);
         }
         catch (IllegalArgumentException e)
-        {}
+        {
+        }
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -59,13 +59,13 @@ public class BaseCommand implements CommandExecutor
         {
             return executeSub(sender, this.subCommands.get(this.defaultCommand), args);
         }
-        
+
         sender.sendMessage("Available commands:");
         for (String commandLabel : this.subCommands.keySet())
         {
             sender.sendMessage(" - " + commandLabel);
         }
-        
+
         return true;
     }
 
@@ -94,14 +94,18 @@ public class BaseCommand implements CommandExecutor
      */
     public BaseCommand registerSubCommand(AbstractCommand command)
     {
-        this.subCommands.put(command.getLabel().toLowerCase(), command);
+        for (String subLabel : command.getLabels())
+        {
+            this.subCommands.put(subLabel.toLowerCase(), command);
+        }
         final Permission perm = command.getPermission();
         try
         {
             this.pm.addPermission(perm);
         }
         catch (IllegalArgumentException e)
-        {}
+        {
+        }
         perm.addParent(this.parentPermission, true);
         perm.recalculatePermissibles();
         return this;

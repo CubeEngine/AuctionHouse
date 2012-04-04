@@ -14,15 +14,16 @@ public class SearchCommand extends AbstractCommand
 {
     public SearchCommand(BaseCommand base)
     {
-        super("search", base);
+        super(base, "search");
     }
+
     public boolean execute(CommandSender sender, String[] args)
     {
         if (!(sender.hasPermission("auctionhouse.search")))
         {
             sender.sendMessage("You are not allowed to search for Auctions!");
             return true;
-        } 
+        }
         if (args.length < 1)
         {
             sender.sendMessage("/ah search <Item> [s:<date|id|price>]");
@@ -30,16 +31,16 @@ public class SearchCommand extends AbstractCommand
         }
         Arguments arguments = new Arguments(args);
         List<Auction> auctionlist;
-        
-        if (arguments.getString("1") == null) 
+
+        if (arguments.getString("1") == null)
         {
             sender.sendMessage("ProTip: You can NOT sort nothing! Item is missing.");
             return true;
-        }   
-        AuctionHouse.debug("Search for: "+arguments.getString("1"));
+        }
+        AuctionHouse.debug("Search for: " + arguments.getString("1"));
         if (arguments.getMaterial("1") != null)
         {
-            AuctionHouse.debug("Item detected: "+arguments.getMaterial("1").toString());
+            AuctionHouse.debug("Item detected: " + arguments.getMaterial("1").toString());
             auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("1"));
         }
         else
@@ -47,55 +48,67 @@ public class SearchCommand extends AbstractCommand
             sender.sendMessage("Error: Item does not exist!");
             return true;
         }
-        if (arguments.getString("s")!=null)
+        if (arguments.getString("s") != null)
         {
             AuctionSort sorter = new AuctionSort();
             if (arguments.getString("s").equalsIgnoreCase("date"))
-                sorter.SortAuction(auctionlist, "date");   
+            {
+                sorter.SortAuction(auctionlist, "date");
+            }
             if (arguments.getString("s").equalsIgnoreCase("id"))
-                sorter.SortAuction(auctionlist, "id");   
+            {
+                sorter.SortAuction(auctionlist, "id");
+            }
             if (arguments.getString("s").equalsIgnoreCase("price"))
-                sorter.SortAuction(auctionlist, "price"); 
-        }   
+            {
+                sorter.SortAuction(auctionlist, "price");
+            }
+        }
         if (auctionlist.isEmpty())
+        {
             sender.sendMessage("Info: No Auction found!");
+        }
         this.sendInfo(sender, auctionlist);
-        return true;    
+        return true;
     }
-    
-    public void sendInfo(CommandSender sender,List<Auction> auctionlist)
+
+    public void sendInfo(CommandSender sender, List<Auction> auctionlist)
     {
         int max = auctionlist.size();
-        for (int i=0;i<max;++i)
+        for (int i = 0; i < max; ++i)
         {
             Auction auction = auctionlist.get(i);
             String output = "";
-            output += "#"+auction.id+": ";
+            output += "#" + auction.id + ": ";
             output += auction.item.toString();
-            if (auction.item.getEnchantments().size()>0)
+            if (auction.item.getEnchantments().size() > 0)
             {
                 output += " Enchantments: ";
                 for (Enchantment enchantment : auction.item.getEnchantments().keySet())
                 {
                     output += enchantment.toString() + ":";
-                    output += auction.item.getEnchantments().get(enchantment).toString() +" ";
+                    output += auction.item.getEnchantments().get(enchantment).toString() + " ";
                 }
             }
             if (auction.bids.peek().getBidder().equals(auction.owner))
             {
-                output += "StartBid is: "+auction.bids.peek().getAmount();
+                output += "StartBid is: " + auction.bids.peek().getAmount();
             }
             else
             {
                 if (auction.bids.peek().getBidder() instanceof ServerBidder)
+                {
                     output += "Leading Bidder: Server";
+                }
                 else
-                    output += "Leading Bidder: "+auction.bids.peek().getBidder().getName();
-                output += " with "+auction.bids.peek().getAmount();
+                {
+                    output += "Leading Bidder: " + auction.bids.peek().getBidder().getName();
+                }
+                output += " with " + auction.bids.peek().getAmount();
             }
             output += " Auction ends: ";
             output += DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat);
-            
+
             sender.sendMessage(output);
         }
     }
@@ -105,10 +118,10 @@ public class SearchCommand extends AbstractCommand
     {
         return "Finds Auctions with Item in it. Sorting optional.";
     }
-    
+
     @Override
     public String getUsage()
     {
-        return "/ah search <Item> [s:<date|id|price>]";
+        return super.getUsage() + " <Item> [s:<date|id|price>]";
     }
 }

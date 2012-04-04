@@ -8,13 +8,13 @@ import org.bukkit.entity.Player;
  *
  * @author Faithcaio
  */
-public class NotifyCommand extends AbstractCommand{
-
+public class NotifyCommand extends AbstractCommand
+{
     public NotifyCommand(BaseCommand base)
     {
-        super("notify", base);
+        super(base, "notify");
     }
-    
+
     public boolean execute(CommandSender sender, String[] args)
     {
         if (args.length < 1)
@@ -29,28 +29,34 @@ public class NotifyCommand extends AbstractCommand{
             return true;
         }
         Arguments arguments = new Arguments(args);
-        if (arguments.getString("1")==null)
+        if (arguments.getString("1") == null)
         {
             AuctionHouse.debug("Invalid Command");
             return true;
         }
-        Bidder bidder = Bidder.getInstance((Player)sender);
-        if (arguments.getString("1").equalsIgnoreCase("true")||arguments.getString("1").equalsIgnoreCase("on"))
+        Bidder bidder = Bidder.getInstance((Player) sender);
+        if (arguments.getString("1").equalsIgnoreCase("true") || arguments.getString("1").equalsIgnoreCase("on"))
+        {
             bidder.playerNotification = true;
-        if (arguments.getString("1").equalsIgnoreCase("false")||arguments.getString("1").equalsIgnoreCase("off"))
+        }
+        if (arguments.getString("1").equalsIgnoreCase("false") || arguments.getString("1").equalsIgnoreCase("off"))
+        {
             bidder.playerNotification = false;
-        if (arguments.getString("1").equalsIgnoreCase("toggle")||arguments.getString("1").equalsIgnoreCase("t"))
+        }
+        if (arguments.getString("1").equalsIgnoreCase("toggle") || arguments.getString("1").equalsIgnoreCase("t"))
+        {
             bidder.playerNotification = !bidder.playerNotification;
-        sender.sendMessage("Info: AuctionHouse Notification: "+bidder.playerNotification);
+        }
+        sender.sendMessage("Info: AuctionHouse Notification: " + bidder.playerNotification);
         return true;
     }
-    
+
     @Override
     public String getUsage()
     {
-        return "/ah notify true|false|toggle";
+        return super.getUsage() + " true|false|toggle";
     }
-    
+
     public String getDescription()
     {
         return "Changes weather Bidder receives automatic Notifications";

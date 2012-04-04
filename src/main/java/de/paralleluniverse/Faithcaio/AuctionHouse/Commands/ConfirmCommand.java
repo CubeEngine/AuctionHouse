@@ -14,12 +14,13 @@ import org.bukkit.command.CommandSender;
  *
  * @author Faithcaio
  */
-public class ConfirmCommand extends AbstractCommand{
-
-    public ConfirmCommand (BaseCommand base) 
+public class ConfirmCommand extends AbstractCommand
+{
+    public ConfirmCommand(BaseCommand base)
     {
-        super("confirm",base);
+        super(base, "confirm");
     }
+
     public boolean execute(CommandSender sender, String[] args)
     {
         if (AuctionManager.getInstance().remAllConfirm.contains(sender))
@@ -30,58 +31,55 @@ public class ConfirmCommand extends AbstractCommand{
                 sender.sendMessage("Info: No Auctions detected!");
                 return true;
             }
-            for (int i=max-1;i>=0;--i)
+            for (int i = max - 1; i >= 0; --i)
             {
                 AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getIndexAuction(i));
             }
             sender.sendMessage("Info: All Auctions deleted!");
-            return true;    
+            return true;
         }
         if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender))
         {
-           if (AuctionManager.getInstance().remBidderConfirm.get(sender) instanceof ServerBidder)
-           {
+            if (AuctionManager.getInstance().remBidderConfirm.get(sender) instanceof ServerBidder)
+            {
                 int max = ServerBidder.getInstance().getAuctions().size();
                 if (max == 0)
                 {
                     sender.sendMessage("Info: No ServerAuctions detected!");
                     return true;
                 }
-                for (int i=max-1;i>=0;--i)
+                for (int i = max - 1; i >= 0; --i)
                 {
                     AuctionManager.getInstance().cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
                 }
                 sender.sendMessage("Info: All ServerAuctions deleted!");
-                return true;    
-           }    
-           else
-           {
-            Bidder player = AuctionManager.getInstance().remBidderConfirm.get(sender);
-            int bids = player.getActiveBids().size();
-            List<Auction> auctions = player.getActiveBids();
-            for (int i=0;i<bids;++i)
-            {
-                if (auctions.get(i).owner == player)
-                {
-                    AuctionHouse.debug("Remove per Player");
-                    AuctionManager.getInstance().cancelAuction(auctions.get(i));
-                }
+                return true;
             }
-            sender.sendMessage("Info:Removed "+(player.getActiveBids().size()-bids)+
-                                " auctions of "+player.getName());
-            return true;    
-           }
+            else
+            {
+                Bidder player = AuctionManager.getInstance().remBidderConfirm.get(sender);
+                int bids = player.getActiveBids().size();
+                List<Auction> auctions = player.getActiveBids();
+                for (int i = 0; i < bids; ++i)
+                {
+                    if (auctions.get(i).owner == player)
+                    {
+                        AuctionHouse.debug("Remove per Player");
+                        AuctionManager.getInstance().cancelAuction(auctions.get(i));
+                    }
+                }
+                sender.sendMessage(
+                        "Info:Removed " + (player.getActiveBids().size() - bids)
+                        + " auctions of " + player.getName());
+                return true;
+            }
         }
         sender.sendMessage("Error: Nothing to confirm!");
         return true;
     }
-    @Override
-    public String getUsage()
-    {
-        return "";
-    }
+
     public String getDescription()
     {
-        return "";
+        return "Confirms a requested action";
     }
 }

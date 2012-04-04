@@ -15,17 +15,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
  *
  * @author Faithcaio
  */
-public class Events implements Listener{
-    
+public class Events implements Listener
+{
     private static Events instance;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    
-    public Events ()
+
+    public Events()
     {
         instance = this;
     }
-    
+
     @EventHandler
     public void goesOnline(final PlayerJoinEvent event)
     {
@@ -46,12 +46,15 @@ public class Events implements Listener{
                 }
                 if (bidder.notifyContainer)
                 {
-                    event.getPlayer().sendMessage("Info: You still have Items left in your ItemContainer!"+
-                                                    " Be aware Items get deleted after "+config.auction_itemContainerLength+" days!");
+                    event.getPlayer().sendMessage("Info: You still have Items left in your ItemContainer!"
+                            + " Be aware Items get deleted after " + config.auction_itemContainerLength + " days!");
                     Bidder.getInstance(event.getPlayer()).notifyCancel = false;
-                }    
-            };   
-        });
+                }
+            }
+        ;
+    }
+
+    );
     }
     
     @EventHandler
@@ -59,39 +62,52 @@ public class Events implements Listener{
     {
         ItemContainer items = Bidder.getInstance(event.getPlayer()).getContainer();
         if (!(items.itemList.isEmpty()))
+        {
             for (AuctionItem item : items.itemList)
-                if (System.currentTimeMillis()-item.date > config.auction_itemContainerLength*24*60*60*1000)
+            {
+                if (System.currentTimeMillis() - item.date > config.auction_itemContainerLength * 24 * 60 * 60 * 1000)
+                {
                     items.itemList.remove(item);
+                }
+            }
+        }
         if (!(items.itemList.isEmpty()))
         {
             Bidder.getInstance(event.getPlayer()).notifyContainer = true;
         }
     }
-    
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         final Player player = event.getPlayer();
         final Block block = event.getClickedBlock();
-        if (block == null) return;
-        if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
+        if (block == null)
+        {
+            return;
+        }
+        if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK))
+        {
+            return;
+        }
         if (block.getType().equals(Material.WALL_SIGN))
         {
-            if (((Sign)block.getState()).getLine(0).equals("[AuctionHouse]"))
+            if (((Sign) block.getState()).getLine(0).equals("[AuctionHouse]"))
             {
-                if (((Sign)block.getState()).getLine(1).equals("AuctionBox"))
+                if (((Sign) block.getState()).getLine(1).equals("AuctionBox"))
                 {
                     if (!(player.hasPermission("auctionhouse.getItems.sign")))
                     {
                         player.sendMessage("AuctionHouse: You do not have Permission to use this Sign!");
                         return;
                     }
-                    AuctionHouse.debug(player.getName()+": Request Items");
+                    AuctionHouse.debug(player.getName() + ": Request Items");
                     if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
-                        player.sendMessage("Your ItemContainer is empty!");   
+                    {
+                        player.sendMessage("Your ItemContainer is empty!");
+                    }
                 }
-            }  
+            }
         }
     }
 }
-    

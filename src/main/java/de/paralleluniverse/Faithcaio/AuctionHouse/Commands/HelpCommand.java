@@ -13,7 +13,7 @@ public class HelpCommand extends AbstractCommand
 {
     public HelpCommand(BaseCommand base)
     {
-        super("help", base);
+        super(base, "help");
     }
 
     public boolean execute(CommandSender sender, String[] args)

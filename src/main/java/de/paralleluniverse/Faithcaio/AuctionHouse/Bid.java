@@ -1,4 +1,5 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
+
 /**
  * Represents a bid by a player
  *
@@ -12,24 +13,23 @@ public class Bid
 
     public Bid(Bidder bidder, double amount)
     {
-       this.amount = amount;
-       this.bidder = bidder;
-       this.timestamp = System.currentTimeMillis();
+        this.amount = amount;
+        this.bidder = bidder;
+        this.timestamp = System.currentTimeMillis();
     }
-    
+
     public double getAmount()
     {
         return this.amount;
     }
-    
+
     public Bidder getBidder()
     {
         return this.bidder;
     }
-    
+
     public long getTimestamp()
     {
         return this.timestamp;
     }
 }
-

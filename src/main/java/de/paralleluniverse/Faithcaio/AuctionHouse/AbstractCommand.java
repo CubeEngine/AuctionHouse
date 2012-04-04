@@ -11,7 +11,7 @@ import org.bukkit.permissions.PermissionDefault;
  */
 public abstract class AbstractCommand
 {
-    private final String label;
+    private final String[] labels;
     private final BaseCommand base;
     private final Permission permission;
 
@@ -21,11 +21,15 @@ public abstract class AbstractCommand
      * @param label the name/label
      * @param base the base command
      */
-    public AbstractCommand(String label, BaseCommand base)
+    public AbstractCommand(BaseCommand base, String... labels)
     {
-        this.label = label;
+        if (labels.length < 1)
+        {
+            throw new IllegalStateException("A command needs at least one label!");
+        }
+        this.labels = labels;
         this.base = base;
-        this.permission = new Permission(base.permissinBase + label, PermissionDefault.OP);
+        this.permission = new Permission(base.permissinBase + labels[0], PermissionDefault.OP);
     }
 
     /**
@@ -55,7 +59,17 @@ public abstract class AbstractCommand
      */
     public final String getLabel()
     {
-        return this.label;
+        return this.labels[0];
+    }
+
+    /**
+     * Returns all labels
+     *
+     * @return the labels
+     */
+    public final String[] getLabels()
+    {
+        return this.labels;
     }
 
     /**
@@ -65,7 +79,7 @@ public abstract class AbstractCommand
      */
     public String getUsage()
     {
-        return "/" + base.getLabel() + " " + this.label;
+        return "/" + base.getLabel() + " " + getLabel();
     }
 
     /**

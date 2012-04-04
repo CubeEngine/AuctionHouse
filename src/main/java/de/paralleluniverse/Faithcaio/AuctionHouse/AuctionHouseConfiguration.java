@@ -23,7 +23,7 @@ public class AuctionHouseConfiguration
     public final int      auction_punish;               //Punishment in % of Bid 0-100
     public final int      auction_itemContainerLength;  //in days
     public final int      auction_comission;            //Cost for Owner in %
-    
+
     public AuctionHouseConfiguration(Configuration config)
     {
         this.auction_maxAuctions_player = config.getInt("auction.maxAuctions.player");
@@ -34,58 +34,58 @@ public class AuctionHouseConfiguration
         this.auction_punish = config.getInt("auction.punish");
         this.auction_itemContainerLength = config.getInt("auction.itemContainerLength");
         this.auction_comission = config.getInt("auction.comission");
-       
+
         this.auction_undoTime = this.convert(config.getString("auction.undoTime"));
         this.auction_maxLength = this.convert(config.getString("auction.maxLength"));
         this.auction_standardLength = this.convert(config.getString("auction.standardLength"));
-        
+
         this.auction_notifyTime = this.convertlist(config.getStringList("auction.notifyTime"));
-        
+
         this.auction_blacklist = getItemList(config.getStringList("auction.blacklist"));
     }
-    
+
     private List<Integer> convertlist(List<String> str)
     {
         List<Integer> list = new ArrayList<Integer>();
-        for (int i=0;i<str.size();++i)
+        for (int i = 0; i < str.size(); ++i)
         {
             list.add(this.convert(str.get(i)));
         }
         return list;
-        
+
     }
-    
+
     private List<ItemStack> getItemList(List<String> str)
     {
         int max = str.size();
         List<ItemStack> out = new ArrayList<ItemStack>();
-        for(int i=0;i<max;++i)
+        for (int i = 0; i < max; ++i)
         {
-            String tmp=str.get(i);
+            String tmp = str.get(i);
             int parambreak = tmp.indexOf(":");
             if (parambreak == -1)
             {
-                out.add(new ItemStack(Material.matchMaterial(tmp),1));
+                out.add(new ItemStack(Material.matchMaterial(tmp), 1));
             }
             else
             {
-                tmp  = tmp.substring(0, parambreak);
+                tmp = tmp.substring(0, parambreak);
                 short tmp2;
                 try
                 {
-                    tmp2 = Short.parseShort(tmp.substring(parambreak+1));
+                    tmp2 = Short.parseShort(tmp.substring(parambreak + 1));
                 }
                 catch (NumberFormatException ex)
                 {
                     return null;
                 }
-                out.add(new ItemStack(Material.matchMaterial(tmp),1,tmp2));
+                out.add(new ItemStack(Material.matchMaterial(tmp), 1, tmp2));
             }
         }
         return out;
     }
-    
-    public Integer convert(String str) //ty quick_wango
+
+    public final Integer convert(String str) //ty quick_wango
     {
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
@@ -103,7 +103,10 @@ public class AuctionHouseConfiguration
         {
             return null;
         }
-        if (tmp==-1) return -1;
+        if (tmp == -1)
+        {
+            return -1;
+        }
         String unitSuffix = matcher.group(2);
         if (unitSuffix == null)
         {
