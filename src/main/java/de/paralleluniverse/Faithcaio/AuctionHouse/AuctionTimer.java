@@ -38,7 +38,7 @@ public class AuctionTimer
                     {
                         
                         Auction auction = auctionlist.get(i);
-                        AuctionHouse.debug("Auction Endcheck #"+auction.id);
+                        //AuctionHouse.debug("Auction Endcheck #"+auction.id);
                         if ((System.currentTimeMillis()+600>auction.auctionEnd)
                           &&(System.currentTimeMillis()-600<auction.auctionEnd)) 
                         {
@@ -55,24 +55,34 @@ public class AuctionTimer
                                 
                                 if (econ.getBalance(winner.getName())>auction.bids.peek().getAmount())
                                 {
-                                    econ.withdrawPlayer(winner.getName(),auction.bids.peek().getAmount());
+                                    double money = auction.bids.peek().getAmount();
+                                    econ.withdrawPlayer(winner.getName(),money);
                                     if (!(auction.owner instanceof ServerBidder))
-                                        econ.depositPlayer(auction.owner.getName(), auction.bids.peek().getAmount());
+                                    {
+                                        
+                                        econ.depositPlayer(auction.owner.getName(), money);
+                                        econ.withdrawPlayer(auction.owner.getName(), money*config.auction_comission / 100);
+                                        if (auction.owner.isOnline())
+                                            winner.getPlayer().sendMessage("Congratulations! You just sold: "+auction.item.toString()+
+                                                                           " for "+econ.format(money-money*config.auction_comission/100)+
+                                                                           " excluding " +econ.format(money*config.auction_comission/100));
+                                    }
                                     winner.getContainer().addItem(auction);
                                     if (winner.isOnline())
                                         winner.getPlayer().sendMessage("Congratulations! You just bought: "+auction.item.toString()+
-                                                                            " for "+econ.format(auction.bids.peek().getAmount()));
+                                                                       " for "+econ.format(money));
+ 
                                     else
                                         winner.notify = true;
                                     manager.finishAuction(auction);
-                                    continue; //NPE Prevention
+                                    break; //NPE Prevention
                                 }
                                 else
                                 {
                                     if (winner.isOnline())
-                                    {   winner.getPlayer().sendMessage("&2Not enough money to pay what you bid for!");
-                                        winner.getPlayer().sendMessage("&4 You will be charged "+config.auction_punish+"% of your Bid.");
-                                        winner.getPlayer().sendMessage("&5 Next time do not bid if you know you can not spare the money!");
+                                    {   winner.getPlayer().sendMessage("Not enough money to pay what you bid for!");
+                                        winner.getPlayer().sendMessage(" You will be charged "+config.auction_punish+"% of your Bid.");
+                                        winner.getPlayer().sendMessage(" Next time do not bid if you know you can not spare the money!");
                                     }
                                     rPlayer.add(winner);
                                     econ.withdrawPlayer(winner.getName(), auction.bids.peek().getAmount()*config.auction_punish / 100);
@@ -86,8 +96,16 @@ public class AuctionTimer
                                 if (auction.owner instanceof ServerBidder)
                                     AuctionHouse.log("No Bids | Auction failed!");
                                 else
+                                {
+                                    econ.withdrawPlayer(auction.owner.getName(), auction.bids.peek().getAmount()*config.auction_comission / 100);
                                     if (auction.owner.isOnline())
+                                    {
                                         auction.owner.getPlayer().sendMessage("Nobody bid on your auction and it got canceled.");
+                                        if (auction.bids.peek().getAmount()!=0)
+                                            auction.owner.getPlayer().sendMessage("You have been charged "+config.auction_comission+"% of your startbid!");
+                                    }
+                                    
+                                }
                                 manager.cancelAuction(auction);
                             }
                         }

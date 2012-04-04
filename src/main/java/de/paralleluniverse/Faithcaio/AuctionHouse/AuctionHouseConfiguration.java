@@ -22,7 +22,7 @@ public class AuctionHouseConfiguration
     public final List<Integer>   auction_notifyTime;    //List with time in d h m s
     public final int      auction_punish;               //Punishment in % of Bid 0-100
     public final int      auction_itemContainerLength;  //in days
-    //TODO blacklist einbauen
+    public final int      auction_comission;            //Cost for Owner in %
     
     public AuctionHouseConfiguration(Configuration config)
     {
@@ -33,8 +33,8 @@ public class AuctionHouseConfiguration
         this.auction_timeFormat = config.getString("auction.timeFormat");
         this.auction_punish = config.getInt("auction.punish");
         this.auction_itemContainerLength = config.getInt("auction.itemContainerLength");
-        //TODO Preis fuer AuktionsErstellung (Formel mit Startgebot?)
-        
+        this.auction_comission = config.getInt("auction.comission");
+       
         this.auction_undoTime = this.convert(config.getString("auction.undoTime"));
         this.auction_maxLength = this.convert(config.getString("auction.maxLength"));
         this.auction_standardLength = this.convert(config.getString("auction.standardLength"));

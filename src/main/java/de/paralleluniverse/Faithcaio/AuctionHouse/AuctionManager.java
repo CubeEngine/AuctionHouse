@@ -1,6 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import java.util.*;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
 
@@ -18,6 +19,9 @@ public class AuctionManager
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
+    public HashMap<CommandSender,Bidder> remBidderConfirm = new HashMap();
+    public HashSet<CommandSender> remAllConfirm = new HashSet();
     
     private AuctionManager()
     {

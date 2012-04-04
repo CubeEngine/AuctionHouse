@@ -21,7 +21,7 @@ public class RemoveCommand extends AbstractCommand
         if (args.length < 1)
         {
             sender.sendMessage("/ah remove <AuctionID>");
-            sender.sendMessage("/ah remove p:<Player>");//TODO /ah confirm
+            sender.sendMessage("/ah remove p:<Player>");
             sender.sendMessage("/ah remove Server");
             sender.sendMessage("/ah remove all");
             return true;
@@ -34,17 +34,9 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (sender.hasPermission("auctionhouse.delete.all"))
                 {
-                    int max = AuctionManager.getInstance().size();
-                    if (max == 0)
-                    {
-                        sender.sendMessage("Info: No Auctions detected!");
-                        return true;
-                    }
-                    for (int i=max-1;i>=0;--i)
-                    {
-                        AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getIndexAuction(i));
-                    }
-                    sender.sendMessage("Info: All Auctions deleted!");
+                    AuctionManager.getInstance().remAllConfirm.add(sender);
+                    sender.sendMessage("Are you sure you want to delete all Auctions on the Server?");
+                    sender.sendMessage("Use \"/ah confirm\" to remove.");
                     return true;
                 }
                 sender.sendMessage("You do not have Permission to delete all Auctions!");
@@ -56,17 +48,9 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (sender.hasPermission("auctionhouse.delete.server"))
                 {
-                    int max = ServerBidder.getInstance().getAuctions().size();
-                    if (max == 0)
-                    {
-                        sender.sendMessage("Info: No ServerAuctions detected!");
-                        return true;
-                    }
-                    for (int i=max-1;i>=0;--i)
-                    {
-                        AuctionManager.getInstance().cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
-                    }
-                    sender.sendMessage("Info: All ServerAuctions deleted!");
+                    AuctionManager.getInstance().remBidderConfirm.put(sender, ServerBidder.getInstance());
+                    sender.sendMessage("Are you sure you want to delete all ServerAuctions?");
+                    sender.sendMessage("Use \"/ah confirm\" to remove.");
                     return true;
                 }
                 sender.sendMessage("You do not have Permission to delete all ServerAuctions!");
@@ -79,7 +63,7 @@ public class RemoveCommand extends AbstractCommand
                 {
                     if (AuctionManager.getInstance().getAuction(id)==null)
                     {
-                        sender.sendMessage("Error: Auction"+id+"does not exist!");
+                        sender.sendMessage("Error: Auction #"+id+" does not exist!");
                         return true;    
                     }
                     if (!(sender.hasPermission("auctionhouse.delete.id")))
@@ -129,18 +113,9 @@ public class RemoveCommand extends AbstractCommand
                 
                 if(!(player.getAuctions().isEmpty()))
                 {    
-                    int bids = player.getActiveBids().size();
-                    List<Auction> auctions = player.getActiveBids();
-                    for (int i=0;i<bids;++i)
-                        {
-                            if (auctions.get(i).owner == player)
-                            {
-                                AuctionHouse.debug("Remove per Player");
-                                AuctionManager.getInstance().cancelAuction(auctions.get(i));
-                            }
-                        }
-                    sender.sendMessage("Info:Removed "+(player.getActiveBids().size()-bids)+
-                                       " auctions of "+player.getName());
+                    AuctionManager.getInstance().remBidderConfirm.put(sender, player);
+                    sender.sendMessage("Are you sure you want to delete all Auctions of "+player.getName()+"?");
+                    sender.sendMessage("Use \"/ah confirm\" to remove.");
                     return true;
                 }
                 sender.sendMessage("Info: Player \""+arguments.getString("p")+"\" has no Auctions!");

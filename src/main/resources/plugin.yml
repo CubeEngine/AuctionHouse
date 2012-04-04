@@ -24,7 +24,7 @@ permissions:
       auctionhouse.use.*: true
       auctionhouse.delete.all: true
       auctionhouse.info.*: true
-      auctionhouse.getItems.command: true
+      auctionhouse.getItems.*: true
       auctionhouse.help: true
       auctionhouse.notify.*: true
       auctionhouse.help: true
@@ -108,9 +108,21 @@ permissions:
   auctionhouse.search:
     description: ""
     
+  auctionhouse.getItems.*:
+    description: ""
+    children:
+      auctionhouse.getItems.command: true
+      auctionhouse.getItems.sign: true
+      auctionhouse.getItems.signplace: true
+  
   auctionhouse.getItems.command:
     description: ""
   
+  auctionhouse.getItems.sign:
+    description: ""
+  
+  auctionhouse.getItems.signplace:
+    description: ""
 
     
     

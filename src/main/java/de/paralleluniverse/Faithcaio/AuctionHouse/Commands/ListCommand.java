@@ -32,7 +32,7 @@ public class ListCommand extends AbstractCommand
         for (int i=0;i<max;++i)
         {
             Auction auction = auctionlist.get(i);
-            
+            output = "";
             output += "#"+auction.id+": ";
             output += auction.item.toString();
             if (auction.item.getEnchantments().size()>0)

@@ -21,10 +21,9 @@ public class GetItemsCommand extends AbstractCommand{
         if (!(sender.hasPermission("auctionhouse.getItems.command")))
         {
             sender.sendMessage("You do not have Permission to use the GetItems Command! Use the sign instead!");
-            //TODO Use sign
             return true;
         }
-        AuctionHouse.debug(sender.getName()+": Receiving Items");
+        AuctionHouse.debug(sender.getName()+": Request Items");
         if (!(Bidder.getInstance((Player)sender).getContainer().giveNextItem()))
             sender.sendMessage("Your ItemContainer is empty!");   
         return true;

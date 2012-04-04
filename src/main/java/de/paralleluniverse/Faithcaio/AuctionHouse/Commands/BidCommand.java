@@ -123,7 +123,7 @@ public class BidCommand extends AbstractCommand
                     
                 if (AuctionManager.getInstance().getAuction(id)==null)
                 {
-                    sender.sendMessage("Info: Auction"+id+"does not exist!");
+                    sender.sendMessage("Info: Auction #"+id+" does not exist!");
                     return true;
                 }
                 auction = AuctionManager.getInstance().getAuction(id);

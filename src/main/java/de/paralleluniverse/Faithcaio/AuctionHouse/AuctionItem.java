@@ -41,5 +41,19 @@ public class AuctionItem {
         this.date = System.currentTimeMillis();
         this.owner = bidder.getName();
         this.price = 0.0;
+    } 
+   
+    private AuctionItem (Bidder bidder,ItemStack item,long date, String owner,Double price)
+    {
+        this.bidder = bidder;
+        this.item =item;
+        this.date =date;
+        this.owner = owner;
+        this.price= price;
+    }
+    
+    public  AuctionItem clone()
+    {
+        return new AuctionItem(bidder,item,date,owner,price);
     }
 }

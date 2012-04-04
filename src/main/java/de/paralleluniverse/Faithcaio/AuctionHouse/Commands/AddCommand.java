@@ -36,7 +36,6 @@ public class AddCommand extends AbstractCommand
     
     public boolean execute(CommandSender sender, String[] args)
     {
-        //TODO /ah confirm
         ItemStack newItem = null;
         Material newMaterial;
         Integer amount;
