@@ -36,7 +36,6 @@ public class AuctionItem
         {
             this.owner = auction.owner.getName();
         }
-        AuctionHouse.debug("ItemContainer Filled with: " + this.item.toString());
     }
 
     public AuctionItem(ItemStack item, Bidder bidder)

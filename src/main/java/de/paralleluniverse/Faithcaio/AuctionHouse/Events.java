@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -36,18 +37,17 @@ public class Events implements Listener
                 Bidder bidder = Bidder.getInstance(event.getPlayer());
                 if (bidder.notify)
                 {
-                    event.getPlayer().sendMessage("Info: You have purchased Items by auction. Don't forget to check your ItemContainer with \"/ah getItems\"");
+                    event.getPlayer().sendMessage(t("i")+" "+t("event_new"));
                     Bidder.getInstance(event.getPlayer()).notify = false;
                 }
                 if (bidder.notifyCancel)
                 {
-                    event.getPlayer().sendMessage("Info: Your auction(s) failed. Don't forget to check your ItemContainer with \"/ah getItems\"");
+                    event.getPlayer().sendMessage(t("i")+" "+t("event_fail"));
                     Bidder.getInstance(event.getPlayer()).notifyCancel = false;
                 }
                 if (bidder.notifyContainer)
                 {
-                    event.getPlayer().sendMessage("Info: You still have Items left in your ItemContainer!"
-                            + " Be aware Items get deleted after " + config.auction_itemContainerLength + " days!");
+                    event.getPlayer().sendMessage(t("i")+" "+t("event_old",config.auction_itemContainerLength));
                     Bidder.getInstance(event.getPlayer()).notifyCancel = false;
                 }
             }
@@ -98,13 +98,13 @@ public class Events implements Listener
                 {
                     if (!(player.hasPermission("auctionhouse.getItems.sign")))
                     {
-                        player.sendMessage("AuctionHouse: You do not have Permission to use this Sign!");
+                        player.sendMessage(t("event_sign_perm"));
                         return;
                     }
                     AuctionHouse.debug(player.getName() + ": Request Items");
                     if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
                     {
-                        player.sendMessage("Your ItemContainer is empty!");
+                        player.sendMessage(t("i")+" "+t("time_sign_empty"));
                     }
                 }
             }

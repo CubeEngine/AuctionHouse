@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -25,13 +26,12 @@ public class NotifyCommand extends AbstractCommand
         }
         if (!(sender.hasPermission("auctionhouse.notify.command")))
         {
-            sender.sendMessage("You do not have Permission to change whether to be notified!");
+            sender.sendMessage(t("perm")+" "+t("note_perm"));
             return true;
         }
         Arguments arguments = new Arguments(args);
         if (arguments.getString("1") == null)
         {
-            AuctionHouse.debug("Invalid Command");
             return true;
         }
         Bidder bidder = Bidder.getInstance((Player) sender);
@@ -47,7 +47,11 @@ public class NotifyCommand extends AbstractCommand
         {
             bidder.playerNotification = !bidder.playerNotification;
         }
-        sender.sendMessage("Info: AuctionHouse Notification: " + bidder.playerNotification);
+        if (bidder.playerNotification)
+            sender.sendMessage(t("i")+" "+t("note_on"));
+        else
+            sender.sendMessage(t("i")+" "+t("note_off"));
+        
         return true;
     }
 
@@ -59,6 +63,6 @@ public class NotifyCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Changes weather Bidder receives automatic Notifications";
+        return t("command_note");
     }
 }

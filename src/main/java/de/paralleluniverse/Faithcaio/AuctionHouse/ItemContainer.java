@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import java.util.LinkedList;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.entity.Player;
@@ -35,35 +36,30 @@ public class ItemContainer
         }
 
         AuctionItem auctionItem = this.itemList.getFirst();
-        AuctionHouse.debug("Player: " + player.getName() + ": Give Items" + auctionItem.item.toString());
-
 
         ItemStack tmp = player.getInventory().addItem(this.itemList.getFirst().clone().item).get(0);
 
 
         if (auctionItem.owner.equals(this.bidder.getName()))
         {
-            player.sendMessage("Info: Receiving aborted Auction with " + auctionItem.item.toString());
+            player.sendMessage(t("i")+" "+t("cont_rec_ab",auctionItem.item.toString()));
         }
         else
         {
-            player.sendMessage("Info: Receiving " + auctionItem.item.toString()
-                    + " for " + auctionItem.price
-                    + " from " + auctionItem.owner
-                    + " at " + DateFormatUtils.formatUTC(auctionItem.date, "MMM dd"));
+            player.sendMessage(t("i")+" "+t("cont_rec",auctionItem.item.toString(),
+                                             auctionItem.price,auctionItem.owner,
+                                             DateFormatUtils.formatUTC(auctionItem.date, "MMM dd")));
         }
 
         if (tmp == null)
         {
-            AuctionHouse.debug("Player: " + player.getName() + ": all Items received");
             player.updateInventory();
             this.itemList.removeFirst();
             return true;
         }
         else
         {
-            AuctionHouse.debug("Player: " + player.getName() + ": old Items" + auctionItem.item.toString());
-            player.sendMessage("Info: Could not retrieve all Items. Remains are stored again!");
+            player.sendMessage(t("i")+" "+t("cont_rec_remain"));
             itemList.getFirst().item.setAmount(tmp.getAmount());
             player.updateInventory();
             return true;

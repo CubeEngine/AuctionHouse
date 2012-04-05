@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -32,14 +33,14 @@ public class SubscribeCommand extends AbstractCommand
             if (arguments.getMaterial("m") != null)
             {
                 bidder.addSubscription(arguments.getMaterial("m"));
-                sender.sendMessage("Info: Added " + arguments.getString("m") + " to your subscriptionlist. You will be notified if a new auction is started!");
+                sender.sendMessage(t("i")+" "+t("sub_add_mat",arguments.getString("m")));
                 if (!bidder.playerNotification)
                 {
-                    sender.sendMessage("Info: Do not forget to turn on notification!");
+                    sender.sendMessage(t("i")+" "+t("sub_note"));
                 }
                 return true;
             }
-            sender.sendMessage("Error: Invalid Item!");
+            sender.sendMessage(t("i")+" "+arguments.getString("m") + " "+t("no_valid_item"));
             return true;
         }
         if (arguments.getString("i") != null)
@@ -48,20 +49,20 @@ public class SubscribeCommand extends AbstractCommand
             {
                 if (AuctionManager.getInstance().getAuction(arguments.getInt("i")) != null)
                 {
-                    sender.sendMessage("Info: Added Auction #" + arguments.getString("i") + " to your subscriptionlist. You will be notified when the auction ends!");
+                    sender.sendMessage(t("i")+" "+t("sub_add",arguments.getInt("i")));
                     if (!bidder.playerNotification)
                     {
-                        sender.sendMessage("Info: Do not forget to turn on notification!");
+                        sender.sendMessage(t("i")+" "+t("sub_note"));
                     }
                     return true;
                 }
-                sender.sendMessage("Error: Auction #" + arguments.getString("i") + "does not exist!");
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",arguments.getString("i")));
                 return true;
             }
-            sender.sendMessage("Error: Invalid AuctionID!");
+            sender.sendMessage(t("e")+" "+t("invalid_id"));
             return true;
         }
-        sender.sendMessage("Error: Invalid Command!");
+        sender.sendMessage(t("e")+" "+t("invalid_com"));
         return true;
     }
 
@@ -73,6 +74,6 @@ public class SubscribeCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Manages your Subscriptions";
+        return t("command_sub");
     }
 }

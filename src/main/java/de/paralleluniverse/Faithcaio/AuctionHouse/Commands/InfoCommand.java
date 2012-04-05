@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
@@ -15,6 +16,10 @@ import org.bukkit.entity.Player;
  */
 public class InfoCommand extends AbstractCommand
 {
+    
+    private static final AuctionHouse plugin = AuctionHouse.getInstance();
+    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
     public InfoCommand(BaseCommand base)
     {
         super(base, "info");
@@ -35,19 +40,17 @@ public class InfoCommand extends AbstractCommand
         Arguments arguments = new Arguments(args);
         if (!(sender.hasPermission("auctionhouse.info")))
         {
-            sender.sendMessage("You do not have Permission to get Info about Auctions!");
+            sender.sendMessage(t("perm")+" "+t("info_perm"));
             return true;
         }
 
         if (arguments.getString("1").equalsIgnoreCase("Bids"))//bidding
         {
-            AuctionHouse.debug("Bids");
             List<Auction> auctions = Bidder.getInstance((Player) sender).getAuctions();
             int max = auctions.size();
-            AuctionHouse.debug("max: " + max);
             if (max == 0)
             {
-                sender.sendMessage("Info: No Bids yet!");
+                sender.sendMessage(t("i")+" "+t("info_no_bid"));
             }
             for (int i = 0; i < max; ++i)
             {
@@ -62,13 +65,11 @@ public class InfoCommand extends AbstractCommand
         {
             if (arguments.getString("1").equalsIgnoreCase("Auctions"))//own auctions
             {
-                AuctionHouse.debug("own Auctions");
                 List<Auction> auctions = Bidder.getInstance((Player) sender).getOwnAuctions();
                 int max = auctions.size();
-                AuctionHouse.debug("max: " + max);
                 if (max == 0)
                 {
-                    sender.sendMessage("Info: No own Auctions started!");
+                    sender.sendMessage(t("i")+" "+t("info_no_start"));
                 }
                 for (int i = 0; i < max; ++i)
                 {
@@ -81,13 +82,12 @@ public class InfoCommand extends AbstractCommand
 
                 if (arguments.getString("1").equalsIgnoreCase("Leading"))
                 {
-                    AuctionHouse.debug("Leading Auctions");
                     List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
                     int max = auctions.size();
                     AuctionHouse.debug("max: " + max);
                     if (max == 0)
                     {
-                        sender.sendMessage("Info: No Leading Auctions!");
+                        sender.sendMessage(t("i")+" "+t("info_no_lead"));
                     }
                     for (int i = 0; i < max; ++i)
                     {
@@ -99,13 +99,12 @@ public class InfoCommand extends AbstractCommand
                 {
                     if (arguments.getString("1").equalsIgnoreCase("*Server"))
                     {
-                        AuctionHouse.debug("Server Auctions");
                         List<Auction> auctions = ServerBidder.getInstance().getAuctions();
                         int max = auctions.size();
                         AuctionHouse.debug("max: " + max);
                         if (max == 0)
                         {
-                            sender.sendMessage("Info: No Server Auctions!");
+                            sender.sendMessage(t("i")+" "+t("info_no_serv"));
                         }
                         for (int i = 0; i < max; ++i)
                         {
@@ -118,21 +117,20 @@ public class InfoCommand extends AbstractCommand
                         Integer id = arguments.getInt("1");
                         if (id != null)
                         {
-                            AuctionHouse.debug("Id Auction");
                             if (AuctionManager.getInstance().getAuction(id) != null)
                             {
                                 this.sendInfo(sender, AuctionManager.getInstance().getAuction(id));
                             }
                             else
                             {
-                                sender.sendMessage("Info: Auction #" + id + " does not exist!");
+                                sender.sendMessage(t("i")+" "+t("auction_no_exist",id));
                             }
                         }
                         else
                         {
                             if (!(sender.hasPermission("auctionhouse.info.others")))
                             {
-                                sender.sendMessage("You do not have Permission to get Info about other Players Auctions!");
+                                sender.sendMessage(t("perm")+" "+t("info_perm_other"));
                                 return true;
                             }
                             Bidder player = arguments.getBidder("1");
@@ -144,7 +142,7 @@ public class InfoCommand extends AbstractCommand
                                 AuctionHouse.debug("max: " + max);
                                 if (max == 0)
                                 {
-                                    sender.sendMessage("Info: " + player.getName() + " has no Auctions!");
+                                    sender.sendMessage(t("perm")+t("info_no_auction",player.getName()));
                                 }
                                 for (int i = 0; i < max; ++i)
                                 {
@@ -154,8 +152,7 @@ public class InfoCommand extends AbstractCommand
                             }
                             else
                             {
-                                sender.sendMessage("Info: Player \"" + arguments.getString("1")
-                                        + "\" does not exist or has no Auction!");
+                                sender.sendMessage(t("perm")+" "+t("info_p_no_auction",arguments.getString("1")));
                             }
                         }
                     }
@@ -172,7 +169,7 @@ public class InfoCommand extends AbstractCommand
         output += auction.item.toString();
         if (auction.item.getEnchantments().size() > 0)
         {
-            output += " Enchantments: ";
+            output += " "+t("info_out_ench")+" ";
             for (Enchantment enchantment : auction.item.getEnchantments().keySet())
             {
                 output += enchantment.toString() + ":";
@@ -181,22 +178,22 @@ public class InfoCommand extends AbstractCommand
         }
         if (auction.bids.peek().getBidder().equals(auction.owner))
         {
-            output += "StartBid is: " + auction.bids.peek().getAmount();
+            output += " "+t("info_out_bid",auction.bids.peek().getAmount());
         }
         else
         {
             if (auction.bids.peek().getBidder() instanceof ServerBidder)
             {
-                output += "Leading Bidder: Server";
+                output += t("info_out_leadserv");
             }
             else
             {
-                output += "Leading Bidder: " + auction.bids.peek().getBidder().getName();
+                output += t("info_out_lead",auction.bids.peek().getBidder().getName());
             }
-            output += " with " + auction.bids.peek().getAmount();
+            output +=" "+t("with",auction.bids.peek().getAmount());
         }
-        output += " Auction ends: ";
-        output += DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat);
+        output += " "+t("info_out_end",
+                        DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
 
         sender.sendMessage(output);
     }
@@ -209,6 +206,6 @@ public class InfoCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Provides Info for Auctions.";
+        return t("command_info");
     }
 }

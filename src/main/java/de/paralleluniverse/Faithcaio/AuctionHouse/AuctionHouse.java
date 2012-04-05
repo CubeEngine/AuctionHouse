@@ -1,6 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.Commands.*;
+import de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +50,8 @@ public class AuctionHouse extends JavaPlugin
         this.saveConfig();
         
         this.economy = this.setupEconomy();
+        Translator.loadTranslation("en");//TODO config
+        
         AuctionTimer.getInstance().firstschedule(AuctionManager.getInstance());
         
         this.pm.registerEvents(new Events(),this);

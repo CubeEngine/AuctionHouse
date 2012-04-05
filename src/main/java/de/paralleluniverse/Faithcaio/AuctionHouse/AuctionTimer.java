@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -63,16 +64,15 @@ public class AuctionTimer
                                         econ.withdrawPlayer(auction.owner.getName(), money * config.auction_comission / 100);
                                         if (auction.owner.isOnline())
                                         {
-                                            winner.getPlayer().sendMessage("Congratulations! You just sold: " + auction.item.toString()
-                                                    + " for " + econ.format(money - money * config.auction_comission / 100)
-                                                    + " excluding " + econ.format(money * config.auction_comission / 100));
+                                            winner.getPlayer().sendMessage(t("time_sold",auction.item.toString(),
+                                                                    econ.format(money - money * config.auction_comission / 100),
+                                                                    econ.format(money * config.auction_comission / 100)));
                                         }
                                     }
                                     winner.getContainer().addItem(auction);
                                     if (winner.isOnline())
                                     {
-                                        winner.getPlayer().sendMessage("Congratulations! You just bought: " + auction.item.toString()
-                                                + " for " + econ.format(money));
+                                        winner.getPlayer().sendMessage(t("time_won",auction.item.toString(),econ.format(money)));
                                     }
                                     else
                                     {
@@ -85,9 +85,9 @@ public class AuctionTimer
                                 {
                                     if (winner.isOnline())
                                     {
-                                        winner.getPlayer().sendMessage("Not enough money to pay what you bid for!");
-                                        winner.getPlayer().sendMessage(" You will be charged " + config.auction_punish + "% of your Bid.");
-                                        winner.getPlayer().sendMessage(" Next time do not bid if you know you can not spare the money!");
+                                        winner.getPlayer().sendMessage(t("time_pun1"));
+                                        winner.getPlayer().sendMessage(t("time_pun2",config.auction_punish));
+                                        winner.getPlayer().sendMessage(t("time_pun3"));
                                     }
                                     rPlayer.add(winner);
                                     econ.withdrawPlayer(winner.getName(), auction.bids.peek().getAmount() * config.auction_punish / 100);
@@ -98,22 +98,17 @@ public class AuctionTimer
                             if (auction.bids.peek().getBidder() == auction.owner)
                             {
                                 auction.owner.notifyCancel = true;
-                                if (auction.owner instanceof ServerBidder)
-                                {
-                                    AuctionHouse.log("No Bids | Auction failed!");
-                                }
-                                else
+                                if (!(auction.owner instanceof ServerBidder))
                                 {
                                     econ.withdrawPlayer(auction.owner.getName(), auction.bids.peek().getAmount() * config.auction_comission / 100);
                                     if (auction.owner.isOnline())
                                     {
-                                        auction.owner.getPlayer().sendMessage("Nobody bid on your auction and it got canceled.");
+                                        auction.owner.getPlayer().sendMessage(t("time_stop"));
                                         if (auction.bids.peek().getAmount() != 0)
                                         {
-                                            auction.owner.getPlayer().sendMessage("You have been charged " + config.auction_comission + "% of your startbid!");
+                                            auction.owner.getPlayer().sendMessage(t("time_pun4",config.auction_comission));
                                         }
                                     }
-
                                 }
                                 manager.cancelAuction(auction);
                             }
@@ -164,7 +159,6 @@ public class AuctionTimer
                                     && (config.auction_notifyTime.get(j) - 600 < nextAuction))
                             {
                                 note = j + 1;
-                                AuctionHouse.debug("Notify Time!");
                                 int max = playerlist.size();
                                 for (int k = 0; k < max; ++k)
                                 {
@@ -175,48 +169,48 @@ public class AuctionTimer
                                         {
                                             if (last > 3)
                                             {
-                                                playerlist.get(k).sendMessage("Your auction #" + auction.id + " is ending soon!");
+                                                playerlist.get(k).sendMessage(t("time_end4",auction.id));
                                             }
                                             else if (last == 3)
                                             {
-                                                playerlist.get(k).sendMessage("Your auction #" + auction.id + " ends in 3...");
+                                                playerlist.get(k).sendMessage(t("time_end3",auction.id));
                                             }
                                             else if (last == 2)
                                             {
-                                                playerlist.get(k).sendMessage("Your auction #" + auction.id + " ends in 2..");
+                                                playerlist.get(k).sendMessage(t("time_end2",auction.id));
                                             }
                                             else if (last == 1)
                                             {
-                                                playerlist.get(k).sendMessage("Your auction #" + auction.id + " ends in 1.");
+                                                playerlist.get(k).sendMessage(t("time_end1",auction.id));
                                             }
                                         }
                                         else
                                         {
-                                            String out = "Auction #" + auction.id;
+                                            String out = "";
                                             if (last > 3)
                                             {
-                                                out += " is ending soon!";
+                                                out += t("time_end4",auction.id);
                                             }
                                             else if (last == 3)
                                             {
-                                                out += " ends in 3...";
+                                                out += t("time_end3",auction.id);
                                             }
                                             else if (last == 2)
                                             {
-                                                out += " ends in 2..";
+                                                out += t("time_end2",auction.id);
                                             }
                                             else if (last == 1)
                                             {
-                                                out += " ends in 1.";
+                                                out += t("time_end1",auction.id);
                                             }
 
                                             if (playerlist.get(k) == auction.bids.peek().getBidder().getOffPlayer())
                                             {
-                                                out += " You are the highest Bidder now!";
+                                                out += t("time_high");
                                             }
                                             else
                                             {
-                                                out += " You are not the highest Bidder!";
+                                                out += t("time_low");
                                             }
 
                                             playerlist.get(k).sendMessage(out);
@@ -245,7 +239,6 @@ public class AuctionTimer
 
     public void firstschedule(AuctionManager auctions)
     {
-        AuctionHouse.debug("First Timer Start");
         timer.schedule(timerTask, 1000, 1000);
         notifyTimer.schedule(notifyTask, 1000, 1000);
     }

@@ -1,5 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
@@ -54,7 +56,7 @@ public class AddCommand extends AbstractCommand
 
         if (!sender.hasPermission("auctionhouse.use.add"))
         {
-            sender.sendMessage("You are not allowed to add an Auction!");
+            sender.sendMessage(t("perm")+" "+t("add_Auc_perm"));
             return true;
         }
 
@@ -73,13 +75,13 @@ public class AddCommand extends AbstractCommand
             multiAuction = arguments.getInt("m");
             if (multiAuction == null)
             {
-                sender.sendMessage("Info: MultiAuction m: must be an Number!");
+                sender.sendMessage(t("i")+" "+t("add_multi_number"));
                 return true;
             }
             AuctionHouse.debug("MultiAuction: " + multiAuction);
             if (!(sender.hasPermission("auctionhouse.use.add.multi")))
             {
-                sender.sendMessage("You are not allowed to add multiple Auctions!");
+                sender.sendMessage(t("perm")+" "+t("add_multi_perm"));
                 return true;
             }
         }
@@ -91,24 +93,21 @@ public class AddCommand extends AbstractCommand
                 newItem = ((Player) sender).getItemInHand();
                 if (newItem.getType() == Material.AIR)
                 {
-                    sender.sendMessage("ProTip: You can NOT sell your hands!");
+                    sender.sendMessage(t("pro")+" "+t("add_sell_hand"));
                     return true;
                 }
-                AuctionHouse.debug("Hand ItemDetection OK: " + newItem.toString());
                 if (arguments.getString("2") != null)
                 {
                     startBid = arguments.getDouble("2");
                     if (startBid == null)
                     {
-                        sender.sendMessage("Info: Invalid Start Bid Format!");
+                        sender.sendMessage(t("i")+" "+t("no_invalid_time"));
                         return true;
                     }
-                    AuctionHouse.debug("StartBid OK");
                 }
                 else
                 {
                     startBid = 0.0;
-                    AuctionHouse.debug("No StartBid Set to 0");
                 }
 
                 if (arguments.getString("3") != null)
@@ -116,25 +115,23 @@ public class AddCommand extends AbstractCommand
                     Integer length = this.convert(arguments.getString("3"));
                     if (length == null)
                     {
-                        sender.sendMessage("Error: Invalid Length Format");
+                        sender.sendMessage(t("e")+" "+t("add_invalid_length"));
                         return true;
                     }
                     if (length <= config.auction_maxLength)
                     {
                         auctionEnd = (System.currentTimeMillis() + length);
-                        AuctionHouse.debug("AuctionLentgh OK");
                     }
                     else
                     {
-                        sender.sendMessage("Info: AuctionLength too high! Max: "
-                                + DateFormatUtils.format(config.auction_maxLength, "dd:hh:mm:ss"));
+                        sender.sendMessage(t("i")+" "+t("add_max_length",
+                                DateFormatUtils.format(config.auction_maxLength, "dd:hh:mm:ss")));
                         return true;
                     }
                 }
                 else
                 {
                     auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
-                    AuctionHouse.debug("No Auction Length Set to default");
                 }
             }
         }
@@ -143,40 +140,33 @@ public class AddCommand extends AbstractCommand
             newMaterial = Material.matchMaterial(arguments.getString("1"));
             if (newMaterial == null)
             {
-                sender.sendMessage("Info: " + arguments.getString("1") + " is not a valid Item");
+                sender.sendMessage(t("i") + " " + arguments.getString("1") + t("add_valid_item"));
                 return true;
             }
-            AuctionHouse.debug("Item MaterialDetection OK: " + newMaterial.toString());
             if (newMaterial.equals(Material.AIR))
             {
-                sender.sendMessage("Info: AIR ist not a valid Item!");
+                sender.sendMessage(t("i") + " AIR" + t("add_valid_item"));
                 return true;
             }
             amount = arguments.getInt("2");
             if (amount == null)
             {
-                sender.sendMessage("Info: No Amount given");
+                sender.sendMessage(t("1") + " " + t("add_no_amount"));
                 return true;
             }
-            AuctionHouse.debug("Quantity MaterialDetection OK: " + amount);
-
             newItem = new ItemStack(newMaterial, amount);
-            AuctionHouse.debug("Separate ItemDetection OK: " + newItem.toString());
-
             if (arguments.getString("3") != null)
             {
                 startBid = arguments.getDouble("3");
                 if (startBid == null)
                 {
-                    sender.sendMessage("Info: Invalid Start Bid Format!");
+                    sender.sendMessage(t("i") + " "+t("add_invalid_startbid"));
                     return true;
                 }
-                AuctionHouse.debug("StartBid OK");
             }
             else
             {
                 startBid = 0.0;
-                AuctionHouse.debug("No StartBid Set to 0");
             }
 
             if (arguments.getString("4") != null)
@@ -184,36 +174,34 @@ public class AddCommand extends AbstractCommand
                 Integer length = this.convert(arguments.getString("4"));
                 if (length == null)
                 {
-                    sender.sendMessage("Error: Invalid Length Format");
+                    sender.sendMessage(t("e") + " " + t("add_valid_item"));
                     return true;
                 }
                 if (length <= config.auction_maxLength)
                 {
                     auctionEnd = (System.currentTimeMillis() + length);
-                    AuctionHouse.debug("AuctionLentgh OK");
                 }
                 else
                 {
-                    sender.sendMessage("Info: AuctionLength too high! Max: "
-                            + DateFormatUtils.format(config.auction_maxLength, "dd:hh:mm:ss"));
+                    sender.sendMessage(t("i")+" "+t("add_max_length")+" "+
+                              DateFormatUtils.format(config.auction_maxLength, "dd:hh:mm:ss"));
                     return true;
                 }
             }
             else
             {
                 auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
-                AuctionHouse.debug("No Auction Length Set to default");
             }
         }
 
         if (sender instanceof ConsoleCommandSender)
         {
-            sender.sendMessage("Info: Creating Auction as Server...");
+            sender.sendMessage(t("i")+" "+t("add_server_create"));
         }
 
         if (newItem == null)
         {
-            sender.sendMessage("ProTip: You are a Server. You have no hands!");
+            sender.sendMessage(t("pro")+" "+t("add_server_nohand"));
             return true;
         }
         ItemStack removeItem = newItem.clone();
@@ -221,19 +209,15 @@ public class AddCommand extends AbstractCommand
 
         if (!(sender instanceof ConsoleCommandSender))
         {
-            if (((Player) sender).getInventory().contains(removeItem.getType(), removeItem.getAmount()))
-            {
-                AuctionHouse.debug("Item Amount OK");
-            }
-            else
+            if (!((Player) sender).getInventory().contains(removeItem.getType(), removeItem.getAmount()))
             {
                 if (sender.hasPermission("auctionhouse.cheatItems"))
                 {
-                    sender.sendMessage("Info: Not enough Items! Cheat Items...");
+                    sender.sendMessage(t("i")+" "+t("add_enough_item")+" "+t("add_cheat"));
                 }
                 else
                 {
-                    sender.sendMessage("Info: Not enough Items");
+                    sender.sendMessage(t("i")+" "+t("add_enough_item"));
                     return true;
                 }
             }
@@ -243,7 +227,7 @@ public class AddCommand extends AbstractCommand
         {
             if (item.getType().equals(newItem.getType()))
             {
-                sender.sendMessage("Error: This Item is blacklisted!");
+                sender.sendMessage(t("e")+" "+t("add_blacklist"));
                 return true;
             }
         }
@@ -253,18 +237,16 @@ public class AddCommand extends AbstractCommand
             if (sender instanceof ConsoleCommandSender)
             {
                 newAuction = new Auction(newItem, ServerBidder.getInstance(), auctionEnd, startBid);
-                AuctionHouse.log("Console adds Auction");
             }
             else
             {
                 newAuction = new Auction(newItem, Bidder.getInstance((Player) sender), auctionEnd, startBid);//Created Auction
             }
-            AuctionHouse.debug("Auction #" + (i + 1) + " init complete");
 
             if (!(this.RegisterAuction(newAuction, sender)))
             {
-                sender.sendMessage("Info: Couldn't add all Auctions!");
-                sender.sendMessage("Info: Max Auctions reached! (" + config.auction_maxAuctions_overall + ")");
+                sender.sendMessage(t("i")+" "+t("add_all_stop"));
+                sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
                 return true;
             }
         }
@@ -273,18 +255,14 @@ public class AddCommand extends AbstractCommand
         {
 
             ((Player) sender).getInventory().removeItem(removeItem);
-            AuctionHouse.debug("UserAuction(s) added succesfully!");
         }
         else
         {
-            AuctionHouse.debug("ServerAuction(s) added succesfully!");
+            AuctionHouse.log("ServerAuction(s) added succesfully!");
         }
 
-        sender.sendMessage(
-                "AuctionHouse: Started " + multiAuction
-                + " Auction(s) with " + newItem.toString()
-                + ". StartBid: " + startBid
-                + ". Auction ends: " + DateFormatUtils.format(auctionEnd, config.auction_timeFormat));
+        sender.sendMessage(t("i")+" "+t("add_start",multiAuction,newItem.toString(),startBid,
+                                DateFormatUtils.format(auctionEnd, config.auction_timeFormat)));                     
         return true;
     }
 
@@ -295,7 +273,6 @@ public class AddCommand extends AbstractCommand
             return false;
         }
         AuctionManager.getInstance().addAuction(auction);
-        AuctionHouse.debug("Manager OK");
 
         if (sender instanceof ConsoleCommandSender)
         {
@@ -305,7 +282,6 @@ public class AddCommand extends AbstractCommand
         {
             Bidder.getInstance((Player) sender).addAuction(auction);
         }
-        AuctionHouse.debug("Bidder OK");
 
         for (Bidder bidder : Bidder.getInstances().values())
         {
@@ -334,7 +310,7 @@ public class AddCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Adds an auction";
+        return t("command_add");
     }
 
     public Integer convert(String str) //ty quick_wango

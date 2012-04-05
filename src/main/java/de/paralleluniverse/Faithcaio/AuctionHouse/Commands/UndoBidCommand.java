@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
@@ -23,7 +24,7 @@ public class UndoBidCommand extends AbstractCommand
     {
         if (!(sender.hasPermission("auctionhouse.use.undobid")))
         {
-            sender.sendMessage("You are not allowed to undo Bids!");
+            sender.sendMessage(t("perm")+" "+t("undo_perm"));
             return true;
         }
         if (args.length < 1)
@@ -38,17 +39,17 @@ public class UndoBidCommand extends AbstractCommand
         {
             if (Bidder.getInstance(psender).getlastAuction(Bidder.getInstance(psender)) == null)
             {
-                sender.sendMessage("ProTip: You have to bid to undo it!");
+                sender.sendMessage(t("pro")+" "+t("undo_pro"));
                 return true;
             }
             if (Bidder.getInstance(psender).getlastAuction(Bidder.getInstance(psender)).undobid(Bidder.getInstance(psender)))
             {
-                sender.sendMessage("Info: Bid on last Auction redeemed!");
+                sender.sendMessage(t("i")+" "+t("undo_redeem"));
                 return true;
             }
             else
             {
-                sender.sendMessage("ProTip: You have to bid to undo it!");
+                sender.sendMessage(t("pro")+" "+t("undo_pro"));
                 return true;
             }
         }
@@ -56,21 +57,21 @@ public class UndoBidCommand extends AbstractCommand
         {
             if (AuctionManager.getInstance().getAuction(arguments.getInt("1")) == null)
             {
-                sender.sendMessage("Info: Auction #" + arguments.getInt("1") + " does not exist!");
+                sender.sendMessage(t("i")+" "+t("auction_no_exist",arguments.getInt("1")));
                 return true;
             }
             if (AuctionManager.getInstance().getAuction(arguments.getInt("1")).undobid(Bidder.getInstance(psender)))
             {
-                sender.sendMessage("Info: Bid on Auction #" + arguments.getInt("1") + " redeemed!");
+                sender.sendMessage(t("i")+" "+t("undo_bid_n",arguments.getInt("1")));
                 return true;
             }
             else
             {
-                sender.sendMessage("Info: You are not the highest Bidder!");
+                sender.sendMessage(t("i")+" "+t("undo_bidder"));
                 return true;
             }
         }
-        sender.sendMessage("Info: Couldn't undo Bid!");
+        sender.sendMessage(t("i")+" "+t("undo_fail"));
         return true;
     }
 
@@ -82,6 +83,6 @@ public class UndoBidCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Removes an auction.";
+        return t("command_undo");
     }
 }

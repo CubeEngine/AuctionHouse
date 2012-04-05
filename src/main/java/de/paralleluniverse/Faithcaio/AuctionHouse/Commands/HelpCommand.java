@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import org.bukkit.command.CommandSender;
@@ -20,10 +21,10 @@ public class HelpCommand extends AbstractCommand
     {
         if (!(sender.hasPermission("auctionhouse.help")))
         {
-            sender.sendMessage("You are not allowed to show AuctionHouse Help!");
+            sender.sendMessage(t("perm")+" "+t("help_perm"));
             return true;
         }
-        sender.sendMessage("AuctionHouse Commandlist:");
+        sender.sendMessage(t("help_list"));
         sender.sendMessage("");
         for (AbstractCommand command : getBase().getRegisteredCommands())
         {
@@ -37,6 +38,6 @@ public class HelpCommand extends AbstractCommand
     @Override
     public String getDescription()
     {
-        return "Prints this message.";
+        return t("command_help");
     }
 }

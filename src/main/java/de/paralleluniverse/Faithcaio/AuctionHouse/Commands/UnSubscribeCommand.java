@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
@@ -16,7 +17,7 @@ public class UnSubscribeCommand extends AbstractCommand
 {
     public UnSubscribeCommand(BaseCommand base)
     {
-        super(base, "unsubscribe", "unsub");//TODO auf subscription ändern mit aliases
+        super(base, "unsubscribe", "unsub");
     }
 
     public boolean execute(CommandSender sender, String[] args)
@@ -36,10 +37,10 @@ public class UnSubscribeCommand extends AbstractCommand
             if (arguments.getMaterial("m") != null)
             {
                 bidder.removeSubscription(arguments.getMaterial("m"));
-                sender.sendMessage("Info: Removed " + arguments.getString("m") + " from your subscriptionlist.");
+                sender.sendMessage(t("i")+" "+t("sub_rem_mat",arguments.getString("m")));
                 return true;
             }
-            sender.sendMessage("Error: Invalid Item!");
+            sender.sendMessage(t("e")+" "+t("invalid_id"));
             return true;
         }
         if (arguments.getString("i") != null)
@@ -50,19 +51,19 @@ public class UnSubscribeCommand extends AbstractCommand
                 {
                     if (bidder.removeSubscription(AuctionManager.getInstance().getAuction(arguments.getInt("i"))))
                     {
-                        sender.sendMessage("Info: Removed Auction #" + arguments.getString("i") + " from your subscriptionlist.");
+                        sender.sendMessage(t("i")+" "+t("sub_rem",arguments.getInt("i")));
                         return true;
                     }
-                    sender.sendMessage("Error: You were not subscribed to this auction!");
+                    sender.sendMessage(t("e")+" "+t("sub_rem_no"));
                     return true;
                 }
-                sender.sendMessage("Error: Auction #" + arguments.getString("i") + "does not exist!");
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",arguments.getInt("i")));
                 return true;
             }
-            sender.sendMessage("Error: Invalid AuctionID!");
+            sender.sendMessage(t("e")+" "+t("invalid_id"));
             return true;
         }
-        sender.sendMessage("Error: Invalid Command!");
+        sender.sendMessage(t("e")+" "+t("invalid_com"));
         return true;
     }
 
@@ -74,6 +75,6 @@ public class UnSubscribeCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Manages your Subscriptions";
+        return t("command_sub");
     }
 }

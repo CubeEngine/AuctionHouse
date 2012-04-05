@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
 
@@ -41,12 +42,12 @@ public class Auction
     {
         if (amount <= 0)
         {
-            bidder.getPlayer().sendMessage("Error: Bid must be greater than 0!");
+            bidder.getPlayer().sendMessage(t("e")+" "+t("auc_bid_low1"));
             return false;
         }
         if (amount <= this.bids.peek().getAmount())
         {
-            bidder.getPlayer().sendMessage("Info: Bid is too low!");
+            bidder.getPlayer().sendMessage(t("i")+" "+t("auc_bid_low2"));
             return false;
         }
         if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) >= amount)
@@ -58,26 +59,23 @@ public class Auction
                 this.bids.push(new Bid(bidder, amount));
                 return true;
             }
-            bidder.getPlayer().sendMessage("Error: You already bid too much. You would not have enough money to buy everything.");
+            bidder.getPlayer().sendMessage(t("e")+" "+t("auc_bid_money1"));
             return false;
         }
-        bidder.getPlayer().sendMessage("Error: Not enough money");
+        bidder.getPlayer().sendMessage(t("e")+" "+t("auc_bid_money2"));
         return false;
     }
 
     public boolean undobid(final Bidder bidder)
     {
-        AuctionHouse.debug("UndoBid Checking...");
         if (bidder != this.bids.peek().getBidder())
         {
             return false;
         }
-        AuctionHouse.debug("LastBidder OK");
         if (bidder == this.owner)
         {
             return false;
         }
-        AuctionHouse.debug("NoOwner OK");
         long undoTime = config.auction_undoTime;
         if (undoTime < 0) //Infinite UndoTime
         {

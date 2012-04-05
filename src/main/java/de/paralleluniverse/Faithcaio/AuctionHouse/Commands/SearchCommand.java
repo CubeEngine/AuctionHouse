@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.List;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -12,6 +13,10 @@ import org.bukkit.enchantments.Enchantment;
  */
 public class SearchCommand extends AbstractCommand
 {
+    
+    private static final AuctionHouse plugin = AuctionHouse.getInstance();
+    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
     public SearchCommand(BaseCommand base)
     {
         super(base, "search");
@@ -21,7 +26,7 @@ public class SearchCommand extends AbstractCommand
     {
         if (!(sender.hasPermission("auctionhouse.search")))
         {
-            sender.sendMessage("You are not allowed to search for Auctions!");
+            sender.sendMessage(t("perm")+" "+t("search_perm"));
             return true;
         }
         if (args.length < 1)
@@ -34,18 +39,16 @@ public class SearchCommand extends AbstractCommand
 
         if (arguments.getString("1") == null)
         {
-            sender.sendMessage("ProTip: You can NOT sort nothing! Item is missing.");
+            sender.sendMessage(t("pro")+" "+t("search_pro"));
             return true;
         }
-        AuctionHouse.debug("Search for: " + arguments.getString("1"));
         if (arguments.getMaterial("1") != null)
         {
-            AuctionHouse.debug("Item detected: " + arguments.getMaterial("1").toString());
             auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("1"));
         }
         else
         {
-            sender.sendMessage("Error: Item does not exist!");
+            sender.sendMessage(t("e")+" "+t("item")+" "+t("no_exist"));
             return true;
         }
         if (arguments.getString("s") != null)
@@ -66,7 +69,7 @@ public class SearchCommand extends AbstractCommand
         }
         if (auctionlist.isEmpty())
         {
-            sender.sendMessage("Info: No Auction found!");
+            sender.sendMessage(t("i")+" "+t("search_found"));
         }
         this.sendInfo(sender, auctionlist);
         return true;
@@ -83,7 +86,7 @@ public class SearchCommand extends AbstractCommand
             output += auction.item.toString();
             if (auction.item.getEnchantments().size() > 0)
             {
-                output += " Enchantments: ";
+                output += " "+t("info_out_ench")+" ";
                 for (Enchantment enchantment : auction.item.getEnchantments().keySet())
                 {
                     output += enchantment.toString() + ":";
@@ -92,22 +95,22 @@ public class SearchCommand extends AbstractCommand
             }
             if (auction.bids.peek().getBidder().equals(auction.owner))
             {
-                output += "StartBid is: " + auction.bids.peek().getAmount();
+                output += " "+t("info_out_bid",auction.bids.peek().getAmount());
             }
-            else
+            else //TODO change it to %s etc
             {
                 if (auction.bids.peek().getBidder() instanceof ServerBidder)
                 {
-                    output += "Leading Bidder: Server";
+                    output += t("info_out_leadserv");
                 }
                 else
                 {
-                    output += "Leading Bidder: " + auction.bids.peek().getBidder().getName();
+                    output += t("info_out_lead",auction.bids.peek().getBidder().getName());
                 }
-                output += " with " + auction.bids.peek().getAmount();
+                output += " "+t("with",auction.bids.peek().getAmount());
             }
-            output += " Auction ends: ";
-            output += DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat);
+            output += " "+t("info_out_end",
+                    DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
 
             sender.sendMessage(output);
         }
@@ -116,7 +119,7 @@ public class SearchCommand extends AbstractCommand
     @Override
     public String getDescription()
     {
-        return "Finds Auctions with Item in it. Sorting optional.";
+        return t("command_search");
     }
 
     @Override

@@ -1,8 +1,10 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
+import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouseConfiguration;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
 import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
@@ -10,13 +12,16 @@ import java.util.List;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-
 /**
  *
  * @author Faithcaio
  */
 public class ListCommand extends AbstractCommand
 {
+    
+    private static final AuctionHouse plugin = AuctionHouse.getInstance();
+    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
     public ListCommand(BaseCommand base)
     {
         super(base, "List");
@@ -34,7 +39,7 @@ public class ListCommand extends AbstractCommand
         String output = "";
         if (max == 0)
         {
-            output += "No auctions found!";
+            output += "no_detect";
         }
         for (int i = 0; i < max; ++i)
         {
@@ -44,7 +49,7 @@ public class ListCommand extends AbstractCommand
             output += auction.item.toString();
             if (auction.item.getEnchantments().size() > 0)
             {
-                output += " Enchantments: ";
+                output += " "+t("info_out_ench")+" ";
                 for (Enchantment enchantment : auction.item.getEnchantments().keySet())
                 {
                     output += enchantment.toString() + ":";
@@ -53,22 +58,22 @@ public class ListCommand extends AbstractCommand
             }
             if (auction.bids.peek().getBidder().equals(auction.owner))
             {
-                output += "StartBid is: " + auction.bids.peek().getAmount();
+                output += " "+t("info_out_bid",auction.bids.peek().getAmount());
             }
             else
             {
                 if (auction.bids.peek().getBidder() instanceof ServerBidder)
                 {
-                    output += "Leading Bidder: Server";
+                    output += t("info_out_leadserv");
                 }
                 else
                 {
-                    output += "Leading Bidder: " + auction.bids.peek().getBidder().getName();
+                    output += t("info_out_lead",auction.bids.peek().getBidder().getName());
                 }
-                output += " with " + auction.bids.peek().getAmount();
+                output += " "+t("with",auction.bids.peek().getAmount());
             }
-            output += " Auction ends: ";
-            output += DateFormatUtils.format(auction.auctionEnd, AuctionHouse.getInstance().getConfigurations().auction_timeFormat);
+            output += " "+t("info_out_end",
+                    DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
 
             sender.sendMessage(output);
         }
@@ -76,6 +81,6 @@ public class ListCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return ""; // TODO description missing!
+        return t("command_list");
     }
 }

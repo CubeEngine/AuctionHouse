@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.1-R3</version>
+            <version>1.2.4-R1.0</version>
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
@@ -42,6 +42,14 @@
                 <includes>
                     <include>config.yml</include>
                     <include>plugin.yml</include>
+                </includes>
+            </resource>
+            <resource>
+                <targetPath>./language</targetPath>
+                <directory>${basedir}/src/main/resources/language/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>*</include>
                 </includes>
             </resource>
             <resource>

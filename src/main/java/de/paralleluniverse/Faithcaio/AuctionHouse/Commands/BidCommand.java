@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
@@ -29,12 +30,12 @@ public class BidCommand extends AbstractCommand
     {
         if (!(sender.hasPermission("auctionhouse.use.bid")))
         {
-            sender.sendMessage("You are not allowed to bid on Auctions!");
+            sender.sendMessage(t("perm")+" "+t("bid_perm"));
             return true;
         }
         if (sender instanceof ConsoleCommandSender)
         {
-            sender.sendMessage("Console can not bid on Auctions!");
+            sender.sendMessage(t("bid_console"));
             return true;
         }
 
@@ -55,32 +56,29 @@ public class BidCommand extends AbstractCommand
                 if (arguments.getString("q") == null)
                 {
                     quantity = arguments.getMaterial("i").getMaxStackSize();
-                    AuctionHouse.debug("No Quantity | Set to " + quantity);
                 }
                 else
                 {
                     if (arguments.getInt("q") == null)
                     {
-                        sender.sendMessage("Error: Quantity q: must be a number.");
+                        sender.sendMessage(t("e")+" "+t("bid_quantity_num"));
                         return true;
                     }
                     if (arguments.getInt("q") < 1)
                     {
-                        sender.sendMessage("Error: Quantity q: must be greater than 0");
+                        sender.sendMessage(t("e")+" "+t("bid_quantity"));
                         return true;
                     }
                     else
                     {
                         quantity = arguments.getInt("q");
-                        AuctionHouse.debug("Quantity Set: " + quantity);
                     }
                 }
-                AuctionHouse.debug("Bid on Material");
 
                 List<Auction> auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("i"));
                 if (auctionlist.isEmpty())
                 {
-                    sender.sendMessage("Info: No Auctions with " + arguments.getMaterial("i").toString());
+                    sender.sendMessage(t("i")+" "+t("bid_no_auction",arguments.getMaterial("i").toString()));
                     return true;
                 }
                 AuctionSort sorter = new AuctionSort();
@@ -95,22 +93,20 @@ public class BidCommand extends AbstractCommand
                 }
                 if (auctionlist.isEmpty())
                 {
-                    sender.sendMessage("Info: No Auctions with at least " + quantity + " " + arguments.getMaterial("i").toString());
+                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",quantity,arguments.getMaterial("i").toString()));
                     return true;
                 }
                 auction = auctionlist.get(0);//First is Cheapest after Sort
                 bidAmount = arguments.getDouble("1");
                 if (bidAmount != null)
                 {
-                    AuctionHouse.debug("BidAmount Set");
                     if (auction.owner == Bidder.getInstance((Player) sender))
                     {
-                        sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
+                        sender.sendMessage(t("pro")+" "+t("bid_own"));
                         return true;
                     }
                     if (auction.bid(Bidder.getInstance((Player) sender), bidAmount))
                     {
-                        AuctionHouse.debug("Item Bid OK");
                         Bidder.getInstance((Player) sender).addAuction(auction);
                         this.SendInfo(auction, sender);
                         return true;
@@ -120,33 +116,29 @@ public class BidCommand extends AbstractCommand
             }
             else
             {
-                sender.sendMessage("Info: " + arguments.getString("i") + "is not a valid item!");
+                sender.sendMessage(t("i")+t("no_valid_item",arguments.getString("i")));
                 return true;
             }
         }
         Integer id = arguments.getInt("1");
         if (id != null)
         {
-            AuctionHouse.debug("Bid on ID");
             bidAmount = arguments.getDouble("2");
             if (bidAmount != null)
             {
-                AuctionHouse.debug("BidAmount Set");
-
                 if (AuctionManager.getInstance().getAuction(id) == null)
                 {
-                    sender.sendMessage("Info: Auction #" + id + " does not exist!");
+                    sender.sendMessage(t("i")+" "+t("auction_no_exist",id));
                     return true;
                 }
                 auction = AuctionManager.getInstance().getAuction(id);
                 if (auction.owner == Bidder.getInstance((Player) sender))
                 {
-                    sender.sendMessage("ProTip: To Bid on your own auction is unfair!");
+                    sender.sendMessage(t("pro")+" "+t("bid_own"));
                     return true;
                 }
                 if (auction.bid(Bidder.getInstance((Player) sender), bidAmount))
                 {
-                    AuctionHouse.debug("Id Bid OK");
                     Bidder.getInstance((Player) sender).addAuction(auction);
                     this.SendInfo(auction, sender);
                     return true;
@@ -154,21 +146,18 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        sender.sendMessage("Info: " + arguments.getString("1") + "is not a valid AuctionID!");
+        sender.sendMessage(t("e")+" " + arguments.getString("1") + t("bid_valid_id"));
         return true;
     }
 
     public void SendInfo(Auction auction, CommandSender sender)
     {
-        sender.sendMessage(
-                "You just bid " + auction.bids.peek().getAmount()
-                + " on " + auction.item.toString()
-                + " | Auction ID:" + auction.id);
+        sender.sendMessage(t("bid_out",auction.bids.peek().getAmount(),auction.item.toString(),auction.id));
         if (!(auction.owner instanceof ServerBidder) && auction.owner.isOnline())
         {
             if (auction.owner.playerNotification)
             {
-                auction.owner.getPlayer().sendMessage("Someone bid on your auction #" + auction.id + "!");
+                auction.owner.getPlayer().sendMessage(t("bid_owner",auction.id));
             }
         }
     }
@@ -181,6 +170,6 @@ public class BidCommand extends AbstractCommand
 
     public String getDescription()
     {
-        return "Bids on an auction.";
+        return t("command_bid");
     }
 }

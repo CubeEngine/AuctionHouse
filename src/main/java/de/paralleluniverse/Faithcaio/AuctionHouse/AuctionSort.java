@@ -100,7 +100,6 @@ public class AuctionSort
             }
             while (auctionlist.get(auctionlist.size() - 1).item.getAmount() < quantity)
             {
-                AuctionHouse.debug("removing low quantity remain:" + auctionlist.size());
                 auctionlist.remove(auctionlist.size() - 1);
                 if (auctionlist.isEmpty())
                 {

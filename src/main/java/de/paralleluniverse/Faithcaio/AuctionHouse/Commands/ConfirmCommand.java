@@ -1,5 +1,6 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
@@ -28,14 +29,14 @@ public class ConfirmCommand extends AbstractCommand
             int max = AuctionManager.getInstance().size();
             if (max == 0)
             {
-                sender.sendMessage("Info: No Auctions detected!");
+                sender.sendMessage(t("i")+" "+t("no_detect"));
                 return true;
             }
             for (int i = max - 1; i >= 0; --i)
             {
                 AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getIndexAuction(i));
             }
-            sender.sendMessage("Info: All Auctions deleted!");
+            sender.sendMessage(t("i")+" "+t("confirm_del"));
             return true;
         }
         if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender))
@@ -45,14 +46,14 @@ public class ConfirmCommand extends AbstractCommand
                 int max = ServerBidder.getInstance().getAuctions().size();
                 if (max == 0)
                 {
-                    sender.sendMessage("Info: No ServerAuctions detected!");
+                    sender.sendMessage(t("i")+" "+t("confirm_no_serv"));
                     return true;
                 }
                 for (int i = max - 1; i >= 0; --i)
                 {
                     AuctionManager.getInstance().cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
                 }
-                sender.sendMessage("Info: All ServerAuctions deleted!");
+                sender.sendMessage(t("i")+" "+t("confirm_del_serv"));
                 return true;
             }
             else
@@ -64,22 +65,19 @@ public class ConfirmCommand extends AbstractCommand
                 {
                     if (auctions.get(i).owner == player)
                     {
-                        AuctionHouse.debug("Remove per Player");
                         AuctionManager.getInstance().cancelAuction(auctions.get(i));
                     }
                 }
-                sender.sendMessage(
-                        "Info:Removed " + (player.getActiveBids().size() - bids)
-                        + " auctions of " + player.getName());
+                sender.sendMessage(t("i")+" "+t("confirm_rem",(player.getActiveBids().size() - bids),player.getName()));
                 return true;
             }
         }
-        sender.sendMessage("Error: Nothing to confirm!");
+        sender.sendMessage(t("e")+" "+t("confirm_no_req"));
         return true;
     }
 
     public String getDescription()
     {
-        return "Confirms a requested action";
+        return t("command_confirm");
     }
 }
