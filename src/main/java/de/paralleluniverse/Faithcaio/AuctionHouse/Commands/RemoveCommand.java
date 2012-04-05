@@ -17,10 +17,10 @@ import org.bukkit.inventory.ItemStack;
  * @author Faithcaio
  */
 public class RemoveCommand extends AbstractCommand
-{
+{//TODO confirm delay
     public RemoveCommand(BaseCommand base)
     {
-        super(base, "remove", "cancel", "delete");
+        super(base, "remove", "cancel", "delete", "rem");
     }
 
     public boolean execute(CommandSender sender, String[] args)
@@ -88,7 +88,7 @@ public class RemoveCommand extends AbstractCommand
                     }
                     ItemStack item = AuctionManager.getInstance().getAuction(id).item;
                     AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));
-                    sender.sendMessage(t("i")+" "+t("rem_id",id) + item.toString());//TODO
+                    sender.sendMessage(t("i")+" "+t("rem_id",id,item.toString()));
                     return true;
                 }
                 sender.sendMessage(t("e")+" "+t("invalid_com"));

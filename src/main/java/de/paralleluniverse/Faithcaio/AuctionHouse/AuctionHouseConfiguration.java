@@ -23,6 +23,7 @@ public class AuctionHouseConfiguration
     public final int      auction_punish;               //Punishment in % of Bid 0-100
     public final int      auction_itemContainerLength;  //in days
     public final int      auction_comission;            //Cost for Owner in %
+    public final String   auction_language;             //en / de
 
     public AuctionHouseConfiguration(Configuration config)
     {
@@ -34,6 +35,7 @@ public class AuctionHouseConfiguration
         this.auction_punish = config.getInt("auction.punish");
         this.auction_itemContainerLength = config.getInt("auction.itemContainerLength");
         this.auction_comission = config.getInt("auction.comission");
+        this.auction_language = config.getString("auction.language");
 
         this.auction_undoTime = this.convert(config.getString("auction.undoTime"));
         this.auction_maxLength = this.convert(config.getString("auction.maxLength"));

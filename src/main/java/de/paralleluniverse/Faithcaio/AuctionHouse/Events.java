@@ -101,7 +101,6 @@ public class Events implements Listener
                         player.sendMessage(t("event_sign_perm"));
                         return;
                     }
-                    AuctionHouse.debug(player.getName() + ": Request Items");
                     if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
                     {
                         player.sendMessage(t("i")+" "+t("time_sign_empty"));

@@ -50,7 +50,7 @@ public class AuctionHouse extends JavaPlugin
         this.saveConfig();
         
         this.economy = this.setupEconomy();
-        Translator.loadTranslation("en");//TODO config
+        Translator.loadTranslation(config.auction_language);
         
         AuctionTimer.getInstance().firstschedule(AuctionManager.getInstance());
         

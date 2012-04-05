@@ -13,6 +13,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
 import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -29,6 +30,7 @@ public class AddCommand extends AbstractCommand
     private static AddCommand instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    Economy econ = AuctionHouse.getInstance().getEconomy();
 
     public AddCommand(BaseCommand base)
     {
@@ -78,14 +80,14 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage(t("i")+" "+t("add_multi_number"));
                 return true;
             }
-            AuctionHouse.debug("MultiAuction: " + multiAuction);
             if (!(sender.hasPermission("auctionhouse.use.add.multi")))
             {
                 sender.sendMessage(t("perm")+" "+t("add_multi_perm"));
                 return true;
             }
         }
-
+        if (arguments.getString("1")==null)
+            return true;//TODO meldung
         if (arguments.getString("1").equalsIgnoreCase("hand"))
         {
             if (!(sender instanceof ConsoleCommandSender))
@@ -101,7 +103,7 @@ public class AddCommand extends AbstractCommand
                     startBid = arguments.getDouble("2");
                     if (startBid == null)
                     {
-                        sender.sendMessage(t("i")+" "+t("no_invalid_time"));
+                        sender.sendMessage(t("i")+" "+t("add_invalid_time"));
                         return true;
                     }
                 }
@@ -137,24 +139,26 @@ public class AddCommand extends AbstractCommand
         }
         else
         {
-            newMaterial = Material.matchMaterial(arguments.getString("1"));
+            newMaterial = arguments.getMaterial("1").getType();
             if (newMaterial == null)
             {
-                sender.sendMessage(t("i") + " " + arguments.getString("1") + t("add_valid_item"));
+                sender.sendMessage(t("i") + " " +t("add_invalid_item",arguments.getString("1")));
                 return true;
             }
             if (newMaterial.equals(Material.AIR))
             {
-                sender.sendMessage(t("i") + " AIR" + t("add_valid_item"));
+                sender.sendMessage(t("i") +t("add_invalid_item","AIR"));
                 return true;
             }
             amount = arguments.getInt("2");
             if (amount == null)
             {
-                sender.sendMessage(t("1") + " " + t("add_no_amount"));
+                sender.sendMessage(t("i") + " " + t("add_no_amount"));
                 return true;
             }
+            
             newItem = new ItemStack(newMaterial, amount);
+            newItem.setDurability(arguments.getMaterial("1").getDurability());
             if (arguments.getString("3") != null)
             {
                 startBid = arguments.getDouble("3");
@@ -174,7 +178,7 @@ public class AddCommand extends AbstractCommand
                 Integer length = this.convert(arguments.getString("4"));
                 if (length == null)
                 {
-                    sender.sendMessage(t("e") + " " + t("add_valid_item"));
+                    sender.sendMessage(t("e") + " " + t("add_invalid_length"));
                     return true;
                 }
                 if (length <= config.auction_maxLength)
@@ -261,7 +265,7 @@ public class AddCommand extends AbstractCommand
             AuctionHouse.log("ServerAuction(s) added succesfully!");
         }
 
-        sender.sendMessage(t("i")+" "+t("add_start",multiAuction,newItem.toString(),startBid,
+        sender.sendMessage(t("i")+" "+t("add_start",multiAuction,newItem.toString(),econ.format(startBid),
                                 DateFormatUtils.format(auctionEnd, config.auction_timeFormat)));                     
         return true;
     }

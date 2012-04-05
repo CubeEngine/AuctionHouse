@@ -3,6 +3,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.List;
+import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -16,6 +17,7 @@ public class SearchCommand extends AbstractCommand
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    Economy econ = AuctionHouse.getInstance().getEconomy();
     
     public SearchCommand(BaseCommand base)
     {
@@ -95,7 +97,7 @@ public class SearchCommand extends AbstractCommand
             }
             if (auction.bids.peek().getBidder().equals(auction.owner))
             {
-                output += " "+t("info_out_bid",auction.bids.peek().getAmount());
+                output += " "+t("info_out_bid",econ.format(auction.bids.peek().getAmount()));
             }
             else //TODO change it to %s etc
             {

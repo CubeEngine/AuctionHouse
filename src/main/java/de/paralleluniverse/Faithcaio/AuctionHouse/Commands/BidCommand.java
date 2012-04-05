@@ -11,6 +11,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
 import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
 import java.util.List;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -21,6 +22,8 @@ import org.bukkit.entity.Player;
  */
 public class BidCommand extends AbstractCommand
 {
+    Economy econ = AuctionHouse.getInstance().getEconomy();
+    
     public BidCommand(BaseCommand base)
     {
         super(base, "bid");
@@ -146,13 +149,13 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        sender.sendMessage(t("e")+" " + arguments.getString("1") + t("bid_valid_id"));
+        sender.sendMessage(t("e")+" " + t("bid_valid_id",arguments.getString("1")));
         return true;
     }
 
     public void SendInfo(Auction auction, CommandSender sender)
     {
-        sender.sendMessage(t("bid_out",auction.bids.peek().getAmount(),auction.item.toString(),auction.id));
+        sender.sendMessage(t("bid_out",econ.format(auction.bids.peek().getAmount()),auction.item.toString(),auction.id));
         if (!(auction.owner instanceof ServerBidder) && auction.owner.isOnline())
         {
             if (auction.owner.playerNotification)

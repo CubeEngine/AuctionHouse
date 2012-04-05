@@ -2,6 +2,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse;
 
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import java.util.LinkedList;
+import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,7 @@ public class ItemContainer
 {
     LinkedList<AuctionItem> itemList;
     public final Bidder bidder;
+    Economy econ = AuctionHouse.getInstance().getEconomy();
 
     public ItemContainer(Bidder bidder)
     {
@@ -47,7 +49,7 @@ public class ItemContainer
         else
         {
             player.sendMessage(t("i")+" "+t("cont_rec",auctionItem.item.toString(),
-                                             auctionItem.price,auctionItem.owner,
+                                             econ.format(auctionItem.price),auctionItem.owner,
                                              DateFormatUtils.formatUTC(auctionItem.date, "MMM dd")));
         }
 

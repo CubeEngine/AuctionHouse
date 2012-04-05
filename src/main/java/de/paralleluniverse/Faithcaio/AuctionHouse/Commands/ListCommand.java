@@ -9,6 +9,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
 import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
 import java.util.List;
+import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +22,7 @@ public class ListCommand extends AbstractCommand
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    Economy econ = AuctionHouse.getInstance().getEconomy();
     
     public ListCommand(BaseCommand base)
     {
@@ -58,7 +60,7 @@ public class ListCommand extends AbstractCommand
             }
             if (auction.bids.peek().getBidder().equals(auction.owner))
             {
-                output += " "+t("info_out_bid",auction.bids.peek().getAmount());
+                output += " "+t("info_out_bid",econ.format(auction.bids.peek().getAmount()));
             }
             else
             {
@@ -70,7 +72,7 @@ public class ListCommand extends AbstractCommand
                 {
                     output += t("info_out_lead",auction.bids.peek().getBidder().getName());
                 }
-                output += " "+t("with",auction.bids.peek().getAmount());
+                output += " "+t("info_out_with",auction.bids.peek().getAmount());
             }
             output += " "+t("info_out_end",
                     DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));

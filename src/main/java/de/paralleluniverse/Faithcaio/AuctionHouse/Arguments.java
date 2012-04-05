@@ -84,16 +84,21 @@ public class Arguments
         }
         else
         {
-            tmp = tmp.substring(0, parambreak);
             short tmp2;
             try
             {
-                tmp2 = Short.parseShort(tmp.substring(parambreak + 1));
+                
+                AuctionHouse.debug("param vor: "+tmp+"|"+tmp.substring(parambreak+1));
+                tmp2 = Short.parseShort(tmp.substring(parambreak+1));
+                AuctionHouse.debug("param nach "+tmp+"|"+tmp2);
             }
             catch (NumberFormatException ex)
             {
-                return null;
+                tmp2 = 0;
+                tmp = tmp.substring(0, parambreak);
+                return new ItemStack(Material.matchMaterial(tmp), 1, tmp2);
             }
+            tmp = tmp.substring(0, parambreak);
             return new ItemStack(Material.matchMaterial(tmp), 1, tmp2);
         }
 

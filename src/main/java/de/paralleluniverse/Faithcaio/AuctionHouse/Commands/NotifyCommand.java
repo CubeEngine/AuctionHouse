@@ -3,6 +3,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -13,7 +14,7 @@ public class NotifyCommand extends AbstractCommand
 {
     public NotifyCommand(BaseCommand base)
     {
-        super(base, "notify");
+        super(base, "notify", "n");
     }
 
     public boolean execute(CommandSender sender, String[] args)
@@ -34,6 +35,8 @@ public class NotifyCommand extends AbstractCommand
         {
             return true;
         }
+        if (sender instanceof ConsoleCommandSender)
+            AuctionHouse.log("Console can not use notification!");
         Bidder bidder = Bidder.getInstance((Player) sender);
         if (arguments.getString("1").equalsIgnoreCase("true") || arguments.getString("1").equalsIgnoreCase("on"))
         {

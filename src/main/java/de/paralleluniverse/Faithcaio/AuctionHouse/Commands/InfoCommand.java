@@ -5,6 +5,7 @@ import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import java.util.List;
+import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
@@ -19,6 +20,7 @@ public class InfoCommand extends AbstractCommand
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    Economy econ = plugin.getEconomy();
     
     public InfoCommand(BaseCommand base)
     {
@@ -178,7 +180,7 @@ public class InfoCommand extends AbstractCommand
         }
         if (auction.bids.peek().getBidder().equals(auction.owner))
         {
-            output += " "+t("info_out_bid",auction.bids.peek().getAmount());
+            output += " "+t("info_out_bid",econ.format(auction.bids.peek().getAmount()));
         }
         else
         {
@@ -190,7 +192,7 @@ public class InfoCommand extends AbstractCommand
             {
                 output += t("info_out_lead",auction.bids.peek().getBidder().getName());
             }
-            output +=" "+t("with",auction.bids.peek().getAmount());
+            output +=" "+t("info_out_with",auction.bids.peek().getAmount());
         }
         output += " "+t("info_out_end",
                         DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));

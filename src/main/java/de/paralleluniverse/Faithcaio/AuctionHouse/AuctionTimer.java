@@ -189,19 +189,19 @@ public class AuctionTimer
                                             String out = "";
                                             if (last > 3)
                                             {
-                                                out += t("time_end4",auction.id);
+                                                out += t("time_end42",auction.id);
                                             }
                                             else if (last == 3)
                                             {
-                                                out += t("time_end3",auction.id);
+                                                out += t("time_end32",auction.id);
                                             }
                                             else if (last == 2)
                                             {
-                                                out += t("time_end2",auction.id);
+                                                out += t("time_end22",auction.id);
                                             }
                                             else if (last == 1)
                                             {
-                                                out += t("time_end1",auction.id);
+                                                out += t("time_end12",auction.id);
                                             }
 
                                             if (playerlist.get(k) == auction.bids.peek().getBidder().getOffPlayer())

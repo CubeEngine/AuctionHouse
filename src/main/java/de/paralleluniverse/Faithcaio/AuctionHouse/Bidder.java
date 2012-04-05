@@ -158,6 +158,8 @@ public class Bidder
         final int length = this.activeBids.size();
         for (int i = 0; i < length; ++i)
         {
+            if (this.activeBids.get(i).bids.peek()==null)
+                return null;
             if (this.activeBids.get(i).bids.peek().getBidder() == player)
             {
                 auctionlist.add(this.activeBids.get(i));
