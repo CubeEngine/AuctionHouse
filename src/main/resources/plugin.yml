@@ -30,6 +30,7 @@ permissions:
       auctionhouse.help: true
       auctionhouse.search: true
       auctionhouse.use.bid.infinite: true
+      auctionhouse.create.*: true
 
   auctionhouse.use.*:
     description: ""
@@ -38,6 +39,7 @@ permissions:
       auctionhouse.use.add: true
       auctionhouse.use.add.multi: true
       auctionhouse.use.undobid: true
+      auctionhouse.use.addsign: true
     
 
   auctionhouse.use.bid:
@@ -53,6 +55,9 @@ permissions:
     description: ""
     
   auctionhouse.use.undobid:
+    description: ""
+    
+  auctionhouse.use.addsign:
     description: ""
 
   auctionhouse.delete.all:
@@ -122,6 +127,18 @@ permissions:
     description: ""
   
   auctionhouse.getItems.signplace:
+    description: ""
+    
+  auctionhouse.create.*:
+    description: ""  
+    children:
+      auctionhouse.create.boxsign: true
+      auctionhouse.create.addsign: true
+    
+  auctionhouse.create.boxsign:
+    description: ""
+    
+  auctionhouse.create.addsign:
     description: ""
 
     

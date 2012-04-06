@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -84,6 +85,41 @@ public class Events implements Listener
             Bidder.getInstance(event.getPlayer()).notifyContainer = true;
         }
     }
+   
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event)
+    {//TODO klappt nicht !!
+        if (event.getBlockPlaced().getType() == Material.WALL_SIGN)
+            if(((Sign)event.getBlockPlaced().getState()).getLine(0).equalsIgnoreCase("[AuctionHouse]"))
+            {
+                Sign sign = (Sign)event.getBlockPlaced();
+                sign.setLine(0, "[AuctionHouse]");
+                if (sign.getLine(1).equalsIgnoreCase("AuctionBox"))
+                {
+                    if (Perm.get().check(event.getPlayer(), "auctionhouse.create.boxsign"))
+                    {
+                        event.setCancelled(true);
+                        return;
+                    }
+                    sign.setLine(1, "AuctionBox");
+                    event.getPlayer().sendMessage("event_sign_create");
+                    return;
+                }
+                if (sign.getLine(1).equalsIgnoreCase("Start"))
+                {
+                    if (MyUtil.get().convert(sign.getLine(2))==null)
+                    {
+                        event.getPlayer().sendMessage("event_sign_fail");
+                        event.setCancelled(true);
+                        return;
+                    }
+                    sign.setLine(1, "Start");
+                }
+            }
+        
+        
+        //TODO Schild erstellung abfangen und Grosskleinschreibung anpassen  
+    }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
@@ -94,131 +130,68 @@ public class Events implements Listener
         {
             return;
         }
-        if (!(event.getAction() == Action.RIGHT_CLICK_BLOCK))
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
         {
-            return;
-        }
-        if (block.getType().equals(Material.WALL_SIGN))
-        {
-            if (((Sign) block.getState()).getLine(0).equals("[AuctionHouse]"))
+            if (block.getType().equals(Material.WALL_SIGN))
             {
-                if (((Sign) block.getState()).getLine(1).equals("AuctionBox"))
+                if (((Sign)block.getState()).getLine(0).equals("[AuctionHouse]"))
                 {
-                    //AuktionBox GetItems
-                    if (!(player.hasPermission("auctionhouse.getItems.sign")))
+                    if (((Sign)block.getState()).getLine(1).equals("AuctionBox"))
                     {
-                        player.sendMessage(t("event_sign_perm"));
+                        //AuktionBox GetItems
+                        if (!Perm.get().check(player,"auctionhouse.getItems.sign")) return;
+                        if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
+                        {
+                            player.sendMessage(t("i")+" "+t("time_sign_empty"));
+                        }
+                    }
+                    if (((Sign) block.getState()).getLine(1).equals("Start"))
+                    {
+                        //AuktionBox Start Auktion
+                        //TODO Schwert verschwindet nicht im Inventar
+                        //TODO Blöcke wird gesetzt UND eingestellt
+                        if (!Perm.get().check(player, "auctionhouse.use.addsign")) return;
+
+                        Double startbid;
+                        Integer length = MyUtil.get().convert(((Sign) block.getState()).getLine(2));
+                        if (length == null)
                         return;
+                        try
+                        {
+                            startbid = Double.parseDouble(((Sign) block.getState()).getLine(3));
+                        }
+                        catch (NumberFormatException ex)
+                        {
+                            startbid = 0.0;
+                        }
+                        if (startbid == null) startbid = 0.0;
+
+                        for (ItemStack item : config.auction_blacklist)
+                        {
+                            if (item.getType().equals(player.getItemInHand().getType()))
+                            {
+                                player.sendMessage(t("e")+" "+t("add_blacklist"));
+                                return;
+                            }
+                        }
+
+                        Auction newAuction = new Auction(player.getItemInHand(), 
+                                                        Bidder.getInstance(player),
+                                                        System.currentTimeMillis()+length,
+                                                        startbid);
+                        if (!(MyUtil.get().RegisterAuction(newAuction, player)))
+                        {
+                            player.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
+                        }
+                        else
+                        {
+                            player.getInventory().removeItem(player.getItemInHand());
+                            player.sendMessage(t("i")+" "+t("add_start",1,newAuction.item.toString(),econ.format(startbid),
+                                    DateFormatUtils.format(newAuction.auctionEnd, config.auction_timeFormat))); 
+                        }    
                     }
-                    if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
-                    {
-                        player.sendMessage(t("i")+" "+t("time_sign_empty"));
-                    }
-                }
-                if (((Sign) block.getState()).getLine(1).equals("Start"))
-                {
-                    //AuktionBox Start Auktion
-                    //TODO Schwert verschwindet nicht im Inventar
-                    //TODO Schild wird gesetzt UND eingestellt
-                    Double startbid;
-                    Integer length = this.convert(((Sign) block.getState()).getLine(2));
-                    if (length == null)
-                       return;
-                    try
-                    {
-                         startbid = Double.parseDouble(((Sign) block.getState()).getLine(3));
-                    }
-                    catch (NumberFormatException ex)
-                    {
-                        startbid = 0.0;
-                    }
-                    if (startbid == null) startbid = 0.0;
-                    
-                    Auction newAuction = new Auction(player.getItemInHand(), 
-                                                    Bidder.getInstance(player),
-                                                    System.currentTimeMillis()+length,
-                                                    startbid);
-                    if (!(this.RegisterAuction(newAuction, player)))
-                    {
-                        player.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
-                        return;
-                    }
-                    else
-                    {
-                        player.getInventory().removeItem(player.getItemInHand());
-                        player.sendMessage(t("i")+" "+t("add_start",1,newAuction.item.toString(),econ.format(startbid),
-                                DateFormatUtils.format(newAuction.auctionEnd, config.auction_timeFormat))); 
-                    }    
                 }
             }
         }
     }
-    public Integer convert(String str) //ty quick_wango
-    {//TODO auslagern ist auch in config / add command
-        Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(str);
-        matcher.find();
-        int tmp;
-        try
-        {
-            tmp = Integer.valueOf(String.valueOf(matcher.group(1)));
-        }
-        catch (NumberFormatException e)
-        {
-            return null;
-        }
-        catch (IllegalStateException ex)
-        {
-            return null;
-        }
-        if (tmp == -1)
-        {
-            return -1;
-        }
-        String unitSuffix = matcher.group(2);
-        if (unitSuffix == null)
-        {
-            unitSuffix = "m";
-        }
-        switch (unitSuffix.toLowerCase().charAt(0))
-        {
-            case 'd':
-                tmp *= 24;
-            case 'h':
-                tmp *= 60;
-            case 'm':
-                tmp *= 60;
-            case 's':
-                tmp *= 1000;
-        }
-        return tmp;
-    }
-    
-    private boolean RegisterAuction(Auction auction, CommandSender sender)
-    {//TODO aulagern ist auch in add
-        if (AuctionManager.getInstance().isEmpty())
-        {
-            return false;
-        }
-        AuctionManager.getInstance().addAuction(auction);
-
-        if (sender instanceof ConsoleCommandSender)
-        {
-            ServerBidder.getInstance().addAuction(auction);
-        }
-        else
-        {
-            Bidder.getInstance((Player) sender).addAuction(auction);
-        }
-
-        for (Bidder bidder : Bidder.getInstances().values())
-        {
-            if (bidder.getMatSub().contains(new ItemStack(auction.item.getType(), 1, auction.item.getDurability())))
-            {
-                bidder.addSubscription(auction);
-            }
-        }
-        return true;
-    }
-    
 }

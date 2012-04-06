@@ -26,11 +26,7 @@ public class NotifyCommand extends AbstractCommand
             sender.sendMessage("Aliases notify|n");
             return true;
         }
-        if (!(sender.hasPermission("auctionhouse.notify.command")))
-        {
-            sender.sendMessage(t("perm")+" "+t("note_perm"));
-            return true;
-        }
+        if (!Perm.get().check(sender,"auctionhouse.notify.command")) return true;
         Arguments arguments = new Arguments(args);
         if (arguments.getString("1") == null)
         {

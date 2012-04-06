@@ -1,13 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
-import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
-import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -40,28 +34,20 @@ public class RemoveCommand extends AbstractCommand
         {
             if (arguments.getString("1").equalsIgnoreCase("all"))
             {
-                if (sender.hasPermission("auctionhouse.delete.all"))
-                {
-                    AuctionManager.getInstance().remAllConfirm.add(sender);
-                    sender.sendMessage(t("rem_all"));
-                    sender.sendMessage(t("rem_confirm"));
-                    return true;
-                }
-                sender.sendMessage(t("perm")+" "+t("rem_all_perm"));
+                if (!Perm.get().check(sender,"auctionhouse.delete.all")) return true;
+                AuctionManager.getInstance().remAllConfirm.add(sender);
+                sender.sendMessage(t("rem_all"));
+                sender.sendMessage(t("rem_confirm"));
                 return true;
             }
             else
             {
                 if (arguments.getString("1").equalsIgnoreCase("Server"))
                 {
-                    if (sender.hasPermission("auctionhouse.delete.server"))
-                    {
-                        AuctionManager.getInstance().remBidderConfirm.put(sender, ServerBidder.getInstance());
-                        sender.sendMessage(t("rem_allserv"));
-                        sender.sendMessage(t("rem_confirm"));
-                        return true;
-                    }
-                    sender.sendMessage(t("perm")+" "+t("rem_allserv_perm"));
+                    if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
+                    AuctionManager.getInstance().remBidderConfirm.put(sender, ServerBidder.getInstance());
+                    sender.sendMessage(t("rem_allserv"));
+                    sender.sendMessage(t("rem_confirm"));
                     return true;
                 }
             }
@@ -74,18 +60,14 @@ public class RemoveCommand extends AbstractCommand
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
                         return true;
                     }
-                    if (!(sender.hasPermission("auctionhouse.delete.id")))
+                    if (!Perm.get().check(sender,"auctionhouse.delete.id"))
                     {
                         sender.sendMessage(t("perm")+" "+t("rem_id_perm"));
                         return true;
                     }
                     if (AuctionManager.getInstance().getAuction(id).owner instanceof ServerBidder)
                     {
-                        if (!(sender.hasPermission("auctionhouse.delete.server")))
-                        {
-                            sender.sendMessage(t("perm")+" "+t("rem_serv_perm"));
-                            return true;
-                        }
+                        if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
                     }
                     ItemStack item = AuctionManager.getInstance().getAuction(id).item;
                     AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));
@@ -108,19 +90,11 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (player.getPlayer().equals((Player) sender))
                 {
-                    if (!(sender.hasPermission("auctionhouse.delete.player")))
-                    {
-                        sender.sendMessage(t("perm")+" "+t("rem_own_perm"));
-                        return true;
-                    }
+                    if (!Perm.get().check(sender,"auctionhouse.delete.player")) return true;
                 }
                 else
                 {
-                    if (!(sender.hasPermission("auctionhouse.delete.player.other")))
-                    {
-                        sender.sendMessage(t("perm")+" "+t("rem_other_perm"));
-                        return true;
-                    }
+                    if (!Perm.get().check(sender,"auctionhouse.delete.player.other")) return true;
                 }
 
                 if (!(player.getAuctions().isEmpty()))

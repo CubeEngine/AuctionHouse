@@ -1,16 +1,8 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 
+import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouseConfiguration;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
-import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
-import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.milkbowl.vault.economy.Economy;
@@ -46,12 +38,7 @@ public class AddCommand extends AbstractCommand
         long auctionEnd = 1;
         Integer multiAuction = 1;
 
-        if (!sender.hasPermission("auctionhouse.use.add"))
-        {
-            sender.sendMessage(t("perm")+" "+t("add_Auc_perm"));
-            return true;
-        }
-
+        if (!Perm.get().check(sender, "auctionhouse.use.add")) return true;
         if (args.length < 1)
         {
             sender.sendMessage("/ah add hand [StartBid] [Length] [m:<quantity>]");
@@ -69,14 +56,13 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage(t("i")+" "+t("add_multi_number"));
                 return true;
             }
-            if (!(sender.hasPermission("auctionhouse.use.add.multi")))
-            {
-                sender.sendMessage(t("perm")+" "+t("add_multi_perm"));
-                return true;
-            }
+            if (!Perm.get().check(sender, "auctionhouse.use.add.multi")) return true;
         }
         if (arguments.getString("1")==null)
-            return true;//TODO meldung
+        {
+            sender.sendMessage(t("invalid_com"));
+            return true;
+        }
         if (arguments.getString("1").equalsIgnoreCase("hand"))
         {
             if (!(sender instanceof ConsoleCommandSender))
@@ -103,7 +89,7 @@ public class AddCommand extends AbstractCommand
 
                 if (arguments.getString("3") != null)
                 {
-                    Integer length = this.convert(arguments.getString("3"));
+                    Integer length = MyUtil.get().convert(arguments.getString("3"));
                     if (length == null)
                     {
                         sender.sendMessage(t("e")+" "+t("add_invalid_length"));
@@ -130,7 +116,7 @@ public class AddCommand extends AbstractCommand
         {
             if (arguments.getMaterial("1")==null)
             {
-                sender.sendMessage(t("add_invalid_item",arguments.getString("1")));//TODO
+                sender.sendMessage(t("add_invalid_item",arguments.getString("1")));
                 return true;
             }
            
@@ -170,7 +156,7 @@ public class AddCommand extends AbstractCommand
 
             if (arguments.getString("4") != null)
             {
-                Integer length = this.convert(arguments.getString("4"));
+                Integer length = MyUtil.get().convert(arguments.getString("4"));
                 if (length == null)
                 {
                     sender.sendMessage(t("e") + " " + t("add_invalid_length"));
@@ -210,7 +196,7 @@ public class AddCommand extends AbstractCommand
         {
             if (!((Player) sender).getInventory().contains(removeItem.getType(), removeItem.getAmount()))
             {
-                if (sender.hasPermission("auctionhouse.cheatItems"))
+                if (Perm.get().check(sender, "auctionhouse.cheatItems"))
                 {
                     sender.sendMessage(t("i")+" "+t("add_enough_item")+" "+t("add_cheat"));
                 }
@@ -242,7 +228,7 @@ public class AddCommand extends AbstractCommand
                 newAuction = new Auction(newItem, Bidder.getInstance((Player) sender), auctionEnd, startBid);//Created Auction
             }
 
-            if (!(this.RegisterAuction(newAuction, sender)))
+            if (!(MyUtil.get().RegisterAuction(newAuction, sender)))
             {
                 sender.sendMessage(t("i")+" "+t("add_all_stop"));
                 sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
@@ -265,33 +251,6 @@ public class AddCommand extends AbstractCommand
         return true;
     }
 
-    private boolean RegisterAuction(Auction auction, CommandSender sender)
-    {
-        if (AuctionManager.getInstance().isEmpty())
-        {
-            return false;
-        }
-        AuctionManager.getInstance().addAuction(auction);
-
-        if (sender instanceof ConsoleCommandSender)
-        {
-            ServerBidder.getInstance().addAuction(auction);
-        }
-        else
-        {
-            Bidder.getInstance((Player) sender).addAuction(auction);
-        }
-
-        for (Bidder bidder : Bidder.getInstances().values())
-        {
-            if (bidder.getMatSub().contains(new ItemStack(auction.item.getType(), 1, auction.item.getDurability())))
-            {
-                bidder.addSubscription(auction);
-            }
-        }
-        return true;
-    }
-
     public boolean execute(CommandSender sender, String[] args, int quantity)
     {
         for (int i = 0; i < quantity; ++i)
@@ -310,46 +269,5 @@ public class AddCommand extends AbstractCommand
     public String getDescription()
     {
         return t("command_add");
-    }
-
-    public Integer convert(String str) //ty quick_wango
-    {
-        Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(str);
-        matcher.find();
-        int tmp;
-        try
-        {
-            tmp = Integer.valueOf(String.valueOf(matcher.group(1)));
-        }
-        catch (NumberFormatException e)
-        {
-            return null;
-        }
-        catch (IllegalStateException ex)
-        {
-            return null;
-        }
-        if (tmp == -1)
-        {
-            return -1;
-        }
-        String unitSuffix = matcher.group(2);
-        if (unitSuffix == null)
-        {
-            unitSuffix = "m";
-        }
-        switch (unitSuffix.toLowerCase().charAt(0))
-        {
-            case 'd':
-                tmp *= 24;
-            case 'h':
-                tmp *= 60;
-            case 'm':
-                tmp *= 60;
-            case 's':
-                tmp *= 1000;
-        }
-        return tmp;
     }
 }

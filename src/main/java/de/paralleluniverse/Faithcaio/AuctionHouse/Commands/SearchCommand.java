@@ -26,11 +26,7 @@ public class SearchCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!(sender.hasPermission("auctionhouse.search")))
-        {
-            sender.sendMessage(t("perm")+" "+t("search_perm"));
-            return true;
-        }
+        if (!Perm.get().check(sender,"auctionhouse.search")) return true;
         if (args.length < 1)
         {
             sender.sendMessage("/ah search <Item> [s:<date|id|price>]");

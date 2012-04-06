@@ -37,9 +37,9 @@ public class AuctionHouseConfiguration
         this.auction_comission = config.getInt("auction.comission");
         this.auction_language = config.getString("auction.language");
 
-        this.auction_undoTime = this.convert(config.getString("auction.undoTime"));
-        this.auction_maxLength = this.convert(config.getString("auction.maxLength"));
-        this.auction_standardLength = this.convert(config.getString("auction.standardLength"));
+        this.auction_undoTime = MyUtil.get().convert(config.getString("auction.undoTime"));
+        this.auction_maxLength = MyUtil.get().convert(config.getString("auction.maxLength"));
+        this.auction_standardLength = MyUtil.get().convert(config.getString("auction.standardLength"));
 
         this.auction_notifyTime = this.convertlist(config.getStringList("auction.notifyTime"));
 
@@ -51,7 +51,7 @@ public class AuctionHouseConfiguration
         List<Integer> list = new ArrayList<Integer>();
         for (int i = 0; i < str.size(); ++i)
         {
-            list.add(this.convert(str.get(i)));
+            list.add(MyUtil.get().convert(str.get(i)));
         }
         return list;
 
@@ -85,46 +85,5 @@ public class AuctionHouseConfiguration
             }
         }
         return out;
-    }
-
-    public final Integer convert(String str) //ty quick_wango
-    {
-        Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(str);
-        matcher.find();
-        int tmp;
-        try
-        {
-            tmp = Integer.valueOf(String.valueOf(matcher.group(1)));
-        }
-        catch (NumberFormatException e)
-        {
-            return null;
-        }
-        catch (IllegalStateException ex)
-        {
-            return null;
-        }
-        if (tmp == -1)
-        {
-            return -1;
-        }
-        String unitSuffix = matcher.group(2);
-        if (unitSuffix == null)
-        {
-            unitSuffix = "m";
-        }
-        switch (unitSuffix.toLowerCase().charAt(0))
-        {
-            case 'd':
-                tmp *= 24;
-            case 'h':
-                tmp *= 60;
-            case 'm':
-                tmp *= 60;
-            case 's':
-                tmp *= 1000;
-        }
-        return tmp;
     }
 }

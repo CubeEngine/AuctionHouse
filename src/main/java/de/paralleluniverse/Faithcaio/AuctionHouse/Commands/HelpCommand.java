@@ -3,6 +3,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
 import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
+import de.paralleluniverse.Faithcaio.AuctionHouse.Perm;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -19,11 +20,7 @@ public class HelpCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!(sender.hasPermission("auctionhouse.help")))
-        {
-            sender.sendMessage(t("perm")+" "+t("help_perm"));
-            return true;
-        }
+        if (!Perm.get().check(sender,"auctionhouse.help")) return true;
         sender.sendMessage(t("help_list"));
         sender.sendMessage("");
         for (AbstractCommand command : getBase().getRegisteredCommands())

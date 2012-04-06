@@ -1,15 +1,7 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Auction;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionSort;
-import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
-import de.paralleluniverse.Faithcaio.AuctionHouse.ServerBidder;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
@@ -31,11 +23,7 @@ public class BidCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!(sender.hasPermission("auctionhouse.use.bid")))
-        {
-            sender.sendMessage(t("perm")+" "+t("bid_perm"));
-            return true;
-        }
+        if (!Perm.get().check(sender,"auctionhouse.use.bid")) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             sender.sendMessage(t("bid_console"));

@@ -40,9 +40,9 @@ public class InfoCommand extends AbstractCommand
             return true;
         }
         Arguments arguments = new Arguments(args);
-        if (!(sender.hasPermission("auctionhouse.info")))
+        if (!Perm.get().check(sender,"auctionhouse.info"))
         {
-            sender.sendMessage(t("perm")+" "+t("info_perm"));
+            
             return true;
         }
 
@@ -130,11 +130,7 @@ public class InfoCommand extends AbstractCommand
                         }
                         else
                         {
-                            if (!(sender.hasPermission("auctionhouse.info.others")))
-                            {
-                                sender.sendMessage(t("perm")+" "+t("info_perm_other"));
-                                return true;
-                            }
+                            if (!Perm.get().check(sender,"auctionhouse.info.others")) return true;
                             Bidder player = arguments.getBidder("1");
                             if (player != null)
                             {

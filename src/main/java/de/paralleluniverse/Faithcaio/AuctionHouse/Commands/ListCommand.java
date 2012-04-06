@@ -41,7 +41,7 @@ public class ListCommand extends AbstractCommand
         String output = "";
         if (max == 0)
         {
-            output += t("no_detect");
+            sender.sendMessage(t("no_detect"));
         }
         for (int i = 0; i < max; ++i)
         {
@@ -76,8 +76,8 @@ public class ListCommand extends AbstractCommand
             }
             output += " "+t("info_out_end",
                     DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
-        }
         sender.sendMessage(output);
+        }
     }
 
     public String getDescription()

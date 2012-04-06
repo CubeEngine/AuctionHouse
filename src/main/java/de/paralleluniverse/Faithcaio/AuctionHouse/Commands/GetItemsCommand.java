@@ -19,18 +19,13 @@ public class GetItemsCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!(sender.hasPermission("auctionhouse.getItems.command")))
-        {
-            sender.sendMessage(t("perm")+" "+t("get_perm"));
-            return true;
-        }
+        if (!Perm.get().check(sender,"auctionhouse.getItems.command")) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             AuctionHouse.log("Console can not receive Items");
             return true;
         }
                 
-        
         if (!(Bidder.getInstance((Player) sender).getContainer().giveNextItem()))
         {
             sender.sendMessage(t("get_empty"));
