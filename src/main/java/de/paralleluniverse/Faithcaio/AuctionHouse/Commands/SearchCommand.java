@@ -41,18 +41,17 @@ public class SearchCommand extends AbstractCommand
 
         if (arguments.getString("1") == null)
         {
-            sender.sendMessage(t("pro")+" "+t("search_pro"));
+            if (arguments.getString("s")!=null)
+               sender.sendMessage(t("pro")+" "+t("search_pro")); 
+            sender.sendMessage(t("e")+" "+t("invalid_com"));
             return true;
         }
-        if (arguments.getMaterial("1") != null)
+        if (arguments.getMaterial("1") == null)
         {
-            auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("1"));
-        }
-        else
-        {
-            sender.sendMessage(t("e")+" "+t("item")+" "+t("no_exist"));
+            sender.sendMessage(t("e")+" "+t("item_no_exist",arguments.getString("1")));
             return true;
         }
+        auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("1"));
         if (arguments.getString("s") != null)
         {
             AuctionSort sorter = new AuctionSort();
@@ -99,7 +98,7 @@ public class SearchCommand extends AbstractCommand
             {
                 output += " "+t("info_out_bid",econ.format(auction.bids.peek().getAmount()));
             }
-            else //TODO change it to %s etc
+            else
             {
                 if (auction.bids.peek().getBidder() instanceof ServerBidder)
                 {

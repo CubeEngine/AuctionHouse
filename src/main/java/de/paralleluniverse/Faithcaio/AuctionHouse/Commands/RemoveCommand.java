@@ -31,6 +31,7 @@ public class RemoveCommand extends AbstractCommand
             sender.sendMessage("/ah remove p:<Player>");
             sender.sendMessage("/ah remove Server");
             sender.sendMessage("/ah remove all");
+            sender.sendMessage("Aliases: remove|cancel|delete|rem");
             return true;
         }
         Arguments arguments = new Arguments(args);

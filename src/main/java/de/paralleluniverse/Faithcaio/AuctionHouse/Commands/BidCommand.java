@@ -48,7 +48,7 @@ public class BidCommand extends AbstractCommand
         if (args.length < 2)
         {
             sender.sendMessage("/ah bid <AuctionID> <BidAmount>");
-            sender.sendMessage("/ah bid i:<Item> [q:<Quantity>]<BidAmount>");//bid on the cheapest Item found
+            sender.sendMessage("/ah bid i:<Item> [q:<Quantity>] <BidAmount>");
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -168,7 +168,7 @@ public class BidCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <AuctionID|<i:<Item>[q:<quantity>]>> <BidAmount>";
+        return super.getUsage() + " <AuctionID> <BidAmount>";
     }
 
     public String getDescription()

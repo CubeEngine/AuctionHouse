@@ -1,12 +1,9 @@
 package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
+import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AbstractCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Arguments;
-import de.paralleluniverse.Faithcaio.AuctionHouse.AuctionManager;
-import de.paralleluniverse.Faithcaio.AuctionHouse.BaseCommand;
-import de.paralleluniverse.Faithcaio.AuctionHouse.Bidder;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -28,6 +25,11 @@ public class UnSubscribeCommand extends AbstractCommand
             sender.sendMessage(super.getUsage() + " <m:<Material>");
             sender.sendMessage(super.getUsage() + " <i:<AuctionID>");
             sender.sendMessage(super.getUsage() + " <m:<Material>");
+            return true;
+        }
+        if (sender instanceof ConsoleCommandSender)
+        {
+            AuctionHouse.log("Console can not unsubcribe");
             return true;
         }
         Bidder bidder = Bidder.getInstance((Player) sender);

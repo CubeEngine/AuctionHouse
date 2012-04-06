@@ -37,16 +37,6 @@ public class AddCommand extends AbstractCommand
         super(base, "add");
     }
 
-    public static AddCommand getInstance()
-    {
-        if (instance == null)
-        {
-            BaseCommand base = new BaseCommand(plugin);
-            instance = new AddCommand(base);
-        }
-        return instance;
-    }
-
     public boolean execute(CommandSender sender, String[] args)
     {
         ItemStack newItem = null;
@@ -65,9 +55,8 @@ public class AddCommand extends AbstractCommand
         if (args.length < 1)
         {
             sender.sendMessage("/ah add hand [StartBid] [Length] [m:<quantity>]");
-            sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length]");
             sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length] [m:<quantity>]");
-            sender.sendMessage("Length is in d|h|m|s");
+            sender.sendMessage("Length is in m. Or use d | h | m | s");
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -139,6 +128,12 @@ public class AddCommand extends AbstractCommand
         }
         else
         {
+            if (arguments.getMaterial("1")==null)
+            {
+                sender.sendMessage(t("add_invalid_item",arguments.getString("1")));//TODO
+                return true;
+            }
+           
             newMaterial = arguments.getMaterial("1").getType();
             if (newMaterial == null)
             {
@@ -309,7 +304,7 @@ public class AddCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <hand|<<Item><Amount>>> [StartBid] [Length] [m:<quantity>]";
+        return super.getUsage() + " <Item> <Amount> [StartBid] [Length] [m:<quantity>]";
     }
 
     public String getDescription()

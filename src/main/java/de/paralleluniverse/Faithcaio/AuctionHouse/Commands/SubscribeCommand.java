@@ -3,6 +3,7 @@ package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
@@ -24,6 +25,11 @@ public class SubscribeCommand extends AbstractCommand
             sender.sendMessage("/ah sub <m:<Material>");
             sender.sendMessage("/ah unsub <i:<AuctionID>");
             sender.sendMessage("/ah unsub <m:<Material>");
+            return true;
+        }
+        if (sender instanceof ConsoleCommandSender)
+        {
+            AuctionHouse.log("Console can not subcribe");
             return true;
         }
         Bidder bidder = Bidder.getInstance((Player) sender);

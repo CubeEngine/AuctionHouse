@@ -34,8 +34,8 @@ public class InfoCommand extends AbstractCommand
             sender.sendMessage("/ah info <AuctionID>");
             sender.sendMessage("/ah info <Player>");
             sender.sendMessage("/ah info Bids");
-            sender.sendMessage("/ah info Leading");
-            sender.sendMessage("/ah info Auctions");
+            sender.sendMessage("/ah info lead");
+            sender.sendMessage("/ah info own");
             sender.sendMessage("/ah info *Server");
             return true;
         }
@@ -65,7 +65,7 @@ public class InfoCommand extends AbstractCommand
         }
         else
         {
-            if (arguments.getString("1").equalsIgnoreCase("Auctions"))//own auctions
+            if (arguments.getString("1").equalsIgnoreCase("own"))
             {
                 List<Auction> auctions = Bidder.getInstance((Player) sender).getOwnAuctions();
                 int max = auctions.size();
@@ -82,7 +82,7 @@ public class InfoCommand extends AbstractCommand
             else
             {
 
-                if (arguments.getString("1").equalsIgnoreCase("Leading"))
+                if (arguments.getString("1").equalsIgnoreCase("lead"))
                 {
                     List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
                     int max = auctions.size();
@@ -144,7 +144,7 @@ public class InfoCommand extends AbstractCommand
                                 AuctionHouse.debug("max: " + max);
                                 if (max == 0)
                                 {
-                                    sender.sendMessage(t("perm")+t("info_no_auction",player.getName()));
+                                    sender.sendMessage(t("e")+t("info_no_auction",player.getName()));
                                 }
                                 for (int i = 0; i < max; ++i)
                                 {
@@ -192,7 +192,7 @@ public class InfoCommand extends AbstractCommand
             {
                 output += t("info_out_lead",auction.bids.peek().getBidder().getName());
             }
-            output +=" "+t("info_out_with",auction.bids.peek().getAmount());
+            output +=" "+t("info_out_with",econ.format(auction.bids.peek().getAmount()));
         }
         output += " "+t("info_out_end",
                         DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
@@ -203,7 +203,7 @@ public class InfoCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <<AuctionId>|<Player>|<Bids>|<Leading>|<Auctions>|*Server>";
+        return super.getUsage() + " <<AuctionId>|<Player>> )";
     }
 
     public String getDescription()

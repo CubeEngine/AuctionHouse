@@ -23,6 +23,7 @@ public class NotifyCommand extends AbstractCommand
         {
             sender.sendMessage("/ah notify true|false|toggle");
             sender.sendMessage("/ah notify on|off|t");
+            sender.sendMessage("Aliases notify|n");
             return true;
         }
         if (!(sender.hasPermission("auctionhouse.notify.command")))
@@ -36,7 +37,10 @@ public class NotifyCommand extends AbstractCommand
             return true;
         }
         if (sender instanceof ConsoleCommandSender)
+        {
             AuctionHouse.log("Console can not use notification!");
+            return true;
+        }
         Bidder bidder = Bidder.getInstance((Player) sender);
         if (arguments.getString("1").equalsIgnoreCase("true") || arguments.getString("1").equalsIgnoreCase("on"))
         {

@@ -80,6 +80,8 @@ public class Arguments
         int parambreak = tmp.indexOf(":");
         if (parambreak == -1)
         {
+            if(Material.matchMaterial(tmp)==null)
+                return null;
             return new ItemStack(Material.matchMaterial(tmp), 1);
         }
         else
@@ -87,18 +89,19 @@ public class Arguments
             short tmp2;
             try
             {
-                
-                AuctionHouse.debug("param vor: "+tmp+"|"+tmp.substring(parambreak+1));
                 tmp2 = Short.parseShort(tmp.substring(parambreak+1));
-                AuctionHouse.debug("param nach "+tmp+"|"+tmp2);
             }
             catch (NumberFormatException ex)
             {
                 tmp2 = 0;
                 tmp = tmp.substring(0, parambreak);
+                if(Material.matchMaterial(tmp)==null)
+                    return null;
                 return new ItemStack(Material.matchMaterial(tmp), 1, tmp2);
             }
             tmp = tmp.substring(0, parambreak);
+            if(Material.matchMaterial(tmp)==null)
+                return null;
             return new ItemStack(Material.matchMaterial(tmp), 1, tmp2);
         }
 
