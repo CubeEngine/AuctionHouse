@@ -24,9 +24,11 @@ public class ConfirmCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (AuctionManager.getInstance().remAllConfirm.contains(sender))
+        AuctionManager manager = AuctionManager.getInstance();
+        if (manager.remAllConfirm.contains(sender))
         {
-            int max = AuctionManager.getInstance().size();
+            manager.remAllConfirm.remove(sender);
+            int max = manager.size();
             if (max == 0)
             {
                 sender.sendMessage(t("i")+" "+t("no_detect"));
@@ -34,14 +36,15 @@ public class ConfirmCommand extends AbstractCommand
             }
             for (int i = max - 1; i >= 0; --i)
             {
-                AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getIndexAuction(i));
+                manager.cancelAuction(manager.getIndexAuction(i));
             }
             sender.sendMessage(t("i")+" "+t("confirm_del"));
             return true;
         }
-        if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender))
+        if (manager.remBidderConfirm.containsKey(sender))
         {
-            if (AuctionManager.getInstance().remBidderConfirm.get(sender) instanceof ServerBidder)
+            manager.remBidderConfirm.remove(sender);
+            if (manager.remBidderConfirm.get(sender) instanceof ServerBidder)
             {
                 int max = ServerBidder.getInstance().getAuctions().size();
                 if (max == 0)
@@ -51,21 +54,21 @@ public class ConfirmCommand extends AbstractCommand
                 }
                 for (int i = max - 1; i >= 0; --i)
                 {
-                    AuctionManager.getInstance().cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
+                    manager.cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_del_serv"));
                 return true;
             }
             else
             {
-                Bidder player = AuctionManager.getInstance().remBidderConfirm.get(sender);
+                Bidder player = manager.remBidderConfirm.get(sender);
                 int bids = player.getActiveBids().size();
                 List<Auction> auctions = player.getActiveBids();
                 for (int i = 0; i < bids; ++i)
                 {
                     if (auctions.get(i).owner == player)
                     {
-                        AuctionManager.getInstance().cancelAuction(auctions.get(i));
+                        manager.cancelAuction(auctions.get(i));
                     }
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_rem",(player.getActiveBids().size() - bids),player.getName()));

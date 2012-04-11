@@ -39,7 +39,7 @@ public class SubscribeCommand extends AbstractCommand
             if (arguments.getMaterial("m") != null)
             {
                 bidder.addSubscription(arguments.getMaterial("m"));
-                sender.sendMessage(t("i")+" "+t("sub_add_mat",arguments.getString("m")));
+                sender.sendMessage(t("i")+" "+t("sub_add_mat",arguments.getMaterial("m").getType().toString()));
                 if (!bidder.playerNotification)
                 {
                     sender.sendMessage(t("i")+" "+t("sub_note"));

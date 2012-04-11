@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -86,41 +87,51 @@ public class Events implements Listener
         }
     }
    
+
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event)
-    {//TODO klappt nicht !!
-        if (event.getBlockPlaced().getType() == Material.WALL_SIGN)
-            if(((Sign)event.getBlockPlaced().getState()).getLine(0).equalsIgnoreCase("[AuctionHouse]"))
+    public void onSignChange(SignChangeEvent event)
+    {
+        if(event.getLine(0).equalsIgnoreCase("[AuctionHouse]"))
+        {
+            if (event.getLine(1).equalsIgnoreCase("AuctionBox"))
             {
-                Sign sign = (Sign)event.getBlockPlaced();
-                sign.setLine(0, "[AuctionHouse]");
-                if (sign.getLine(1).equalsIgnoreCase("AuctionBox"))
+                if (!Perm.get().check(event.getPlayer(), "auctionhouse.create.boxsign"))
                 {
-                    if (Perm.get().check(event.getPlayer(), "auctionhouse.create.boxsign"))
-                    {
-                        event.setCancelled(true);
-                        return;
-                    }
-                    sign.setLine(1, "AuctionBox");
-                    event.getPlayer().sendMessage("event_sign_create");
+                    event.setCancelled(true);
                     return;
                 }
-                if (sign.getLine(1).equalsIgnoreCase("Start"))
+                event.setLine(1, "AuctionBox");
+            }
+            else
+            {
+                if (event.getLine(1).equalsIgnoreCase("Start"))
                 {
-                    if (MyUtil.get().convert(sign.getLine(2))==null)
+                    if (!Perm.get().check(event.getPlayer(), "auctionhouse.create.addsign"))
                     {
-                        event.getPlayer().sendMessage("event_sign_fail");
                         event.setCancelled(true);
                         return;
                     }
-                    sign.setLine(1, "Start");
+                    if (MyUtil.get().convert(event.getLine(2))==null)
+                    {
+                        event.getPlayer().sendMessage(t("event_sign_fail"));
+                        event.setCancelled(true);
+                        return;
+                    }
+                    event.setLine(1, "Start");
+                }
+                else
+                {
+                    event.getPlayer().sendMessage(t("event_sign_fail"));
+                    event.setCancelled(true);
+                    return;
                 }
             }
-        
-        
-        //TODO Schild erstellung abfangen und Grosskleinschreibung anpassen  
+            event.getPlayer().sendMessage(t("event_sign_create"));            
+            event.setLine(0, "[AuctionHouse]");
+        }
     }
-
+    
+    
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {
@@ -136,6 +147,7 @@ public class Events implements Listener
             {
                 if (((Sign)block.getState()).getLine(0).equals("[AuctionHouse]"))
                 {
+                    event.setCancelled(true);
                     if (((Sign)block.getState()).getLine(1).equals("AuctionBox"))
                     {
                         //AuktionBox GetItems
@@ -147,9 +159,12 @@ public class Events implements Listener
                     }
                     if (((Sign) block.getState()).getLine(1).equals("Start"))
                     {
+                        if (player.getItemInHand().getType().equals(Material.AIR))
+                        {
+                            player.sendMessage(t("pro")+" "+t("add_sell_hand"));
+                            return;
+                        }
                         //AuktionBox Start Auktion
-                        //TODO Schwert verschwindet nicht im Inventar
-                        //TODO Blöcke wird gesetzt UND eingestellt
                         if (!Perm.get().check(player, "auctionhouse.use.addsign")) return;
 
                         Double startbid;

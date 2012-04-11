@@ -21,10 +21,10 @@ public class UnSubscribeCommand extends AbstractCommand
     {
         if (args.length < 1)
         {
-            sender.sendMessage(super.getUsage() + " <i:<AuctionID>");
-            sender.sendMessage(super.getUsage() + " <m:<Material>");
-            sender.sendMessage(super.getUsage() + " <i:<AuctionID>");
-            sender.sendMessage(super.getUsage() + " <m:<Material>");
+            sender.sendMessage("/ah unsub <i:<AuctionID>");
+            sender.sendMessage("/ah unsub <m:<Material>");
+            sender.sendMessage("/ah sub <i:<AuctionID>");
+            sender.sendMessage("/ah sub <m:<Material>");
             return true;
         }
         if (sender instanceof ConsoleCommandSender)
@@ -39,10 +39,10 @@ public class UnSubscribeCommand extends AbstractCommand
             if (arguments.getMaterial("m") != null)
             {
                 bidder.removeSubscription(arguments.getMaterial("m"));
-                sender.sendMessage(t("i")+" "+t("sub_rem_mat",arguments.getString("m")));
+                sender.sendMessage(t("i")+" "+t("sub_rem_mat",arguments.getMaterial("m").getType().toString()));
                 return true;
             }
-            sender.sendMessage(t("e")+" "+t("invalid_id"));
+            sender.sendMessage(t("e")+" "+arguments.getString("m") + " "+t("no_valid_item"));
             return true;
         }
         if (arguments.getString("i") != null)

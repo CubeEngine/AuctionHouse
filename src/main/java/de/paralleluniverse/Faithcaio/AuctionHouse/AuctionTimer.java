@@ -36,18 +36,16 @@ public class AuctionTimer
                     int size = auctionlist.size();
                     for (int i = 0; i < size; ++i)
                     {
-
                         Auction auction = auctionlist.get(i);
-                        //AuctionHouse.debug("Auction Endcheck #"+auction.id);
                         if ((System.currentTimeMillis() + 600 > auction.auctionEnd)
                                 && (System.currentTimeMillis() - 600 < auction.auctionEnd))
                         {
                             List<Bidder> rPlayer = new ArrayList<Bidder>();
-                            AuctionHouse.debug("Auction ended!");
+                            AuctionHouse.debug("Auction #"+auction.id+" ended!");
                             while (auction.owner != auction.bids.peek().getBidder())
                             {
                                 Bidder winner = auction.bids.peek().getBidder();
-                                if (rPlayer.contains(winner)) //Player was Highest Bidder but not enough money
+                                if (rPlayer.contains(winner))//remove punished Player
                                 {
                                     auction.bids.pop();
                                     continue;
@@ -95,7 +93,8 @@ public class AuctionTimer
                                     auction.bids.pop();
                                 }
                             }
-                            if (auction.bids.peek().getBidder() == auction.owner)
+                            if (auction.bids.isEmpty()) return;
+                            if (auction.bids.peek().getBidder().equals(auction.owner))
                             {
                                 auction.owner.notifyCancel = true;
                                 if (!(auction.owner instanceof ServerBidder))
@@ -165,7 +164,7 @@ public class AuctionTimer
                                     if (Bidder.getInstance(playerlist.get(k)).getSubs().contains(auction))
                                     {
                                         int last = config.auction_notifyTime.size() - j;
-                                        if (playerlist.get(k) == auction.owner)
+                                        if (playerlist.get(k).equals(auction.owner.getPlayer()))
                                         {
                                             if (last > 3)
                                             {

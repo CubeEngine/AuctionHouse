@@ -38,6 +38,17 @@ public class RemoveCommand extends AbstractCommand
                 AuctionManager.getInstance().remAllConfirm.add(sender);
                 sender.sendMessage(t("rem_all"));
                 sender.sendMessage(t("rem_confirm"));
+                final CommandSender sender2= sender;
+                AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                    {
+                        public void run() 
+                        {
+                            if (AuctionManager.getInstance().remAllConfirm.contains(sender2))
+                                sender2.sendMessage(t("rem_abort"));
+                            AuctionManager.getInstance().remAllConfirm.remove(sender2);  
+                        }
+                    }, 200L);
+
                 return true;
             }
             else
@@ -48,6 +59,18 @@ public class RemoveCommand extends AbstractCommand
                     AuctionManager.getInstance().remBidderConfirm.put(sender, ServerBidder.getInstance());
                     sender.sendMessage(t("rem_allserv"));
                     sender.sendMessage(t("rem_confirm"));
+                    final CommandSender sender2= sender;
+                    AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                        {
+                            public void run() 
+                            {
+                                AuctionHouse.debug("running");
+                                if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender2))
+                                    sender2.sendMessage(t("rem_abort"));
+                                AuctionManager.getInstance().remBidderConfirm.remove(sender2);  
+                            }
+                        }, 200L);
+
                     return true;
                 }
             }
@@ -102,6 +125,17 @@ public class RemoveCommand extends AbstractCommand
                     AuctionManager.getInstance().remBidderConfirm.put(sender, player);
                     sender.sendMessage(t("rem_play",player.getName()));
                     sender.sendMessage(t("rem_confirm"));
+                    final CommandSender sender2= sender;
+                    AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                        {
+                            public void run() 
+                            {
+                                AuctionHouse.debug("running");
+                                if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender2))
+                                    sender2.sendMessage(t("rem_abort"));
+                                AuctionManager.getInstance().remBidderConfirm.remove(sender2);  
+                            }
+                        }, 200L);
                     return true;
                 }
                 sender.sendMessage(t("i")+" "+t("rem_no_auc",arguments.getString("p")));
