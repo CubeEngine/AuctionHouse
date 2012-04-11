@@ -37,6 +37,7 @@ public class BidCommand extends AbstractCommand
         {
             sender.sendMessage("/ah bid <AuctionID> <BidAmount>");
             sender.sendMessage("/ah bid i:<Item> [q:<Quantity>] <BidAmount>");
+            sender.sendMessage(t("bid_use"));
             return true;
         }
         Arguments arguments = new Arguments(args);

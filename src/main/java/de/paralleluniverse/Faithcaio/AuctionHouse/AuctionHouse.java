@@ -23,7 +23,12 @@ public class AuctionHouse extends JavaPlugin
     protected AuctionHouseConfiguration config;
     protected File dataFolder;
     private Economy economy = null;
-
+//TODO Info ItemStack trennen
+//TODO Datum wenn über ein Tag Datum sonst Zeit bis dahin
+//TODO später eigene AuktionsBox als Kiste    
+//TODO update inventory nach Schild Start
+//TODO Durchschnitt Vk Preis von Items
+//TODO kürzere / weniger Meldungen
     public AuctionHouse()
     {
         instance = this;

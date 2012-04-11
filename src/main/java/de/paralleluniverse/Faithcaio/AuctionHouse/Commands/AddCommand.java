@@ -3,8 +3,6 @@ package de.paralleluniverse.Faithcaio.AuctionHouse.Commands;
 
 import de.paralleluniverse.Faithcaio.AuctionHouse.*;
 import static de.paralleluniverse.Faithcaio.AuctionHouse.Translation.Translator.t;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
@@ -19,7 +17,6 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AddCommand extends AbstractCommand
 {
-    private static AddCommand instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     Economy econ = AuctionHouse.getInstance().getEconomy();
@@ -41,9 +38,9 @@ public class AddCommand extends AbstractCommand
         if (!Perm.get().check(sender, "auctionhouse.use.add")) return true;
         if (args.length < 1)
         {
-            sender.sendMessage("/ah add hand [StartBid] [Length] [m:<quantity>]");
-            sender.sendMessage("/ah add <Item> <Amount> [StartBid] [Length] [m:<quantity>]");
-            sender.sendMessage("Length is in m. Or use d | h | m | s");
+            sender.sendMessage("/ah add hand [Length] [StartBid] [m:<quantity>]");
+            sender.sendMessage("/ah add <Item> <Amount> [Length] [StartBid] [m:<quantity>]");
+            sender.sendMessage(t("add_use"));
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -73,9 +70,9 @@ public class AddCommand extends AbstractCommand
                     sender.sendMessage(t("pro")+" "+t("add_sell_hand"));
                     return true;
                 }
-                if (arguments.getString("2") != null)
+                if (arguments.getString("3") != null)
                 {
-                    startBid = arguments.getDouble("2");
+                    startBid = arguments.getDouble("3");
                     if (startBid == null)
                     {
                         sender.sendMessage(t("i")+" "+t("add_invalid_time"));
@@ -87,9 +84,9 @@ public class AddCommand extends AbstractCommand
                     startBid = 0.0;
                 }
 
-                if (arguments.getString("3") != null)
+                if (arguments.getString("2") != null)
                 {
-                    Integer length = MyUtil.get().convert(arguments.getString("3"));
+                    Integer length = MyUtil.get().convert(arguments.getString("2"));
                     if (length == null)
                     {
                         sender.sendMessage(t("e")+" "+t("add_invalid_length"));
@@ -263,7 +260,7 @@ public class AddCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <Item> <Amount> [StartBid] [Length] [m:<quantity>]";
+        return super.getUsage() + " <Item> <Amount> [Length] [StartBid]";
     }
 
     public String getDescription()

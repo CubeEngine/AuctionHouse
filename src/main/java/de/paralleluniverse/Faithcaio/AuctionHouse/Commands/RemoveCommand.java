@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
  * @author Faithcaio
  */
 public class RemoveCommand extends AbstractCommand
-{//TODO confirm delay
+{
     public RemoveCommand(BaseCommand base)
     {
         super(base, "remove", "cancel", "delete", "rem");
@@ -147,7 +147,7 @@ public class RemoveCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <<AuctionId>|all <Player>>";
+        return super.getUsage() + " <<AuctionId>|p:<Player>|all>";
     }
 
     public String getDescription()

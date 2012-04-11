@@ -62,7 +62,7 @@ public class AuctionTimer
                                         econ.withdrawPlayer(auction.owner.getName(), money * config.auction_comission / 100);
                                         if (auction.owner.isOnline())
                                         {
-                                            winner.getPlayer().sendMessage(t("time_sold",auction.item.toString(),
+                                            auction.owner.getPlayer().sendMessage(t("time_sold",auction.item.toString(),
                                                                     econ.format(money - money * config.auction_comission / 100),
                                                                     econ.format(money * config.auction_comission / 100)));
                                         }

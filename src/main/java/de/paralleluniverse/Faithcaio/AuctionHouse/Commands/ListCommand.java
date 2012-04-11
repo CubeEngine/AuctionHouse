@@ -38,7 +38,7 @@ public class ListCommand extends AbstractCommand
     public void sendInfo(CommandSender sender, List<Auction> auctionlist)
     {
         int max = auctionlist.size();
-        String output = "";
+        String output;
         if (max == 0)
         {
             sender.sendMessage(t("no_detect"));
