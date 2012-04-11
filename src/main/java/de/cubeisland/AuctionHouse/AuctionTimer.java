@@ -62,7 +62,8 @@ public class AuctionTimer
                                         econ.withdrawPlayer(auction.owner.getName(), money * config.auction_comission / 100);
                                         if (auction.owner.isOnline())
                                         {
-                                            auction.owner.getPlayer().sendMessage(t("time_sold",auction.item.toString(),
+                                            auction.owner.getPlayer().sendMessage(t("time_sold",
+                                                                    auction.item.getType().toString()+" x"+auction.item.getAmount(),
                                                                     econ.format(money - money * config.auction_comission / 100),
                                                                     econ.format(money * config.auction_comission / 100)));
                                         }
@@ -70,7 +71,8 @@ public class AuctionTimer
                                     winner.getContainer().addItem(auction);
                                     if (winner.isOnline())
                                     {
-                                        winner.getPlayer().sendMessage(t("time_won",auction.item.toString(),econ.format(money)));
+                                        winner.getPlayer().sendMessage(t("time_won",auction.item.getType().toString()+" x"+auction.item.getAmount()
+                                                                         ,econ.format(money)));
                                     }
                                     else
                                     {
@@ -163,46 +165,15 @@ public class AuctionTimer
                                 {
                                     if (Bidder.getInstance(playerlist.get(k)).getSubs().contains(auction))
                                     {
-                                        int last = config.auction_notifyTime.size() - j;
                                         if (playerlist.get(k).equals(auction.owner.getPlayer()))
                                         {
-                                            if (last > 3)
-                                            {
-                                                playerlist.get(k).sendMessage(t("time_end4",auction.id));
-                                            }
-                                            else if (last == 3)
-                                            {
-                                                playerlist.get(k).sendMessage(t("time_end3",auction.id));
-                                            }
-                                            else if (last == 2)
-                                            {
-                                                playerlist.get(k).sendMessage(t("time_end2",auction.id));
-                                            }
-                                            else if (last == 1)
-                                            {
-                                                playerlist.get(k).sendMessage(t("time_end1",auction.id));
-                                            }
+                                            playerlist.get(k).sendMessage(t("time_end1",auction.id,MyUtil.get().convertTime(auction.auctionEnd - System.currentTimeMillis())));
                                         }
                                         else
                                         {
                                             String out = "";
-                                            if (last > 3)
-                                            {
-                                                out += t("time_end42",auction.id);
-                                            }
-                                            else if (last == 3)
-                                            {
-                                                out += t("time_end32",auction.id);
-                                            }
-                                            else if (last == 2)
-                                            {
-                                                out += t("time_end22",auction.id);
-                                            }
-                                            else if (last == 1)
-                                            {
-                                                out += t("time_end12",auction.id);
-                                            }
-
+                                            out += t("time_end2",auction.id,MyUtil.get().convertTime(auction.auctionEnd - System.currentTimeMillis()));
+                                            
                                             if (playerlist.get(k) == auction.bids.peek().getBidder().getOffPlayer())
                                             {
                                                 out += t("time_high");

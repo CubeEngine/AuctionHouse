@@ -155,14 +155,13 @@ public class Bidder
     public List<Auction> getLeadingAuctions(Bidder player)
     {
         List<Auction> auctionlist = new ArrayList<Auction>();
-        final int length = this.activeBids.size();
-        for (int i = 0; i < length; ++i)
+        for (Auction auction : this.activeBids)
         {
-            if (this.activeBids.get(i).bids.peek()==null)
+            if (auction.bids.peek()==null)
                 return null;
-            if (this.activeBids.get(i).bids.peek().getBidder() == player)
+            if (auction.bids.peek().getBidder() == player)
             {
-                auctionlist.add(this.activeBids.get(i));
+                auctionlist.add(auction);
             }
         }
         return auctionlist;

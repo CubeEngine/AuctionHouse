@@ -109,7 +109,7 @@ public class BidCommand extends AbstractCommand
                     if (auction.bid(Bidder.getInstance((Player) sender), bidAmount))
                     {
                         Bidder.getInstance((Player) sender).addAuction(auction);
-                        this.SendInfo(auction, sender);
+                        this.SendBidInfo(auction, sender);
                         return true;
                     }
                     return true;
@@ -141,7 +141,7 @@ public class BidCommand extends AbstractCommand
                 if (auction.bid(Bidder.getInstance((Player) sender), bidAmount))
                 {
                     Bidder.getInstance((Player) sender).addAuction(auction);
-                    this.SendInfo(auction, sender);
+                    this.SendBidInfo(auction, sender);
                     return true;
                 }
                 return true;
@@ -151,7 +151,7 @@ public class BidCommand extends AbstractCommand
         return true;
     }
 
-    public void SendInfo(Auction auction, CommandSender sender)
+    public void SendBidInfo(Auction auction, CommandSender sender)
     {
         sender.sendMessage(t("bid_out",econ.format(auction.bids.peek().getAmount()),auction.item.toString(),auction.id));
         if (!(auction.owner instanceof ServerBidder) && auction.owner.isOnline())

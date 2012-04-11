@@ -1,16 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.AuctionManager;
-import de.cubeisland.AuctionHouse.BaseCommand;
-import de.cubeisland.AuctionHouse.ServerBidder;
-import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
-import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.Bidder;
-import de.cubeisland.AuctionHouse.Auction;
+import de.cubeisland.AuctionHouse.*;
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
-import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -27,7 +18,7 @@ public class InfoCommand extends AbstractCommand
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    Economy econ = plugin.getEconomy();
+    
     
     public InfoCommand(BaseCommand base)
     {
@@ -66,7 +57,7 @@ public class InfoCommand extends AbstractCommand
                 Auction auction = auctions.get(i);
                 if (auction.owner != (Player) sender)
                 {
-                    this.sendInfo(sender, auction);
+                    MyUtil.get().sendInfo(sender, auction);
                 }
             }
         }
@@ -83,7 +74,7 @@ public class InfoCommand extends AbstractCommand
                 for (int i = 0; i < max; ++i)
                 {
                     Auction auction = auctions.get(i);
-                    this.sendInfo(sender, auction);
+                    MyUtil.get().sendInfo(sender, auction);
                 }
             }
             else
@@ -101,7 +92,7 @@ public class InfoCommand extends AbstractCommand
                     for (int i = 0; i < max; ++i)
                     {
                         Auction auction = auctions.get(i);
-                        this.sendInfo(sender, auction);
+                        MyUtil.get().sendInfo(sender, auction);
                     }
                 }
                 else
@@ -118,7 +109,7 @@ public class InfoCommand extends AbstractCommand
                         for (int i = 0; i < max; ++i)
                         {
                             Auction auction = auctions.get(i);
-                            this.sendInfo(sender, auction);
+                            MyUtil.get().sendInfo(sender, auction);
                         }
                     }
                     else
@@ -128,7 +119,7 @@ public class InfoCommand extends AbstractCommand
                         {
                             if (AuctionManager.getInstance().getAuction(id) != null)
                             {
-                                this.sendInfo(sender, AuctionManager.getInstance().getAuction(id));
+                                MyUtil.get().sendInfo(sender, AuctionManager.getInstance().getAuction(id));
                             }
                             else
                             {
@@ -152,7 +143,7 @@ public class InfoCommand extends AbstractCommand
                                 for (int i = 0; i < max; ++i)
                                 {
                                     Auction auction = auctions.get(i);
-                                    this.sendInfo(sender, auction);
+                                    MyUtil.get().sendInfo(sender, auction);
                                 }
                             }
                             else
@@ -167,41 +158,7 @@ public class InfoCommand extends AbstractCommand
         return true;
     }
 
-    public void sendInfo(CommandSender sender, Auction auction)
-    {
-        String output = "";
-        output += "#" + auction.id + ": ";
-        output += auction.item.toString();
-        if (auction.item.getEnchantments().size() > 0)
-        {
-            output += " "+t("info_out_ench")+" ";
-            for (Enchantment enchantment : auction.item.getEnchantments().keySet())
-            {
-                output += enchantment.toString() + ":";
-                output += auction.item.getEnchantments().get(enchantment).toString() + " ";
-            }
-        }
-        if (auction.bids.peek().getBidder().equals(auction.owner))
-        {
-            output += " "+t("info_out_bid",econ.format(auction.bids.peek().getAmount()));
-        }
-        else
-        {
-            if (auction.bids.peek().getBidder() instanceof ServerBidder)
-            {
-                output += t("info_out_leadserv");
-            }
-            else
-            {
-                output += t("info_out_lead",auction.bids.peek().getBidder().getName());
-            }
-            output +=" "+t("info_out_with",econ.format(auction.bids.peek().getAmount()));
-        }
-        output += " "+t("info_out_end",
-                        DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
 
-        sender.sendMessage(output);
-    }
 
     @Override
     public String getUsage()

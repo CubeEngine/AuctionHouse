@@ -201,6 +201,7 @@ public class Events implements Listener
                         else
                         {
                             player.getInventory().removeItem(player.getItemInHand());
+                            player.updateInventory();
                             player.sendMessage(t("i")+" "+t("add_start",1,newAuction.item.toString(),econ.format(startbid),
                                     DateFormatUtils.format(newAuction.auctionEnd, config.auction_timeFormat))); 
                         }    

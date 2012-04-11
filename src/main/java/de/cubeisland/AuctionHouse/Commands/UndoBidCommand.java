@@ -54,21 +54,21 @@ public class UndoBidCommand extends AbstractCommand
         {
             if (AuctionManager.getInstance().getAuction(arguments.getInt("1")) == null)
             {
-                sender.sendMessage(t("i")+" "+t("auction_no_exist",arguments.getInt("1")));
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",arguments.getInt("1")));
                 return true;
             }
             if (AuctionManager.getInstance().getAuction(arguments.getInt("1")).undobid(Bidder.getInstance(psender)))
             {
-                sender.sendMessage(t("i")+" "+t("undo_bid_n",arguments.getInt("1")));
+                sender.sendMessage(t("i")+" &a"+t("undo_bid_n",arguments.getInt("1")));
                 return true;
             }
             else
             {
-                sender.sendMessage(t("i")+" "+t("undo_bidder"));
+                sender.sendMessage(t("e")+" "+t("undo_bidder"));
                 return true;
             }
         }
-        sender.sendMessage(t("i")+" "+t("undo_fail"));
+        sender.sendMessage(t("e")+" "+t("undo_fail"));
         return true;
     }
 

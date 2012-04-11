@@ -1,6 +1,6 @@
 name: AuctionHouse
 version: "${project.version}"
-main: de.paralleluniverse.Faithcaio.AuctionHouse.AuctionHouse
+main: de.cubeisland.AuctionHouse.AuctionHouse
 commands:
   auctionhouse:
     description: "This is the base command of AuctionHouse"
