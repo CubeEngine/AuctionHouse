@@ -39,13 +39,10 @@ public class AuctionHouse extends JavaPlugin
 //TODO Durchschnitt Vk Preis von Items
 //TODO kürzere / weniger Meldungen so halb fertig....
 //TODO flatfile mit angeboten
-    //TODO ?hilfe fehlerhaft
-    //TODO ?list formatieren
-    //TODO ?info immer gleich
-    //TODO remove Internal Error own
-    //TODO auktion über id keine bestätigung (gewollt)
-    //TODO ?add beide optionale Param sonst StartBid als Dauer
-    //TODO Blacklist flower ist drauf?P?
+//TODO ?hilfe fehlerhaft
+//TODO ?list formatieren
+//TODO remove Internal Error own
+//TODO auktion über id keine bestätigung (gewollt)
     public AuctionHouse()
     {
         instance = this;

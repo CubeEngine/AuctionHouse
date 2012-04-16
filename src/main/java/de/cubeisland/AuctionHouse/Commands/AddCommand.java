@@ -79,20 +79,6 @@ public class AddCommand extends AbstractCommand
                     sender.sendMessage(t("pro")+" "+t("add_sell_hand"));
                     return true;
                 }
-                if (arguments.getString("3") != null)
-                {
-                    startBid = arguments.getDouble("3");
-                    if (startBid == null)
-                    {
-                        sender.sendMessage(t("i")+" "+t("add_invalid_time"));
-                        return true;
-                    }
-                }
-                else
-                {
-                    startBid = 0.0;
-                }
-
                 if (arguments.getString("2") != null)
                 {
                     Integer length = MyUtil.get().convert(arguments.getString("2"));
@@ -115,6 +101,19 @@ public class AddCommand extends AbstractCommand
                 else
                 {
                     auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
+                }
+                if (arguments.getString("3") != null)
+                {
+                    startBid = arguments.getDouble("3");
+                    if (startBid == null)
+                    {
+                        sender.sendMessage(t("i")+" "+t("add_invalid_time"));
+                        return true;
+                    }
+                }
+                else
+                {
+                    startBid = 0.0;
                 }
             }
         }
@@ -146,20 +145,6 @@ public class AddCommand extends AbstractCommand
             
             newItem = new ItemStack(newMaterial, amount);
             newItem.setDurability(arguments.getMaterial("1").getDurability());
-            if (arguments.getString("4") != null)
-            {
-                startBid = arguments.getDouble("4");
-                if (startBid == null)
-                {
-                    sender.sendMessage(t("i") + " "+t("add_invalid_startbid"));
-                    return true;
-                }
-            }
-            else
-            {
-                startBid = 0.0;
-            }
-
             if (arguments.getString("3") != null)
             {
                 Integer length = MyUtil.get().convert(arguments.getString("3"));
@@ -181,6 +166,19 @@ public class AddCommand extends AbstractCommand
             else
             {
                 auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
+            }
+            if (arguments.getString("4") != null)
+            {
+                startBid = arguments.getDouble("4");
+                if (startBid == null)
+                {
+                    sender.sendMessage(t("i") + " "+t("add_invalid_startbid"));
+                    return true;
+                }
+            }
+            else
+            {
+                startBid = 0.0;
             }
         }
 
