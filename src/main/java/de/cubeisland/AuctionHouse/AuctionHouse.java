@@ -40,6 +40,7 @@ public class AuctionHouse extends JavaPlugin
 //TODO kürzere / weniger Meldungen so halb fertig....
 //TODO flatfile mit angeboten
 //TODO ?list formatieren
+    //TODO DataBase Commands
     public AuctionHouse()
     {
         instance = this;
