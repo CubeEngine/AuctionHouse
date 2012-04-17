@@ -60,17 +60,21 @@ public class Events implements Listener
                     event.getPlayer().sendMessage(t("i")+" "+t("event_old",config.auction_itemContainerLength));
                     Bidder.getInstance(event.getPlayer()).notifyCancel = false;
                 }
-            }
-        ;
-    }
-
-    );
+            };
+        });
+        Bidder bidder = Bidder.getInstance(event.getPlayer());
+        Database data = AuctionHouse.getInstance().database;
+        //Update BidderNotification
+        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                      ,bidder.notifyBitMask(),bidder.id); 
     }
     
     @EventHandler
     public void goesOffline(PlayerQuitEvent event)
     {
-        ItemContainer items = Bidder.getInstance(event.getPlayer()).getContainer();
+        Bidder bidder = Bidder.getInstance(event.getPlayer());
+        ItemContainer items = bidder.getContainer();
+        
         if (!(items.itemList.isEmpty()))
         {
             for (AuctionItem item : items.itemList)
@@ -85,6 +89,10 @@ public class Events implements Listener
         {
             Bidder.getInstance(event.getPlayer()).notifyContainer = true;
         }
+        Database data = AuctionHouse.getInstance().database;
+        //Update BidderNotification
+        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                      ,bidder.notifyBitMask(),bidder.id);  
     }
    
 

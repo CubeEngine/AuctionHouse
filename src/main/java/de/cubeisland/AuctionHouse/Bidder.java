@@ -1,5 +1,7 @@
 package de.cubeisland.AuctionHouse;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +28,7 @@ public class Bidder
     public boolean notify = false;
     public boolean notifyCancel = false;
     public boolean notifyContainer = false;
+    public int id;
     private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
 
     public Bidder(Player player)
@@ -35,6 +38,36 @@ public class Bidder
         this.itemContainer = new ItemContainer(this);
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
+        this.id = -1;
+
+        Database data = AuctionHouse.getInstance().database;
+        try
+        {
+            String bidder;
+            if (player==null) 
+                bidder="*Server";
+            else
+                bidder=player.getName();
+                
+            ResultSet set = 
+            data.query(
+                        "INSERT INTO `bidder` ("+
+                        "`name` ,"+
+                        "`type` ,"+
+                        "`notify` ,"+
+                        ")"+
+                        "VALUES ("+
+                        " ?, ?, ?"+
+                        ");"
+                      ,bidder,false,0);
+            if (set.next())
+                this.id = set.getInt("id");
+                
+        }
+        catch (SQLException ex)
+        {
+            
+        }
     }
 
     public static Bidder getInstance(Player player)
@@ -156,18 +189,31 @@ public class Bidder
 
     public boolean removeAuction(Auction auction)
     {
+        Database data = AuctionHouse.getInstance().database;
+        //All Bid delete
+        data.query("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?"
+                      ,this.id,auction.id);
+        
         subscriptions.remove(auction);
         return activeBids.remove(auction);
     }
 
     public boolean removeSubscription(Auction auction)
     {
+        Database data = AuctionHouse.getInstance().database;
+        //IdSub delete
+        data.query("DELETE FROM `subscription` WHERE `playerid`=? && `auctionid`=?"
+                      ,this.id,auction.id);
         return subscriptions.remove(auction);
     }
 
-    public boolean removeSubscription(ItemStack mat)
+    public boolean removeSubscription(ItemStack item)
     {
-        return materialSub.remove(mat);
+        Database data = AuctionHouse.getInstance().database;
+        //MAtSub delete
+        data.query("DELETE FROM `subscription` WHERE `playerid`=? && `item`=?"
+                      ,this.id,MyUtil.get().convertItem(item));
+        return materialSub.remove(item);
     }
 
     public List<Auction> getLeadingAuctions(Bidder player)
@@ -256,13 +302,51 @@ public class Bidder
 
     public Bidder addSubscription(Auction auction)
     {
+        Database data = AuctionHouse.getInstance().database;        
+        data.query(
+                    "INSERT INTO `subscription` ("+
+                    "`id` ,"+
+                    "`playerid` ,"+
+                    "`auctionid` ,"+
+                    "`type` ,"+
+                    "`item`"+
+                    ")"+
+                    "VALUES ("+
+                    "NULL , '?', '?', '0', 'NULL'"+
+                    ");"
+                  ,this.id,auction.id);
+        
         this.subscriptions.add(auction);
         return this;
     }
 
-    public Bidder addSubscription(ItemStack material)
+    public Bidder addSubscription(ItemStack item)
     {
-        this.materialSub.add(material);
+        Database data = AuctionHouse.getInstance().database;        
+        data.query(
+                    "INSERT INTO `subscription` ("+
+                    "`id` ,"+
+                    "`playerid` ,"+
+                    "`auctionid` ,"+
+                    "`type` ,"+
+                    "`item`"+
+                    ")"+
+                    "VALUES ("+
+                    "NULL , '?', 'NULL', '1', '?'"+
+                    ");"
+                  ,this.id,MyUtil.get().convertItem(item)); 
+        this.materialSub.add(item);
         return this;
     }
+    
+    public int notifyBitMask()
+    {
+        int tmp = 0;
+        if (this.notify) tmp |= 1;
+        if (this.notifyCancel) tmp |= 2;
+        if (this.notifyContainer) tmp |= 4;
+        if (this.playerNotification) tmp |= 8;
+        return tmp;
+    }
+    
 }

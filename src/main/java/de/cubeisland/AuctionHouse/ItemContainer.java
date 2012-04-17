@@ -31,7 +31,7 @@ public class ItemContainer
     public boolean giveNextItem()
     {
         Player player = this.bidder.getPlayer();
-
+        Database data = AuctionHouse.getInstance().database;
         if (this.itemList.isEmpty())
         {
             return false;
@@ -56,12 +56,17 @@ public class ItemContainer
         if (tmp == null)
         {
             player.updateInventory();
+            data.query("DELETE FROM `itemcontainer` WHERE `id`=?"
+                      ,this.itemList.getFirst().id);
             this.itemList.removeFirst();
             return true;
         }
         else
         {
             player.sendMessage(t("i")+" "+t("cont_rec_remain"));
+            
+            data.query("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?"
+                      ,tmp.getAmount(),this.itemList.getFirst().id);            
             itemList.getFirst().item.setAmount(tmp.getAmount());
             player.updateInventory();
             return true;

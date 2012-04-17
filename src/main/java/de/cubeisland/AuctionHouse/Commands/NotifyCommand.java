@@ -6,6 +6,8 @@ import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.Bidder;
+import de.cubeisland.AuctionHouse.Database;
+import de.cubeisland.AuctionHouse.MyUtil;
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -59,7 +61,10 @@ public class NotifyCommand extends AbstractCommand
             sender.sendMessage(t("i")+" "+t("note_on"));
         else
             sender.sendMessage(t("i")+" "+t("note_off"));
-        
+        Database data = AuctionHouse.getInstance().database;
+        //Update BidderNotification
+        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                      ,bidder.notifyBitMask(),bidder.id);   
         return true;
     }
 

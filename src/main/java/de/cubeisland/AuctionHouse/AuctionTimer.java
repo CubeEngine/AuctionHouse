@@ -77,6 +77,10 @@ public class AuctionTimer
                                     else
                                     {
                                         winner.notify = true;
+                                        Database data = AuctionHouse.getInstance().database;
+                                        //Update BidderNotification
+                                        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                                                    ,winner.notifyBitMask(),winner.id);  
                                     }
                                     manager.finishAuction(auction);
                                     break; //NPE Prevention
@@ -99,6 +103,10 @@ public class AuctionTimer
                             if (auction.bids.peek().getBidder().equals(auction.owner))
                             {
                                 auction.owner.notifyCancel = true;
+                                Database data = AuctionHouse.getInstance().database;
+                                //Update BidderNotification
+                                data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                                            ,auction.owner.notifyBitMask(),auction.owner.id);  
                                 if (!(auction.owner instanceof ServerBidder))
                                 {
                                     econ.withdrawPlayer(auction.owner.getName(), auction.bids.peek().getAmount() * config.auction_comission / 100);

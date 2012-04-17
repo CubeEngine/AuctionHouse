@@ -1,5 +1,7 @@
 package de.cubeisland.AuctionHouse;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -8,13 +10,11 @@ import java.util.ArrayList;
  */
 public class ServerBidder extends Bidder
 {
-    public final ArrayList<Auction> activeBids;
     private static ServerBidder instance = null;
 
     public ServerBidder()
     {
         super(null);
-        this.activeBids = new ArrayList<Auction>();
     }
 
     public static Bidder getInstance()

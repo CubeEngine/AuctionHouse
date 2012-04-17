@@ -25,6 +25,11 @@ public class AuctionHouseConfiguration
     public final int      auction_comission;            //Cost for Owner in %
     public final String   auction_language;             //en / de
     public final boolean  auction_confirmID;            //need confirm to delete Auction per id
+    public final String   auction_database_host;            
+    public final short    auction_database_port;
+    public final String   auction_database_user;
+    public final String   auction_database_pass;
+    public final String   auction_database_name;
 
     public AuctionHouseConfiguration(Configuration config)
     {
@@ -38,6 +43,16 @@ public class AuctionHouseConfiguration
         this.auction_comission = config.getInt("auction.comission");
         this.auction_language = config.getString("auction.language");
         this.auction_confirmID = config.getBoolean("auction.confirmID");
+        
+        this.auction_database_host = config.getString("auction.database.host");
+        this.auction_database_port = Short.parseShort(config.getString("auction_database_port"));
+        this.auction_database_user = config.getString("auction_database_user");
+        this.auction_database_pass = config.getString("auction_database_pass");
+        this.auction_database_name = config.getString("auction_database_name");
+        
+        
+        
+        
 
         this.auction_undoTime = MyUtil.get().convert(config.getString("auction.undoTime"));
         this.auction_maxLength = MyUtil.get().convert(config.getString("auction.maxLength"));

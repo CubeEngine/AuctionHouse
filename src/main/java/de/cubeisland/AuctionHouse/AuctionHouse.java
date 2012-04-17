@@ -35,12 +35,14 @@ public class AuctionHouse extends JavaPlugin
     protected AuctionHouseConfiguration config;
     protected File dataFolder;
     private Economy economy = null;
+//TODO standard config für database
+    public final Database database = new Database(config.auction_database_host,config.auction_database_port,
+                                                   config.auction_database_user,config.auction_database_pass,config.auction_database_name);
 //TODO später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO Durchschnitt Vk Preis von Items
 //TODO kürzere / weniger Meldungen so halb fertig....
 //TODO flatfile mit angeboten
 //TODO ?list formatieren
-    //TODO DataBase Commands
     public AuctionHouse()
     {
         instance = this;

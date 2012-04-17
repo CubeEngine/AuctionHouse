@@ -2,6 +2,7 @@ package de.cubeisland.AuctionHouse;
 
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import java.util.Stack;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -21,21 +22,27 @@ public class Auction
 
     public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
-        this.id = 0;
+        this.id = Manager.getInstance().freeIds.peek();
+        Manager.getInstance().freeIds.pop();
         this.item = item;
         this.owner = owner;
         this.auctionEnd = auctionEnd;
         this.bids = new Stack<Bid>();
-        this.bids.push(new Bid(owner, startBid));
-    }
-
-    public boolean abortAuction()
-    {
-        while (!(this.bids.isEmpty()))
-        {
-            this.bids.pop();
-        }
-        return true;
+        this.bids.push(new Bid(owner, startBid, this));
+        
+        Database data = AuctionHouse.getInstance().database;
+        data.query(  
+            "INSERT INTO `auctions` ("+
+            "`id` ,"+
+            "`ownerid` ,"+
+            "`item` ,"+
+            "`amount`"+
+            "`timestamp`"+
+            ")"+
+            "VALUES ("+
+            "?, ?, ?, ?, ?"
+        ,this.id,owner.id,MyUtil.get().convertItem(item),item.getAmount(),auctionEnd);
+        
     }
 
     public boolean bid(final Bidder bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
@@ -56,7 +63,7 @@ public class Auction
             if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) - bidder.getTotalBidAmount() >= amount
                     || Perm.get().check(bidder,"auctionhouse.use.bid.infinite"))
             {
-                this.bids.push(new Bid(bidder, amount));
+                this.bids.push(new Bid(bidder, amount, this));
                 return true;
             }
             bidder.getPlayer().sendMessage(t("e")+" "+t("auc_bid_money1"));
@@ -86,6 +93,11 @@ public class Auction
             return false;
         }
         //else: Undo Last Bid
+        
+        Database data = AuctionHouse.getInstance().database;
+        //Single Bid delete
+        data.query("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
+                      ,bidder.id,this.id,this.bids.peek().getTimestamp());
         this.bids.pop();
         return true;
     }

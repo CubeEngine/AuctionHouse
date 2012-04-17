@@ -13,7 +13,7 @@ public class Manager
 {
     private static Manager instance = null;
     private final List<Auction> auctions;
-    private final Stack<Integer> freeIds;
+    public final Stack<Integer> freeIds;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     public HashMap<Bidder, Bidder> remBidderConfirm = new HashMap();
@@ -141,7 +141,6 @@ public class Manager
             ServerBidder.getInstance().removeAuction(auction);
         }
         this.auctions.remove(auction);
-        auction.abortAuction();
         return true;
     }
 
@@ -161,14 +160,17 @@ public class Manager
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
+        
+        Database data = AuctionHouse.getInstance().database;
+        data.query("DELETE FROM `auctions` WHERE `id`=?"
+                      ,auction.id);
+        
         this.auctions.remove(auction);
         return true;
     }
 
     public boolean addAuction(Auction auction)
     {
-        auction.id = this.freeIds.peek();
-        this.freeIds.pop();
         this.auctions.add(auction);
         return true;
     }

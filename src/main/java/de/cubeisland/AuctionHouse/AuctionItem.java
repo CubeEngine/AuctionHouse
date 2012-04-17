@@ -1,5 +1,7 @@
 package de.cubeisland.AuctionHouse;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -13,6 +15,7 @@ public class AuctionItem
     protected long date;
     protected String owner;
     protected Double price;
+    public int id;
 
     public AuctionItem(Auction auction)
     {
@@ -36,8 +39,36 @@ public class AuctionItem
         {
             this.owner = auction.owner.getName();
         }
+        this.id = -1;
+        try
+        {
+            Database data = AuctionHouse.getInstance().database;
+            ResultSet set = 
+            data.query(
+                    "INSERT INTO `itemcontainer` ("+
+                    "`playerid` ,"+
+                    "`item` ,"+
+                    "`amount` ,"+
+                    "`price` ,"+
+                    "`timestamp` ,"+
+                    "`ownerid`"+
+                    ")"+
+                    "VALUES ("+
+                    " ?, ?, ?, ?, ?, ?"+
+                    ");"
+                  ,this.bidder.id,MyUtil.get().convertItem(this.item),
+                  this.item.getAmount(),this.price,this.date,auction.owner.id);
+             if (set.next())
+                this.id = set.getInt("id");
+                
+        }
+        catch (SQLException ex)
+        {
+            
+        }
     }
 
+    
     public AuctionItem(ItemStack item, Bidder bidder)
     {
         this.bidder = bidder;
@@ -45,8 +76,36 @@ public class AuctionItem
         this.date = System.currentTimeMillis();
         this.owner = bidder.getName();
         this.price = 0.0;
+        this.id = -1; 
+        
+        try
+        {
+            Database data = AuctionHouse.getInstance().database;
+            ResultSet set = 
+            data.query(
+                    "INSERT INTO `itemcontainer` ("+
+                    "`playerid` ,"+
+                    "`item` ,"+
+                    "`amount` ,"+
+                    "`price` ,"+
+                    "`timestamp` ,"+
+                    "`ownerid`"+
+                    ")"+
+                    "VALUES ("+
+                    " ?, ?, ?, ?, ?, ?"+
+                    ");"
+                  ,bidder.id,MyUtil.get().convertItem(item),
+                  item.getAmount(),this.price,this.date,bidder.id);
+            if (set.next())
+                this.id = set.getInt("id");
+        }
+        catch (SQLException ex)
+        {
+            
+        }
     }
-
+    
+    //Fake Auktion
     private AuctionItem(Bidder bidder, ItemStack item, long date, String owner, Double price)
     {
         this.bidder = bidder;

@@ -169,4 +169,17 @@ public class MyUtil {
             );
     }
     
+    public String convertItem(ItemStack item)
+    {
+        String out = item.getTypeId()+":"+item.getDurability();
+        if (!item.getEnchantments().isEmpty())
+        {
+            for (Enchantment ench : item.getEnchantments().keySet())
+            {
+                out += " "+ench.getId()+":"+item.getEnchantmentLevel(ench);
+            }
+        }
+        return out;
+    } 
+    
 }
