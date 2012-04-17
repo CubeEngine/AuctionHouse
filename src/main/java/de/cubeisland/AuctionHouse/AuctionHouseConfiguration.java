@@ -24,6 +24,7 @@ public class AuctionHouseConfiguration
     public final int      auction_itemContainerLength;  //in days
     public final int      auction_comission;            //Cost for Owner in %
     public final String   auction_language;             //en / de
+    public final boolean  auction_confirmID;            //need confirm to delete Auction per id
 
     public AuctionHouseConfiguration(Configuration config)
     {
@@ -36,6 +37,7 @@ public class AuctionHouseConfiguration
         this.auction_itemContainerLength = config.getInt("auction.itemContainerLength");
         this.auction_comission = config.getInt("auction.comission");
         this.auction_language = config.getString("auction.language");
+        this.auction_confirmID = config.getBoolean("auction.confirmID");
 
         this.auction_undoTime = MyUtil.get().convert(config.getString("auction.undoTime"));
         this.auction_maxLength = MyUtil.get().convert(config.getString("auction.maxLength"));

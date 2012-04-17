@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.AuctionManager;
+import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.AuctionHouse;
@@ -54,9 +54,9 @@ public class UnSubscribeCommand extends AbstractCommand
         {
             if (arguments.getInt("i") != null)
             {
-                if (AuctionManager.getInstance().getAuction(arguments.getInt("i")) != null)
+                if (Manager.getInstance().getAuction(arguments.getInt("i")) != null)
                 {
-                    if (bidder.removeSubscription(AuctionManager.getInstance().getAuction(arguments.getInt("i"))))
+                    if (bidder.removeSubscription(Manager.getInstance().getAuction(arguments.getInt("i"))))
                     {
                         sender.sendMessage(t("i")+" "+t("sub_rem",arguments.getInt("i")));
                         return true;

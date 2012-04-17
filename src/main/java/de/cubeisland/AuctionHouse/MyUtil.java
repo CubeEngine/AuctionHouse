@@ -77,11 +77,11 @@ public class MyUtil {
     
     public boolean RegisterAuction(Auction auction, CommandSender sender)
     {
-        if (AuctionManager.getInstance().isEmpty())
+        if (Manager.getInstance().isEmpty())
         {
             return false;
         }
-        AuctionManager.getInstance().addAuction(auction);
+        Manager.getInstance().addAuction(auction);
 
         if (sender instanceof ConsoleCommandSender)
         {

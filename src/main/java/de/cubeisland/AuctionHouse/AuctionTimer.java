@@ -28,7 +28,7 @@ public class AuctionTimer
         {
             public void run()
             {
-                AuctionManager manager = AuctionManager.getInstance();
+                Manager manager = Manager.getInstance();
                 if (!(manager.getAuctions().isEmpty()))
                 {
                     Economy econ = AuctionHouse.getInstance().getEconomy();
@@ -126,7 +126,7 @@ public class AuctionTimer
         {
             public void run()
             {
-                AuctionManager manager = AuctionManager.getInstance();
+                Manager manager = Manager.getInstance();
                 if (!(manager.getAuctions().isEmpty()))
                 {
                     List<Player> playerlist = new ArrayList<Player>();
@@ -207,7 +207,7 @@ public class AuctionTimer
         return instance;
     }
 
-    public void firstschedule(AuctionManager auctions)
+    public void firstschedule(Manager auctions)
     {
         timer.schedule(timerTask, 1000, 1000);
         notifyTimer.schedule(notifyTask, 1000, 1000);

@@ -2,7 +2,7 @@ package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.Perm;
 import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.AuctionManager;
+import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Bidder;
@@ -52,12 +52,12 @@ public class UndoBidCommand extends AbstractCommand
         }
         if (arguments.getInt("1") != null)
         {
-            if (AuctionManager.getInstance().getAuction(arguments.getInt("1")) == null)
+            if (Manager.getInstance().getAuction(arguments.getInt("1")) == null)
             {
                 sender.sendMessage(t("e")+" "+t("auction_no_exist",arguments.getInt("1")));
                 return true;
             }
-            if (AuctionManager.getInstance().getAuction(arguments.getInt("1")).undobid(Bidder.getInstance(psender)))
+            if (Manager.getInstance().getAuction(arguments.getInt("1")).undobid(Bidder.getInstance(psender)))
             {
                 sender.sendMessage(t("i")+" &a"+t("undo_bid_n",arguments.getInt("1")));
                 return true;

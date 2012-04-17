@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -70,6 +72,22 @@ public class Bidder
         {
             Player onlinePlayer = AuctionHouse.getInstance().getServer().getPlayer(player.getName());
             instance = bidderInstances.get(onlinePlayer);
+        }
+        return instance;
+    }
+    
+    public static Bidder getInstance(CommandSender player)
+    {
+        Bidder instance;
+        if (bidderInstances.isEmpty())
+        {
+            instance = null;
+        }
+        else
+        {
+            if (player instanceof ConsoleCommandSender)
+                return ServerBidder.getInstance();
+            instance = getInstance((Player)player);
         }
         return instance;
     }

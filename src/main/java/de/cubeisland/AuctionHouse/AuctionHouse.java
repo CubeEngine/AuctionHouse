@@ -39,10 +39,7 @@ public class AuctionHouse extends JavaPlugin
 //TODO Durchschnitt Vk Preis von Items
 //TODO kürzere / weniger Meldungen so halb fertig....
 //TODO flatfile mit angeboten
-//TODO ?hilfe fehlerhaft
 //TODO ?list formatieren
-//TODO remove Internal Error own
-//TODO auktion über id keine bestätigung (gewollt)
     public AuctionHouse()
     {
         instance = this;
@@ -71,7 +68,7 @@ public class AuctionHouse extends JavaPlugin
         this.economy = this.setupEconomy();
         Translator.loadTranslation(config.auction_language);
         
-        AuctionTimer.getInstance().firstschedule(AuctionManager.getInstance());
+        AuctionTimer.getInstance().firstschedule(Manager.getInstance());
         
         this.pm.registerEvents(new Events(),this);
         

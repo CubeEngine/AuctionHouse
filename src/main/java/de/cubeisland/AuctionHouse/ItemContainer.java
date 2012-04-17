@@ -44,11 +44,11 @@ public class ItemContainer
 
         if (auctionItem.owner.equals(this.bidder.getName()))
         {
-            player.sendMessage(t("i")+" "+t("cont_rec_ab",auctionItem.item.toString()));
+            player.sendMessage(t("i")+" "+t("cont_rec_ab",auctionItem.item.getType().toString()+"x"+auctionItem.item.getAmount()));
         }
         else
         {
-            player.sendMessage(t("i")+" "+t("cont_rec",auctionItem.item.toString(),
+            player.sendMessage(t("i")+" "+t("cont_rec",auctionItem.item.getType().toString()+"x"+auctionItem.item.getAmount(),
                                              econ.format(auctionItem.price),auctionItem.owner,
                                              DateFormatUtils.formatUTC(auctionItem.date, "MMM dd")));
         }

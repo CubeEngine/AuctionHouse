@@ -2,7 +2,7 @@ package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.Perm;
 import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.AuctionManager;
+import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.AuctionSort;
 import de.cubeisland.AuctionHouse.ServerBidder;
@@ -76,7 +76,7 @@ public class BidCommand extends AbstractCommand
                     }
                 }
 
-                List<Auction> auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("i"));
+                List<Auction> auctionlist = Manager.getInstance().getAuctionItems(arguments.getMaterial("i"));
                 if (auctionlist.isEmpty())
                 {
                     sender.sendMessage(t("i")+" "+t("bid_no_auction",arguments.getMaterial("i").toString()));
@@ -127,12 +127,12 @@ public class BidCommand extends AbstractCommand
             bidAmount = arguments.getDouble("2");
             if (bidAmount != null)
             {
-                if (AuctionManager.getInstance().getAuction(id) == null)
+                if (Manager.getInstance().getAuction(id) == null)
                 {
                     sender.sendMessage(t("i")+" "+t("auction_no_exist",id));
                     return true;
                 }
-                auction = AuctionManager.getInstance().getAuction(id);
+                auction = Manager.getInstance().getAuction(id);
                 if (auction.owner == Bidder.getInstance((Player) sender))
                 {
                     sender.sendMessage(t("pro")+" "+t("bid_own"));

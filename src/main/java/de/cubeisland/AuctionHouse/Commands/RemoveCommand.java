@@ -1,15 +1,9 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.AuctionManager;
-import de.cubeisland.AuctionHouse.BaseCommand;
-import de.cubeisland.AuctionHouse.ServerBidder;
-import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.Bidder;
+import de.cubeisland.AuctionHouse.*;
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -19,6 +13,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class RemoveCommand extends AbstractCommand
 {
+    private static final AuctionHouse plugin = AuctionHouse.getInstance();
+    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
     public RemoveCommand(BaseCommand base)
     {
         super(base, "remove", "cancel", "delete", "rem");
@@ -42,7 +39,7 @@ public class RemoveCommand extends AbstractCommand
             if (arguments.getString("1").equalsIgnoreCase("all"))
             {
                 if (!Perm.get().check(sender,"auctionhouse.delete.all")) return true;
-                AuctionManager.getInstance().remAllConfirm.add(sender);
+                Manager.getInstance().remAllConfirm.add(Bidder.getInstance(sender));
                 sender.sendMessage(t("rem_all"));
                 sender.sendMessage(t("rem_confirm"));
                 final CommandSender sender2= sender;
@@ -50,9 +47,9 @@ public class RemoveCommand extends AbstractCommand
                     {
                         public void run() 
                         {
-                            if (AuctionManager.getInstance().remAllConfirm.contains(sender2))
+                            if (Manager.getInstance().remAllConfirm.contains(Bidder.getInstance(sender2)))
                                 sender2.sendMessage(t("rem_abort"));
-                            AuctionManager.getInstance().remAllConfirm.remove(sender2);  
+                            Manager.getInstance().remAllConfirm.remove(Bidder.getInstance(sender2));  
                         }
                     }, 200L);
 
@@ -63,18 +60,18 @@ public class RemoveCommand extends AbstractCommand
                 if (arguments.getString("1").equalsIgnoreCase("Server"))
                 {
                     if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
-                    AuctionManager.getInstance().remBidderConfirm.put(sender, ServerBidder.getInstance());
+                    Manager.getInstance().remBidderConfirm.put(Bidder.getInstance(sender), ServerBidder.getInstance());
                     sender.sendMessage(t("rem_allserv"));
                     sender.sendMessage(t("rem_confirm"));
                     final CommandSender sender2= sender;
+                    
                     AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
                         {
                             public void run() 
                             {
-                                AuctionHouse.debug("running");
-                                if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender2))
+                                if (Manager.getInstance().remBidderConfirm.containsKey(Bidder.getInstance(sender2)))
                                     sender2.sendMessage(t("rem_abort"));
-                                AuctionManager.getInstance().remBidderConfirm.remove(sender2);  
+                                Manager.getInstance().remBidderConfirm.remove(Bidder.getInstance(sender2));  
                             }
                         }, 200L);
 
@@ -85,7 +82,7 @@ public class RemoveCommand extends AbstractCommand
                 Integer id = arguments.getInt("1");
                 if (id != null)
                 {
-                    if (AuctionManager.getInstance().getAuction(id) == null)
+                    if (Manager.getInstance().getAuction(id) == null)
                     {
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
                         return true;
@@ -95,13 +92,32 @@ public class RemoveCommand extends AbstractCommand
                         sender.sendMessage(t("perm")+" "+t("rem_id_perm"));
                         return true;
                     }
-                    if (AuctionManager.getInstance().getAuction(id).owner instanceof ServerBidder)
+                    if (Manager.getInstance().getAuction(id).owner instanceof ServerBidder)
                     {
                         if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
                     }
-                    ItemStack item = AuctionManager.getInstance().getAuction(id).item;
-                    AuctionManager.getInstance().cancelAuction(AuctionManager.getInstance().getAuction(id));
-                    sender.sendMessage(t("i")+" "+t("rem_id",id,item.toString()));
+                    if (config.auction_confirmID)
+                    {
+                        Manager.getInstance().remSingleConfirm.put(Bidder.getInstance(sender), id);
+                        sender.sendMessage(t("rem_single"));
+                        sender.sendMessage(t("rem_confirm"));
+                        final CommandSender sender2= sender;
+
+                        AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                            {
+                                public void run() 
+                                {
+                                    if (Manager.getInstance().remSingleConfirm.containsKey(Bidder.getInstance(sender2)))
+                                        sender2.sendMessage(t("rem_abort"));
+                                    Manager.getInstance().remSingleConfirm.remove(Bidder.getInstance(sender2));  
+                                }
+                            }, 200L);
+
+                        return true;
+                    }    
+                    ItemStack item = Manager.getInstance().getAuction(id).item;
+                    Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(id));
+                    sender.sendMessage(t("i")+" "+t("rem_id",id,item.getType().toString()+"x"+item.getAmount()));
                     return true;
                 }
                 sender.sendMessage(t("e")+" "+t("invalid_com"));
@@ -129,7 +145,7 @@ public class RemoveCommand extends AbstractCommand
 
                 if (!(player.getAuctions().isEmpty()))
                 {
-                    AuctionManager.getInstance().remBidderConfirm.put(sender, player);
+                    Manager.getInstance().remBidderConfirm.put(Bidder.getInstance(sender), player);
                     sender.sendMessage(t("rem_play",player.getName()));
                     sender.sendMessage(t("rem_confirm"));
                     final CommandSender sender2= sender;
@@ -137,10 +153,9 @@ public class RemoveCommand extends AbstractCommand
                         {
                             public void run() 
                             {
-                                AuctionHouse.debug("running");
-                                if (AuctionManager.getInstance().remBidderConfirm.containsKey(sender2))
+                                if (Manager.getInstance().remBidderConfirm.containsKey(Bidder.getInstance(sender2)))
                                     sender2.sendMessage(t("rem_abort"));
-                                AuctionManager.getInstance().remBidderConfirm.remove(sender2);  
+                                Manager.getInstance().remBidderConfirm.remove(Bidder.getInstance(sender2));  
                             }
                         }, 200L);
                     return true;

@@ -25,7 +25,7 @@ public class ListCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        MyUtil.get().sendInfo(sender, AuctionManager.getInstance().getAuctions());
+        MyUtil.get().sendInfo(sender, Manager.getInstance().getAuctions());
         return true;
     }
 

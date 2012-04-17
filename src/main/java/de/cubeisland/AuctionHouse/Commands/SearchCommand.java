@@ -45,7 +45,7 @@ public class SearchCommand extends AbstractCommand
             sender.sendMessage(t("e")+" "+t("item_no_exist",arguments.getString("1")));
             return true;
         }
-        auctionlist = AuctionManager.getInstance().getAuctionItems(arguments.getMaterial("1"));
+        auctionlist = Manager.getInstance().getAuctionItems(arguments.getMaterial("1"));
         if (arguments.getString("s") != null)
         {
             AuctionSort sorter = new AuctionSort();

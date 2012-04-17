@@ -117,9 +117,9 @@ public class InfoCommand extends AbstractCommand
                         Integer id = arguments.getInt("1");
                         if (id != null)
                         {
-                            if (AuctionManager.getInstance().getAuction(id) != null)
+                            if (Manager.getInstance().getAuction(id) != null)
                             {
-                                MyUtil.get().sendInfo(sender, AuctionManager.getInstance().getAuction(id));
+                                MyUtil.get().sendInfo(sender, Manager.getInstance().getAuction(id));
                             }
                             else
                             {

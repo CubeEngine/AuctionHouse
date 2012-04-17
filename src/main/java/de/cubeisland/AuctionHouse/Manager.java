@@ -9,17 +9,18 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class AuctionManager
+public class Manager
 {
-    private static AuctionManager instance = null;
+    private static Manager instance = null;
     private final List<Auction> auctions;
     private final Stack<Integer> freeIds;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    public HashMap<CommandSender, Bidder> remBidderConfirm = new HashMap();
-    public HashSet<CommandSender> remAllConfirm = new HashSet();
+    public HashMap<Bidder, Bidder> remBidderConfirm = new HashMap();
+    public HashSet<Bidder> remAllConfirm = new HashSet();
+    public HashMap<Bidder, Integer> remSingleConfirm = new HashMap();
 
-    private AuctionManager()
+    private Manager()
     {
         int maxAuctions = config.auction_maxAuctions_overall;
         if (!(maxAuctions > 0))
@@ -34,11 +35,11 @@ public class AuctionManager
         }
     }
 
-    public static AuctionManager getInstance()
+    public static Manager getInstance()
     {
         if (instance == null)
         {
-            instance = new AuctionManager();
+            instance = new Manager();
         }
         return instance;
     }
