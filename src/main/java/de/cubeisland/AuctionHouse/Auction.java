@@ -42,9 +42,19 @@ public class Auction
             "VALUES ("+
             "?, ?, ?, ?, ?"
         ,this.id,owner.id,MyUtil.get().convertItem(item),item.getAmount(),auctionEnd);
-        
     }
 
+    //Override: load in Auction from DataBase
+    public Auction(int id,ItemStack item, Bidder owner, long auctionEnd)
+    {//TODO
+        this.id = id;
+        this.item = item;
+        this.owner = owner;
+        this.auctionEnd = auctionEnd;
+        this.bids = new Stack<Bid>();
+        //this.bids.push(new Bid(owner, startBid, this));
+    }
+    
     public boolean bid(final Bidder bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
     {
         if (amount <= 0)

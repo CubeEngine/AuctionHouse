@@ -50,10 +50,6 @@ public class AuctionHouseConfiguration
         this.auction_database_pass = config.getString("auction_database_pass");
         this.auction_database_name = config.getString("auction_database_name");
         
-        
-        
-        
-
         this.auction_undoTime = MyUtil.get().convert(config.getString("auction.undoTime"));
         this.auction_maxLength = MyUtil.get().convert(config.getString("auction.maxLength"));
         this.auction_standardLength = MyUtil.get().convert(config.getString("auction.standardLength"));

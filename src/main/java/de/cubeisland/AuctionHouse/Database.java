@@ -1,9 +1,5 @@
 package de.cubeisland.AuctionHouse;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -80,7 +76,7 @@ public class Database
                  );
         this.exec(       "CREATE TABLE IF NOT EXISTS `itemcontainer` ("+
                         "`id` int(11) NOT NULL AUTO_INCREMENT,"+
-                        "`playerid` int(11) NOT NULL,"+
+                        "`bidderid` int(11) NOT NULL,"+
                         "`item` varchar(42) NOT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
                         "`amount` int(11) NOT NULL,"+
                         "`price` decimal(11,2) NOT NULL,"+
@@ -91,7 +87,7 @@ public class Database
                  );
         this.exec(      "CREATE TABLE IF NOT EXISTS `subscription` ("+
                         "`id` int(11) NOT NULL AUTO_INCREMENT,"+
-                        "`playerid` int(11) NOT NULL,"+
+                        "`bidderid` int(11) NOT NULL,"+
                         "`auctionid` int(11) NOT NULL,"+
                         "`type` tinyint(1) NOT NULL,"+
                         "`item` varchar(42) NOT NULL 'ID:DATA Ench1:Val Ench2:Val ...',"+
@@ -165,8 +161,94 @@ public class Database
     }
     
     public void loadDatabase()
-    {
-        //TODO serverstart...
+    {  //TODO serverstart... prüfen
+        try{
+        Database data = AuctionHouse.getInstance().database; 
+        
+
+        ResultSet bidderset =
+              data.query("SELECT * from `bidder`");
+        while (bidderset.next())
+        {
+            //load in Bidder
+            Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("bidder"));
+        }
+        
+        
+        int max = AuctionHouse.getInstance().config.auction_maxAuctions_overall;
+        for (int i=0; i>max; i++)
+        {
+            ResultSet set =
+              data.query("SELECT * from `auctions` where `id`=? LIMIT 1;",i);  
+            
+            if (set.next())
+            {
+                int id = set.getInt("id");
+                ItemStack item = MyUtil.get().convertItem(set.getString("item"));
+                //load in Bidder:
+                Bidder owner = Bidder.getInstance(set.getInt("bidderid"),this.getBidderString(set.getInt("bidderid")));
+                long auctionEnd = set.getTimestamp("timestamp").getTime();
+                Auction newauction = new Auction (id,item,owner,auctionEnd);
+                //load in auction
+                Manager.getInstance().addAuction(newauction);
+                ResultSet bidset =
+                  data.query("SELECT * from `bids` where `auctionid`=? ;",i);
+                while (bidset.next())
+                { 
+                    //sort bids by time & fill auction with bids
+                    //TODO prüfen ob richtig sortiert
+                    data.query("SELECT * from `bids` ORDER BY `timestamp` ;");
+                    newauction.bids.push(
+                            new Bid( bidset.getInt("id"),
+                                     bidset.getInt("bidderid"),
+                                     this.getBidderString(bidset.getInt("bidder")),
+                                     bidset.getDouble("price"), newauction));
+                }
+            }
+        }
+        //load in ID-Subs
+        //TODO prüfen ob richtig
+        ResultSet subset =
+              data.query("SELECT * from `subscriptions` ;");
+        while (subset.next())
+        {
+            Bidder bidder = Bidder.getInstance(subset.getInt("bidderid"),this.getBidderString(subset.getInt("bidderid")));
+            if (subset.getInt("type")==1)
+            {//IDSub
+                
+                bidder.addDataBaseSub(subset.getInt("auctionid"));
+            }
+            else
+            {//MatSub
+                bidder.addDataBaseSub(MyUtil.get().convertItem(subset.getString("item")));
+            }
+        }
+        //TODO
+        //load in ItemContainer
+        //TODO prüfen ob richtig sortiert
+        data.query("SELECT * from `itemcontainer` ORDER BY `timestamp` ;");
+        ResultSet itemset =
+              data.query("SELECT * from `subscriptions` ;");
+        while (itemset.next())
+        {
+            Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
+            //TODO ItemContainer DataBaseFiller
+        }
+        }   
+        catch (SQLException ex){}
         AuctionHouse.log("Database loaded succesfully");
+    }
+    
+    private String getBidderString(int id)
+    {
+        try{
+            Database data = AuctionHouse.getInstance().database;
+            ResultSet set =
+              data.query("SELECT * from `bidder` where `id`=? LIMIT 1;",id);  
+            if (set.next())
+              return set.getString("bidder");
+        }   
+        catch (SQLException ex){}
+        return null;
     }
 }

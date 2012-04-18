@@ -46,6 +46,15 @@ public class Bid
         }
         
     }
+    
+    //Override: load in Bid from DataBase
+    public Bid(int id,int bidderid ,String bidder, double amount, Auction auction)
+    {
+        this.amount = amount;
+        this.bidder = Bidder.getInstance(bidderid,bidder);
+        this.timestamp = System.currentTimeMillis();
+        this.id = id;
+    }
 
     public double getAmount()
     {

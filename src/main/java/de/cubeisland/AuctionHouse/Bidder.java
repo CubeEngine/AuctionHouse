@@ -29,9 +29,9 @@ public class Bidder
     public boolean notifyCancel = false;
     public boolean notifyContainer = false;
     public int id;
-    private static final Map<Player, Bidder> bidderInstances = new HashMap<Player, Bidder>();
+    private static final Map<OfflinePlayer, Bidder> bidderInstances = new HashMap<OfflinePlayer, Bidder>();
 
-    public Bidder(Player player)
+    public Bidder(OfflinePlayer player)
     {
         this.player = player;
         this.activeBids = new ArrayList<Auction>();
@@ -69,6 +69,18 @@ public class Bidder
             
         }
     }
+    
+    private Bidder(int id,String player)
+    {
+        this.player = AuctionHouse.getInstance().server.getOfflinePlayer(player);
+        this.activeBids = new ArrayList<Auction>();
+        this.itemContainer = new ItemContainer(this);
+        this.subscriptions = new ArrayList<Auction>();
+        this.materialSub = new ArrayList<ItemStack>();
+        this.id = id;
+    }
+    
+    
 
     public static Bidder getInstance(Player player)
     {
@@ -88,8 +100,27 @@ public class Bidder
         instance = bidderInstances.get(player);
         return instance;
     }
+    
+    public static Bidder getInstance(int id,String player)
+    {
+        Bidder instance;
+        if (bidderInstances.isEmpty())
+        {
+            instance = null;
+        }
+        else
+        {
+            instance = bidderInstances.get(AuctionHouse.getInstance().server.getOfflinePlayer(player));
+        }
+        if (instance == null)
+        {
+            bidderInstances.put(AuctionHouse.getInstance().server.getOfflinePlayer(player), new Bidder(id ,player));
+        }
+        instance = bidderInstances.get(player);
+        return instance;
+    }
 
-    public static Map<Player, Bidder> getInstances()
+    public static Map<OfflinePlayer, Bidder> getInstances()
     {
         return bidderInstances;
     }
@@ -317,6 +348,18 @@ public class Bidder
                   ,this.id,auction.id);
         
         this.subscriptions.add(auction);
+        return this;
+    }
+    
+    public Bidder addDataBaseSub(int id)
+    {
+        this.subscriptions.add(Manager.getInstance().getAuction(id));
+        return this;
+    }
+    
+    public Bidder addDataBaseSub(ItemStack item)
+    {
+        this.materialSub.add(item);
         return this;
     }
 
