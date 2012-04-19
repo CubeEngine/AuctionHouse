@@ -216,6 +216,8 @@ public class Bidder
 
     public boolean isOnline()
     {
+        if (player==null)
+            return false;
         return player.isOnline();
     }
 
@@ -343,7 +345,7 @@ public class Bidder
     public Bidder addAuction(Auction auction)
     {
         this.activeBids.add(auction);
-        this.subscriptions.add(auction);
+        this.addSubscription(auction);
         return this;
     }
 
@@ -352,16 +354,12 @@ public class Bidder
         Database data = AuctionHouse.getInstance().database;        
         data.exec(
                     "INSERT INTO `subscription` ("+
-                    "`id` ,"+
-                    "`playerid` ,"+
+                    "`bidderid` ,"+
                     "`auctionid` ,"+
-                    "`type` ,"+
-                    "`item`"+
+                    "`type` "+
                     ")"+
-                    "VALUES ("+
-                    "NULL , '?', '?', '0', 'NULL'"+
-                    ");"
-                  ,this.id,auction.id);
+                    "VALUES ( ?, ?, ? );"
+                  ,this.id,auction.id,1);
         
         this.subscriptions.add(auction);
         return this;
@@ -384,16 +382,12 @@ public class Bidder
         Database data = AuctionHouse.getInstance().database;        
         data.exec(
                     "INSERT INTO `subscription` ("+
-                    "`id` ,"+
-                    "`playerid` ,"+
-                    "`auctionid` ,"+
+                    "`bidderid` ,"+
                     "`type` ,"+
-                    "`item`"+
+                    "`item` "+
                     ")"+
-                    "VALUES ("+
-                    "NULL , '?', 'NULL', '1', '?'"+
-                    ");"
-                  ,this.id,MyUtil.get().convertItem(item)); 
+                    "VALUES ( ?, ?, ? );"
+                  ,this.id,0,MyUtil.get().convertItem(item)); 
         this.materialSub.add(item);
         return this;
     }

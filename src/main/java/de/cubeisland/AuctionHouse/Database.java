@@ -86,9 +86,9 @@ public class Database
         this.exec(      "CREATE TABLE IF NOT EXISTS `subscription` ("+
                         "`id` int(11) NOT NULL AUTO_INCREMENT,"+
                         "`bidderid` int(11) NOT NULL,"+
-                        "`auctionid` int(11) NOT NULL,"+
+                        "`auctionid` int(11) DEFAULT NULL,"+
                         "`type` tinyint(1) NOT NULL,"+
-                        "`item` varchar(42) NOT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
+                        "`item` varchar(42) DEFAULT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
                  );
@@ -180,7 +180,7 @@ public class Database
             if (set.next())
             {
                 int id = set.getInt("id");
-                ItemStack item = MyUtil.get().convertItem(set.getString("item"));
+                ItemStack item = MyUtil.get().convertItem(set.getString("item"),set.getInt("amount"));
                 Bidder owner = Bidder.getInstance(set.getInt("ownerid"),this.getBidderString(set.getInt("ownerid")));
                 long auctionEnd = set.getTimestamp("timestamp").getTime();
                 Auction newauction = new Auction (id,item,owner,auctionEnd);
@@ -188,11 +188,11 @@ public class Database
                 AuctionHouse.debug("Auction loaded: "+newauction.id+"|O:"+newauction.owner.getName());
                 Manager.getInstance().addAuction(newauction);
                 ResultSet bidset =
-                  data.query("SELECT * from `bids` where `auctionid`=? ;",i);
+                  data.query("SELECT * FROM `bids` WHERE `auctionid`=? ;",i);
                 while (bidset.next())
                 { 
                     //sort bids by time & fill auction with bids
-                    data.query("SELECT * from `bids` ORDER BY `timestamp` ;");
+                    data.query("SELECT * FROM `bids` ORDER BY `timestamp` ;");
                     AuctionHouse.debug("Bid loaded: "+newauction.id+"|C:"+bidset.getDouble("amount")+"|P:"+this.getBidderString(bidset.getInt("bidderid")));
                     //load in Bids
                     Bid bid = new Bid( bidset.getInt("id"),
@@ -206,10 +206,9 @@ public class Database
             }
         }
         //load in ID-Subs
-        //TODO Subs speichern geht nicht
-        //TODO prüfen ob richtig
+        //TODO Subs speichern geht nicht sollte gehn ... prüfen
         ResultSet subset =
-              data.query("SELECT * from `subscription` ;");
+              data.query("SELECT * FROM `subscription`;");
         while (subset.next())
         {
             Bidder bidder = Bidder.getInstance(subset.getInt("bidderid"),this.getBidderString(subset.getInt("bidderid")));
@@ -229,7 +228,14 @@ public class Database
         while (itemset.next())
         {
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
-            //TODO ItemContainer DataBaseFiller
+            bidder.getContainer().itemList.add(
+                    new AuctionItem( bidder,
+                    MyUtil.get().convertItem(itemset.getString("item"),itemset.getInt("amount")),
+                    itemset.getTimestamp("timestamp"),
+                    this.getBidderString(itemset.getInt("ownerid")),
+                    itemset.getDouble("price"),
+                    itemset.getInt("id")
+                    ));
         }
         }   
         catch (SQLException ex){

@@ -182,6 +182,13 @@ public class MyUtil {
         return out;
     }
     
+    public ItemStack convertItem (String in, int amount)
+    {
+        ItemStack out = this.convertItem(in);
+        out.setAmount(amount);
+        return out;
+    }
+    
     public ItemStack convertItem(String in)
     {
         //id:data
@@ -216,8 +223,8 @@ public class MyUtil {
                 enchval = Integer.valueOf(in.substring(in.indexOf(":")+1,in.indexOf(" ")));
                 in.replace(in.substring(0, in.indexOf(" ")+1), "");
             }
-            
-            out.addEnchantment(Enchantment.getById(enchid), enchval);
+            if (Enchantment.getById(id)!=null)
+                out.addEnchantment(Enchantment.getById(enchid), enchval);
         }  
         return out;
     }

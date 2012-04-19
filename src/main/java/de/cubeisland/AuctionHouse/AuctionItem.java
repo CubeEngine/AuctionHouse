@@ -68,6 +68,15 @@ public class AuctionItem
         }
     }
 
+    public AuctionItem(Bidder bidder, ItemStack item, Timestamp time,String owner, double price, int id)
+    {
+        this.bidder = bidder;
+        this.item = item;
+        this.date = time.getTime();
+        this.owner = owner;
+        this.price = price;
+        this.id = id; 
+    }
     
     public AuctionItem(ItemStack item, Bidder bidder)
     {
@@ -90,9 +99,7 @@ public class AuctionItem
                     "`timestamp` ,"+
                     "`ownerid`"+
                     ")"+
-                    "VALUES ("+
-                    " ?, ?, ?, ?, ?, ?"+
-                    ");"
+                    "VALUES ( ?, ?, ?, ?, ?, ?);"
                   ,bidder.id,MyUtil.get().convertItem(item),
                   item.getAmount(),this.price,this.date,bidder.id);
             ResultSet set =
