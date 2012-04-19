@@ -79,9 +79,7 @@ public class AuctionHouse extends JavaPlugin
         {
             translation = Translation.get(this.getClass(), "en");
         }
-        
-        AuctionTimer.getInstance().firstschedule(Manager.getInstance());
-        
+
         this.pm.registerEvents(new AuctionHouseListener(this), this);
         
         BaseCommand baseCommand = new BaseCommand(this);
@@ -109,7 +107,7 @@ public class AuctionHouse extends JavaPlugin
                                 config.auction_database_name);
         
         database.loadDatabase();
-
+        AuctionTimer.getInstance().firstschedule(Manager.getInstance());
         log("Version " + this.getDescription().getVersion() + " enabled");
     }
     

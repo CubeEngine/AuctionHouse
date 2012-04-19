@@ -120,7 +120,7 @@ public class Manager
         this.freeIds.push(auction.getId());
         if (!(auction.getOwner() instanceof ServerBidder))
         {
-            Bidder.getInstance(auction.getOwner().getPlayer()).removeAuction(auction);
+            auction.getOwner().removeAuction(auction);
             while (!(auction.getBids().isEmpty()))
             {
                 Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);
@@ -178,11 +178,11 @@ public class Manager
     
     public HashSet<Bidder> getAllConfirm()
     {
-        return this.getAllConfirm();
+        return this.remAllConfirm;
     }
     
     public HashMap<Bidder, Integer> getSingleConfirm()
     {
-        return this.getSingleConfirm();
+        return this.remSingleConfirm;
     }
 }
