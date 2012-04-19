@@ -31,11 +31,6 @@
             <artifactId>vault</artifactId>
             <version>1.2.13</version>
         </dependency>
-        <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.2.5-R1.2-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <build>

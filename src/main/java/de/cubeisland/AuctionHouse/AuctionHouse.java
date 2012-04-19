@@ -82,7 +82,7 @@ public class AuctionHouse extends JavaPlugin
         
         AuctionTimer.getInstance().firstschedule(Manager.getInstance());
         
-        this.pm.registerEvents(new Events(this), this);
+        this.pm.registerEvents(new AuctionHouseListener(this), this);
         
         BaseCommand baseCommand = new BaseCommand(this);
         baseCommand

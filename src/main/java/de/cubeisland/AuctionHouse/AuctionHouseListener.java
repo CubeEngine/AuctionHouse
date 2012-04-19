@@ -20,13 +20,13 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class Events implements Listener
+public class AuctionHouseListener implements Listener
 {
     private final AuctionHouse plugin;
     private final AuctionHouseConfiguration config;
     private final Economy econ;
     
-    public Events(AuctionHouse plugin)
+    public AuctionHouseListener(AuctionHouse plugin)
     {
         this.plugin = plugin;
         this.config = plugin.getConfigurations();
