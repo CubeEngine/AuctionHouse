@@ -402,4 +402,12 @@ public class Bidder
         return tmp;
     }
     
+    public void setNotify (int bitmask)
+    {
+        if (bitmask % 1 == 1) this.notify = true;
+        if (bitmask % 1 == 1)this.notifyCancel = true;
+        if (bitmask % 1 == 1)this.notifyContainer = true;
+        if (bitmask % 1 == 1)this.playerNotification = true;
+    }
+    
 }

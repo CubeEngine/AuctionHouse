@@ -159,7 +159,8 @@ public class Database
     }
     
     public void loadDatabase()
-    {  //TODO serverstart... hier weiter
+    {
+        //TODO resolve BitMask for bidder
         try{
         Database data = AuctionHouse.getInstance().database; 
         AuctionHouse.debug("Load DataBase...");
@@ -205,8 +206,7 @@ public class Database
                 }
             }
         }
-        //load in ID-Subs
-        //TODO Subs speichern geht nicht sollte gehn ... prüfen
+        //load in Subs
         ResultSet subset =
               data.query("SELECT * FROM `subscription`;");
         while (subset.next())
