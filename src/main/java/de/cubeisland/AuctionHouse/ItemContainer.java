@@ -56,7 +56,7 @@ public class ItemContainer
         if (tmp == null)
         {
             player.updateInventory();
-            data.query("DELETE FROM `itemcontainer` WHERE `id`=?"
+            data.exec("DELETE FROM `itemcontainer` WHERE `id`=?"
                       ,this.itemList.getFirst().id);
             this.itemList.removeFirst();
             return true;
@@ -65,7 +65,7 @@ public class ItemContainer
         {
             player.sendMessage(t("i")+" "+t("cont_rec_remain"));
             
-            data.query("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?"
+            data.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?"
                       ,tmp.getAmount(),this.itemList.getFirst().id);            
             itemList.getFirst().item.setAmount(tmp.getAmount());
             player.updateInventory();

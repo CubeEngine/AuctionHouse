@@ -1,6 +1,7 @@
 package de.cubeisland.AuctionHouse;
 
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import java.sql.Timestamp;
 import java.util.Stack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -22,8 +23,7 @@ public class Auction
 
     public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
-        this.id = Manager.getInstance().freeIds.peek();
-        Manager.getInstance().freeIds.pop();
+        this.id = Manager.getInstance().freeIds.pop();
         this.item = item;
         this.owner = owner;
         this.auctionEnd = auctionEnd;
@@ -31,28 +31,27 @@ public class Auction
         this.bids.push(new Bid(owner, startBid, this));
         
         Database data = AuctionHouse.getInstance().database;
-        data.query(  
+        data.exec(  
             "INSERT INTO `auctions` ("+
             "`id` ,"+
             "`ownerid` ,"+
             "`item` ,"+
-            "`amount`"+
+            "`amount` ,"+
             "`timestamp`"+
             ")"+
-            "VALUES ("+
-            "?, ?, ?, ?, ?"
-        ,this.id,owner.id,MyUtil.get().convertItem(item),item.getAmount(),auctionEnd);
+            "VALUES (?, ?, ?, ?, ?)"
+        ,this.id,owner.id,MyUtil.get().convertItem(item),item.getAmount(),new Timestamp(auctionEnd));
     }
 
     //Override: load in Auction from DataBase
     public Auction(int id,ItemStack item, Bidder owner, long auctionEnd)
-    {//TODO
+    {
+        Manager.getInstance().freeIds.removeElement(id);
         this.id = id;
         this.item = item;
         this.owner = owner;
         this.auctionEnd = auctionEnd;
         this.bids = new Stack<Bid>();
-        //this.bids.push(new Bid(owner, startBid, this));
     }
     
     public boolean bid(final Bidder bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
@@ -106,7 +105,7 @@ public class Auction
         
         Database data = AuctionHouse.getInstance().database;
         //Single Bid delete
-        data.query("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
+        data.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
                       ,bidder.id,this.id,this.bids.peek().getTimestamp());
         this.bids.pop();
         return true;

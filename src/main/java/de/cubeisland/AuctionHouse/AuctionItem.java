@@ -2,6 +2,7 @@ package de.cubeisland.AuctionHouse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -43,21 +44,20 @@ public class AuctionItem
         try
         {
             Database data = AuctionHouse.getInstance().database;
-            ResultSet set = 
-            data.query(
+            data.exec(
                     "INSERT INTO `itemcontainer` ("+
-                    "`playerid` ,"+
+                    "`bidderid` ,"+
                     "`item` ,"+
                     "`amount` ,"+
                     "`price` ,"+
                     "`timestamp` ,"+
                     "`ownerid`"+
                     ")"+
-                    "VALUES ("+
-                    " ?, ?, ?, ?, ?, ?"+
-                    ");"
+                    "VALUES ( ?, ?, ?, ?, ?, ? );"
                   ,this.bidder.id,MyUtil.get().convertItem(this.item),
-                  this.item.getAmount(),this.price,this.date,auction.owner.id);
+                  this.item.getAmount(),this.price,new Timestamp(this.date),auction.owner.id);
+            ResultSet set =
+                    data.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
              if (set.next())
                 this.id = set.getInt("id");
                 
@@ -81,8 +81,7 @@ public class AuctionItem
         try
         {
             Database data = AuctionHouse.getInstance().database;
-            ResultSet set = 
-            data.query(
+            data.exec(
                     "INSERT INTO `itemcontainer` ("+
                     "`playerid` ,"+
                     "`item` ,"+
@@ -96,6 +95,8 @@ public class AuctionItem
                     ");"
                   ,bidder.id,MyUtil.get().convertItem(item),
                   item.getAmount(),this.price,this.date,bidder.id);
+            ResultSet set =
+                    data.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
             if (set.next())
                 this.id = set.getInt("id");
         }

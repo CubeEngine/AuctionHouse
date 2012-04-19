@@ -140,6 +140,10 @@ public class Manager
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
+        Database data = AuctionHouse.getInstance().database;
+        data.exec("DELETE FROM `auctions` WHERE `id`=?"
+                      ,auction.id);
+        
         this.auctions.remove(auction);
         return true;
     }
@@ -162,7 +166,7 @@ public class Manager
         }
         
         Database data = AuctionHouse.getInstance().database;
-        data.query("DELETE FROM `auctions` WHERE `id`=?"
+        data.exec("DELETE FROM `auctions` WHERE `id`=?"
                       ,auction.id);
         
         this.auctions.remove(auction);

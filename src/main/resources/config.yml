@@ -18,9 +18,7 @@ auction:
   blacklist: [7,8,9,10,11,26,34,36,51,52,55,59,60,63,64,68,71,74,75,83,90,92,93,94,95,104,105,115,117,118,119,120]
   database:
     host: localhost
-    port: 2063
-    user: ah
-    pass: 123456
+    port: 3306
+    user: root
+    pass: ''
     name: auctionhouse
-  
-

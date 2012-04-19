@@ -184,18 +184,39 @@ public class MyUtil {
     
     public ItemStack convertItem(String in)
     {
-        //TODO unconvert prüfen string richtige substrings
         //id:data
         int id = Integer.valueOf(in.substring(0,in.indexOf(":")));
-        short data = Short.valueOf(in.substring(in.indexOf(":"+1),in.indexOf(" ")));
-        in.replace(in.substring(0, in.indexOf(" ")+1), "");
+        short data;
+        if (in.indexOf(" ")==-1)
+        {
+            data = Short.valueOf(in.substring(in.indexOf(":")+1));
+            in = "";
+        }
+            
+        else
+        {
+            data = Short.valueOf(in.substring(in.indexOf(":")+1,in.indexOf(" ")));
+            in.replace(in.substring(0, in.indexOf(" ")+1), "");
+        }
+        
+        
         ItemStack out = new ItemStack(id,data);
         //ench1:val1 ench2:val2 ...
         while (in.length()>1)
         {
             int enchid = Integer.valueOf(in.substring(0,in.indexOf(":")));
-            int enchval = Integer.valueOf(in.substring(in.indexOf(":")+1,in.indexOf(" ")));
-            in.replace(in.substring(0, in.indexOf(" ")+1), "");
+            int enchval; 
+            if (in.indexOf(" ")==-1)
+            {
+                enchval = Short.valueOf(in.substring(in.indexOf(":")+1));
+                in = "";
+            }
+            else
+            {
+                enchval = Integer.valueOf(in.substring(in.indexOf(":")+1,in.indexOf(" ")));
+                in.replace(in.substring(0, in.indexOf(" ")+1), "");
+            }
+            
             out.addEnchantment(Enchantment.getById(enchid), enchval);
         }  
         return out;

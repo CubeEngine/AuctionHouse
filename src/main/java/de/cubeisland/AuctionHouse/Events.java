@@ -65,7 +65,7 @@ public class Events implements Listener
         Bidder bidder = Bidder.getInstance(event.getPlayer());
         Database data = AuctionHouse.getInstance().database;
         //Update BidderNotification
-        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                       ,bidder.notifyBitMask(),bidder.id); 
     }
     
@@ -91,7 +91,7 @@ public class Events implements Listener
         }
         Database data = AuctionHouse.getInstance().database;
         //Update BidderNotification
-        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                       ,bidder.notifyBitMask(),bidder.id);  
     }
    

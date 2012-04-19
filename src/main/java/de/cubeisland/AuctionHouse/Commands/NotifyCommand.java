@@ -63,7 +63,7 @@ public class NotifyCommand extends AbstractCommand
             sender.sendMessage(t("i")+" "+t("note_off"));
         Database data = AuctionHouse.getInstance().database;
         //Update BidderNotification
-        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                       ,bidder.notifyBitMask(),bidder.id);   
         return true;
     }

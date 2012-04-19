@@ -79,7 +79,7 @@ public class AuctionTimer
                                         winner.notify = true;
                                         Database data = AuctionHouse.getInstance().database;
                                         //Update BidderNotification
-                                        data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                                        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                                                     ,winner.notifyBitMask(),winner.id);  
                                     }
                                     manager.finishAuction(auction);
@@ -105,7 +105,7 @@ public class AuctionTimer
                                 auction.owner.notifyCancel = true;
                                 Database data = AuctionHouse.getInstance().database;
                                 //Update BidderNotification
-                                data.query("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                                data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                                             ,auction.owner.notifyBitMask(),auction.owner.id);  
                                 if (!(auction.owner instanceof ServerBidder))
                                 {

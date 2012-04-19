@@ -25,4 +25,18 @@ public class ServerBidder extends Bidder
         }
         return instance;
     }
+    
+    public ServerBidder(int id)
+    {
+        super(id,"*Server");
+    }
+
+    public static Bidder getInstance(int id)
+    {
+        if (instance == null)
+        {
+            instance = new ServerBidder(id);
+        }
+        return instance;
+    }
 }

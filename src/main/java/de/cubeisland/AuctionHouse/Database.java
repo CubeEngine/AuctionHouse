@@ -28,13 +28,11 @@ public class Database
         {
             throw new IllegalStateException("Couldn't find the MySQL driver!", t);
         }
-
         this.host = host;
         this.port = port;
         this.user = user;
         this.pass = pass;
         this.name = name;
-
         try
         {
             this.connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + String.valueOf(this.port) + "/" + this.name, this.user, this.pass);
@@ -52,25 +50,25 @@ public class Database
                         "`id` int(10) unsigned NOT NULL,"+
                         "`ownerid` int(11) NOT NULL,"+
                         "`item` varchar(42) NOT NULL,"+
-                        "`amount` int(11) NOT NULL"+
-                        "`timestamp` timestamp NOT NULL"+
+                        "`amount` int(11) NOT NULL,"+
+                        "`timestamp` timestamp NOT NULL,"+
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1;"
                  );
         this.exec(      "CREATE TABLE IF NOT EXISTS `bidder` ("+
-                        "`id` int(11) NOT NULL,"+
+                        "`id` int(11) NOT NULL AUTO_INCREMENT,"+
                         "`name` varchar(16) NOT NULL,"+
                         "`type` tinyint(1) NOT NULL COMMENT 'is ServerBidder?',"+
-                        "`notify` int(1) NOT NULL"+
+                        "`notify` int(1) NOT NULL,"+
                         "PRIMARY KEY (`id`)"+
-                        ") ENGINE=MyISAM DEFAULT CHARSET=latin1;"
+                        ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;"
                  );
         this.exec(      "CREATE TABLE IF NOT EXISTS `bids` ("+
                         "`id` int(11) NOT NULL AUTO_INCREMENT,"+
                         "`auctionid` int(11) NOT NULL,"+
                         "`bidderid` int(11) NOT NULL,"+
                         "`amount` int(11) NOT NULL,"+
-                        "`timestamp` timestamp NOT NULL"+
+                        "`timestamp` timestamp NOT NULL,"+
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;"
                  );
@@ -80,7 +78,7 @@ public class Database
                         "`item` varchar(42) NOT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
                         "`amount` int(11) NOT NULL,"+
                         "`price` decimal(11,2) NOT NULL,"+
-                        "`timestamp` timestamp NOT NULL"+
+                        "`timestamp` timestamp NOT NULL,"+
                         "`ownerid` int(11) NOT NULL COMMENT 'Bidder who started auction',"+
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
@@ -90,7 +88,7 @@ public class Database
                         "`bidderid` int(11) NOT NULL,"+
                         "`auctionid` int(11) NOT NULL,"+
                         "`type` tinyint(1) NOT NULL,"+
-                        "`item` varchar(42) NOT NULL 'ID:DATA Ench1:Val Ench2:Val ...',"+
+                        "`item` varchar(42) NOT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
                  );
@@ -106,7 +104,7 @@ public class Database
         return this.host;
     }
 
-    public short getPort()
+    public int getPort()
     {
         return this.port;
     }
@@ -131,9 +129,9 @@ public class Database
         try
         {
             PreparedStatement statement = this.connection.prepareStatement(query);
-            for (int i = 1; i <= params.length; ++i)
+            for (int i = 0; i < params.length; ++i)
             {
-                statement.setObject(i, params[i]);
+                statement.setObject(i+1, params[i]);
             }
             return statement.executeQuery();
         }
@@ -150,7 +148,7 @@ public class Database
             PreparedStatement statement = this.connection.prepareStatement(query);
             for (int i = 0; i < params.length; ++i)
             {
-                statement.setObject(i, params[i]);
+                statement.setObject(i+1, params[i]);
             }
             return statement.executeUpdate();
         }
@@ -161,55 +159,57 @@ public class Database
     }
     
     public void loadDatabase()
-    {  //TODO serverstart... prüfen
+    {  //TODO serverstart... hier weiter
         try{
         Database data = AuctionHouse.getInstance().database; 
-        
+        AuctionHouse.debug("Load DataBase...");
 
         ResultSet bidderset =
-              data.query("SELECT * from `bidder`");
+              data.query("SELECT * FROM `bidder`");
         while (bidderset.next())
         {
             //load in Bidder
-            Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("bidder"));
+            Bidder bidderer = Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("name"));
+            AuctionHouse.debug("Bidder loaded: "+bidderer.id+"|"+bidderer.getName());
         }
-        
-        
         int max = AuctionHouse.getInstance().config.auction_maxAuctions_overall;
-        for (int i=0; i>max; i++)
+        for (int i=0; i<max; i++)
         {
             ResultSet set =
-              data.query("SELECT * from `auctions` where `id`=? LIMIT 1;",i);  
-            
+              data.query("SELECT * FROM `auctions` WHERE `id`=? LIMIT 1;",i);  
             if (set.next())
             {
                 int id = set.getInt("id");
                 ItemStack item = MyUtil.get().convertItem(set.getString("item"));
-                //load in Bidder:
-                Bidder owner = Bidder.getInstance(set.getInt("bidderid"),this.getBidderString(set.getInt("bidderid")));
+                Bidder owner = Bidder.getInstance(set.getInt("ownerid"),this.getBidderString(set.getInt("ownerid")));
                 long auctionEnd = set.getTimestamp("timestamp").getTime();
                 Auction newauction = new Auction (id,item,owner,auctionEnd);
                 //load in auction
+                AuctionHouse.debug("Auction loaded: "+newauction.id+"|O:"+newauction.owner.getName());
                 Manager.getInstance().addAuction(newauction);
                 ResultSet bidset =
                   data.query("SELECT * from `bids` where `auctionid`=? ;",i);
                 while (bidset.next())
                 { 
                     //sort bids by time & fill auction with bids
-                    //TODO prüfen ob richtig sortiert
                     data.query("SELECT * from `bids` ORDER BY `timestamp` ;");
-                    newauction.bids.push(
-                            new Bid( bidset.getInt("id"),
+                    AuctionHouse.debug("Bid loaded: "+newauction.id+"|C:"+bidset.getDouble("amount")+"|P:"+this.getBidderString(bidset.getInt("bidderid")));
+                    //load in Bids
+                    Bid bid = new Bid( bidset.getInt("id"),
                                      bidset.getInt("bidderid"),
-                                     this.getBidderString(bidset.getInt("bidder")),
-                                     bidset.getDouble("price"), newauction));
+                                     this.getBidderString(bidset.getInt("bidderid")),
+                                     bidset.getDouble("amount"),
+                                     bidset.getTimestamp("timestamp"));
+                    Manager.getInstance().getAuction(newauction.id).bids.push(bid);
+                   
                 }
             }
         }
         //load in ID-Subs
+        //TODO Subs speichern geht nicht
         //TODO prüfen ob richtig
         ResultSet subset =
-              data.query("SELECT * from `subscriptions` ;");
+              data.query("SELECT * from `subscription` ;");
         while (subset.next())
         {
             Bidder bidder = Bidder.getInstance(subset.getInt("bidderid"),this.getBidderString(subset.getInt("bidderid")));
@@ -223,19 +223,18 @@ public class Database
                 bidder.addDataBaseSub(MyUtil.get().convertItem(subset.getString("item")));
             }
         }
-        //TODO
         //load in ItemContainer
-        //TODO prüfen ob richtig sortiert
-        data.query("SELECT * from `itemcontainer` ORDER BY `timestamp` ;");
         ResultSet itemset =
-              data.query("SELECT * from `subscriptions` ;");
+              data.query("SELECT * from `itemcontainer` ORDER BY `timestamp`;");
         while (itemset.next())
         {
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
             //TODO ItemContainer DataBaseFiller
         }
         }   
-        catch (SQLException ex){}
+        catch (SQLException ex){
+        AuctionHouse.log("Error while loading DataBase!");
+        }
         AuctionHouse.log("Database loaded succesfully");
     }
     
@@ -246,7 +245,7 @@ public class Database
             ResultSet set =
               data.query("SELECT * from `bidder` where `id`=? LIMIT 1;",id);  
             if (set.next())
-              return set.getString("bidder");
+              return set.getString("name");
         }   
         catch (SQLException ex){}
         return null;

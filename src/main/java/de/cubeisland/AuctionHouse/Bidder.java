@@ -39,30 +39,39 @@ public class Bidder
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = -1;
-
+        String bidder;
         Database data = AuctionHouse.getInstance().database;
         try
         {
-            String bidder;
+            
             if (player==null) 
+            {
                 bidder="*Server";
-            else
-                bidder=player.getName();
-                
-            ResultSet set = 
-            data.query(
+                data.exec(
                         "INSERT INTO `bidder` ("+
                         "`name` ,"+
                         "`type` ,"+
-                        "`notify` ,"+
-                        ")"+
-                        "VALUES ("+
-                        " ?, ?, ?"+
-                        ");"
-                      ,bidder,false,0);
+                        "`notify` "+
+                        ") "+
+                        "VALUES ( ?, ?, ? );"
+                      ,bidder,1,0);
+            }
+            else
+            {
+                bidder=player.getName();
+                data.exec(
+                        "INSERT INTO `bidder` ("+
+                        "`name` ,"+
+                        "`type` ,"+
+                        "`notify` "+
+                        ") "+
+                        "VALUES ( ?, ?, ? );"
+                      ,bidder,0,0);
+            }
+            ResultSet set =
+                    data.query("SELECT * FROM `bidder` WHERE `name`=? LIMIT 1",bidder);
             if (set.next())
-                this.id = set.getInt("id");
-                
+                this.id = set.getInt("id");                
         }
         catch (SQLException ex)
         {
@@ -70,9 +79,12 @@ public class Bidder
         }
     }
     
-    private Bidder(int id,String player)
+    public Bidder(int id,String name)
     {
-        this.player = AuctionHouse.getInstance().server.getOfflinePlayer(player);
+        if (name.equalsIgnoreCase("*Server"))
+            this.player = null;//ServerBidder
+        else
+            this.player = AuctionHouse.getInstance().server.getOfflinePlayer(name);
         this.activeBids = new ArrayList<Auction>();
         this.itemContainer = new ItemContainer(this);
         this.subscriptions = new ArrayList<Auction>();
@@ -110,13 +122,16 @@ public class Bidder
         }
         else
         {
-            instance = bidderInstances.get(AuctionHouse.getInstance().server.getOfflinePlayer(player));
+            if (player.equalsIgnoreCase("*Server"))
+                return ServerBidder.getInstance(id);
+            else
+                instance = bidderInstances.get(AuctionHouse.getInstance().server.getOfflinePlayer(player));
         }
         if (instance == null)
         {
             bidderInstances.put(AuctionHouse.getInstance().server.getOfflinePlayer(player), new Bidder(id ,player));
         }
-        instance = bidderInstances.get(player);
+        instance = bidderInstances.get(AuctionHouse.getInstance().server.getOfflinePlayer(player));
         return instance;
     }
 
@@ -178,14 +193,12 @@ public class Bidder
 
     public Player getPlayer()
     {
-        if (player.isOnline())
+        if (this.player != null)
+        if (this.player.isOnline())
         {
-            return player.getPlayer();
+            return this.player.getPlayer();
         }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
     public OfflinePlayer getOffPlayer()
@@ -195,7 +208,10 @@ public class Bidder
 
     public String getName()
     {
-        return player.getName();
+        if (player==null)
+            return "*Server";
+        else
+            return player.getName();
     }
 
     public boolean isOnline()
@@ -222,7 +238,7 @@ public class Bidder
     {
         Database data = AuctionHouse.getInstance().database;
         //All Bid delete
-        data.query("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?"
+        data.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?"
                       ,this.id,auction.id);
         
         subscriptions.remove(auction);
@@ -233,7 +249,7 @@ public class Bidder
     {
         Database data = AuctionHouse.getInstance().database;
         //IdSub delete
-        data.query("DELETE FROM `subscription` WHERE `playerid`=? && `auctionid`=?"
+        data.exec("DELETE FROM `subscription` WHERE `playerid`=? && `auctionid`=?"
                       ,this.id,auction.id);
         return subscriptions.remove(auction);
     }
@@ -242,7 +258,7 @@ public class Bidder
     {
         Database data = AuctionHouse.getInstance().database;
         //MAtSub delete
-        data.query("DELETE FROM `subscription` WHERE `playerid`=? && `item`=?"
+        data.exec("DELETE FROM `subscription` WHERE `playerid`=? && `item`=?"
                       ,this.id,MyUtil.get().convertItem(item));
         return materialSub.remove(item);
     }
@@ -334,7 +350,7 @@ public class Bidder
     public Bidder addSubscription(Auction auction)
     {
         Database data = AuctionHouse.getInstance().database;        
-        data.query(
+        data.exec(
                     "INSERT INTO `subscription` ("+
                     "`id` ,"+
                     "`playerid` ,"+
@@ -366,7 +382,7 @@ public class Bidder
     public Bidder addSubscription(ItemStack item)
     {
         Database data = AuctionHouse.getInstance().database;        
-        data.query(
+        data.exec(
                     "INSERT INTO `subscription` ("+
                     "`id` ,"+
                     "`playerid` ,"+

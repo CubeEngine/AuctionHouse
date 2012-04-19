@@ -35,22 +35,25 @@ public class AuctionHouse extends JavaPlugin
     protected AuctionHouseConfiguration config;
     protected File dataFolder;
     private Economy economy = null;
-    public final Database database = new Database(config.auction_database_host,config.auction_database_port,
-                                                   config.auction_database_user,config.auction_database_pass,config.auction_database_name);
+    public Database database;
 //TODO später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO Durchschnitt Vk Preis von Items
 //TODO kürzere / weniger Meldungen so halb fertig....
 //TODO flatfile mit angeboten
 //TODO ?list formatieren
+//TODO force saving Database TRUNCATE all Lists
+//TODO bei ServerStart auf abgelaufene Auktionen prüfen
     public AuctionHouse()
     {
         instance = this;
     }
+    
     public static AuctionHouse getInstance()
     {
         return instance;
     }
 
+    @Override
     public void onEnable()
     {
         logger = this.getLogger();
@@ -91,6 +94,14 @@ public class AuctionHouse extends JavaPlugin
             .registerSubCommand(new      ConfirmCommand(baseCommand))    
         .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);
+        
+        database = new Database(config.auction_database_host,
+                                config.auction_database_port,
+                                config.auction_database_user,
+                                config.auction_database_pass,
+                                config.auction_database_name);
+        
+        database.loadDatabase();
 
         log("Version " + this.getDescription().getVersion() + " enabled");
     }
