@@ -68,17 +68,17 @@ public class AuctionHouseListener implements Listener
         Bidder bidder = Bidder.getInstance(event.getPlayer());
         ItemContainer items = bidder.getContainer();
         
-        if (!(items.itemList.isEmpty()))
+        if (!(items.getItemList().isEmpty()))
         {
-            for (AuctionItem item : items.itemList)
+            for (AuctionItem item : items.getItemList())
             {
-                if (System.currentTimeMillis() - item.date > config.auction_itemContainerLength * 24 * 60 * 60 * 1000)
+                if (System.currentTimeMillis() - item.getDate() > config.auction_itemContainerLength * 24 * 60 * 60 * 1000)
                 {
-                    items.itemList.remove(item);
+                    items.getItemList().remove(item);
                 }
             }
         }
-        if (!(items.itemList.isEmpty()))
+        if (!(items.getItemList().isEmpty()))
         {
             Bidder.getInstance(event.getPlayer()).setNotifyState(Bidder.NOTIFY_ITEMS);
         }

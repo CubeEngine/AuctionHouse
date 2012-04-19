@@ -11,12 +11,12 @@ import org.bukkit.inventory.ItemStack;
  */
 public class AuctionItem
 {
-    protected Bidder bidder;
-    protected ItemStack item;
-    protected long date;
-    protected String owner;
-    protected Double price;
-    public int id;
+    private Bidder bidder;
+    private ItemStack item;
+    private long date;
+    private String owner;
+    private Double price;
+    private int id;
     private final Database db;
     
     public AuctionItem(Auction auction)
@@ -130,4 +130,34 @@ public class AuctionItem
     {
         return new AuctionItem(bidder, item, date, owner, price);
     }
+    
+    public Bidder getBidder()
+    {
+        return this.bidder;
+    }
+    
+    public ItemStack getItem()
+    {
+        return this.item;
+    }
+    
+    public long getDate()
+    {
+        return this.date;
+    }
+    
+    public String getOwner()
+    {
+        return this.owner;
+    }
+    
+    public Double getPrice()
+    {
+        return this.price;
+    }
+    
+    public int getId()
+    {
+        return this.id;
+    }   
 }

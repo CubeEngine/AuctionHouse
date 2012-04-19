@@ -47,7 +47,7 @@ public class RemoveCommand extends AbstractCommand
             if (arguments.getString("1").equalsIgnoreCase("all"))
             {
                 if (!Perm.get().check(sender,"auctionhouse.delete.all")) return true;
-                Manager.getInstance().remAllConfirm.add(Bidder.getInstance(sender));
+                Manager.getInstance().getAllConfirm().add(Bidder.getInstance(sender));
                 sender.sendMessage(t("rem_all"));
                 sender.sendMessage(t("rem_confirm"));
                 final CommandSender sender2= sender;
@@ -55,9 +55,9 @@ public class RemoveCommand extends AbstractCommand
                     {
                         public void run() 
                         {
-                            if (Manager.getInstance().remAllConfirm.contains(Bidder.getInstance(sender2)))
+                            if (Manager.getInstance().getAllConfirm().contains(Bidder.getInstance(sender2)))
                                 sender2.sendMessage(t("rem_abort"));
-                            Manager.getInstance().remAllConfirm.remove(Bidder.getInstance(sender2));  
+                            Manager.getInstance().getAllConfirm().remove(Bidder.getInstance(sender2));  
                         }
                     }, 200L);
 
@@ -68,7 +68,7 @@ public class RemoveCommand extends AbstractCommand
                 if (arguments.getString("1").equalsIgnoreCase("Server"))
                 {
                     if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
-                    Manager.getInstance().remBidderConfirm.put(Bidder.getInstance(sender), ServerBidder.getInstance());
+                    Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
                     sender.sendMessage(t("rem_allserv"));
                     sender.sendMessage(t("rem_confirm"));
                     final CommandSender sender2= sender;
@@ -77,9 +77,9 @@ public class RemoveCommand extends AbstractCommand
                         {
                             public void run() 
                             {
-                                if (Manager.getInstance().remBidderConfirm.containsKey(Bidder.getInstance(sender2)))
+                                if (Manager.getInstance().getBidderConfirm().containsKey(Bidder.getInstance(sender2)))
                                     sender2.sendMessage(t("rem_abort"));
-                                Manager.getInstance().remBidderConfirm.remove(Bidder.getInstance(sender2));  
+                                Manager.getInstance().getBidderConfirm().remove(Bidder.getInstance(sender2));  
                             }
                         }, 200L);
 
@@ -106,7 +106,7 @@ public class RemoveCommand extends AbstractCommand
 
                     if (config.auction_confirmID)
                     {
-                        Manager.getInstance().remSingleConfirm.put(Bidder.getInstance(sender), id);
+                        Manager.getInstance().getSingleConfirm().put(Bidder.getInstance(sender), id);
                         sender.sendMessage(t("rem_single"));
                         sender.sendMessage(t("rem_confirm"));
                         final CommandSender sender2= sender;
@@ -115,9 +115,9 @@ public class RemoveCommand extends AbstractCommand
                             {
                                 public void run() 
                                 {
-                                    if (Manager.getInstance().remSingleConfirm.containsKey(Bidder.getInstance(sender2)))
+                                    if (Manager.getInstance().getSingleConfirm().containsKey(Bidder.getInstance(sender2)))
                                         sender2.sendMessage(t("rem_abort"));
-                                    Manager.getInstance().remSingleConfirm.remove(Bidder.getInstance(sender2));  
+                                    Manager.getInstance().getSingleConfirm().remove(Bidder.getInstance(sender2));  
                                 }
                             }, 200L);
 
@@ -153,7 +153,7 @@ public class RemoveCommand extends AbstractCommand
 
                 if (!(player.getAuctions().isEmpty()))
                 {
-                    Manager.getInstance().remBidderConfirm.put(Bidder.getInstance(sender), player);
+                    Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), player);
                     sender.sendMessage(t("rem_play",player.getName()));
                     sender.sendMessage(t("rem_confirm"));
                     final CommandSender sender2= sender;
@@ -161,9 +161,9 @@ public class RemoveCommand extends AbstractCommand
                         {
                             public void run() 
                             {
-                                if (Manager.getInstance().remBidderConfirm.containsKey(Bidder.getInstance(sender2)))
+                                if (Manager.getInstance().getBidderConfirm().containsKey(Bidder.getInstance(sender2)))
                                     sender2.sendMessage(t("rem_abort"));
-                                Manager.getInstance().remBidderConfirm.remove(Bidder.getInstance(sender2));  
+                                Manager.getInstance().getBidderConfirm().remove(Bidder.getInstance(sender2));  
                             }
                         }, 200L);
                     return true;

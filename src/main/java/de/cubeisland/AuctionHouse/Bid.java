@@ -14,7 +14,7 @@ public class Bid
     private final double amount;
     private final Bidder bidder;
     private final long timestamp;
-    public int id;
+    private int id;
     private final Database db;
 
     public Bid(Bidder bidder, double amount, Auction auction)
@@ -69,5 +69,10 @@ public class Bid
     public long getTimestamp()
     {
         return this.timestamp;
+    }
+    
+    public int getId()
+    {
+        return this.id;
     }
 }

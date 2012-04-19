@@ -16,12 +16,12 @@ public class Manager
 {
     private static Manager instance = null;
     private final List<Auction> auctions;
-    public final Stack<Integer> freeIds;
+    private final Stack<Integer> freeIds;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    public HashMap<Bidder, Bidder> remBidderConfirm = new HashMap();
-    public HashSet<Bidder> remAllConfirm = new HashSet();
-    public HashMap<Bidder, Integer> remSingleConfirm = new HashMap();
+    private HashMap<Bidder, Bidder> remBidderConfirm = new HashMap();
+    private HashSet<Bidder> remAllConfirm = new HashSet();
+    private HashMap<Bidder, Integer> remSingleConfirm = new HashMap();
     private final Database db;
 
     private Manager()
@@ -164,5 +164,25 @@ public class Manager
     {
         this.auctions.add(auction);
         return true;
+    }
+    
+    public Stack<Integer> getFreeIds()
+    {
+        return this.freeIds;
+    }
+    
+    public HashMap<Bidder, Bidder> getBidderConfirm()
+    {
+        return this.remBidderConfirm;
+    }
+    
+    public HashSet<Bidder> getAllConfirm()
+    {
+        return this.getAllConfirm();
+    }
+    
+    public HashMap<Bidder, Integer> getSingleConfirm()
+    {
+        return this.getSingleConfirm();
     }
 }

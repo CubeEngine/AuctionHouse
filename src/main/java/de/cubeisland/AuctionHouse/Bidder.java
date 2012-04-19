@@ -17,15 +17,15 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Bidder
 {
+    public static final byte NOTIFY_STATUS = 8;
+    public static final byte NOTIFY_ITEMS = 4;
+    public static final byte NOTIFY_CANCEL = 2;
+    public static final byte NOTIFY_WIN = 1;
     private final ArrayList<Auction> activeBids;
     private final ArrayList<Auction> subscriptions;
     private final ArrayList<ItemStack> materialSub;
     private final OfflinePlayer player;
     private final ItemContainer itemContainer;
-    public static final byte NOTIFY_STATUS = 8;
-    public static final byte NOTIFY_ITEMS = 4;
-    public static final byte NOTIFY_CANCEL = 2;
-    public static final byte NOTIFY_WIN = 1;
     private byte notifyState = 0;
     private int id;
     private static final Map<OfflinePlayer, Bidder> bidderInstances = new HashMap<OfflinePlayer, Bidder>();

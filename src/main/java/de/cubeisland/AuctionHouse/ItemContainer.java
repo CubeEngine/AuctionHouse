@@ -13,9 +13,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class ItemContainer
 {
-    LinkedList<AuctionItem> itemList;
-    public final Bidder bidder;
-    Economy econ = AuctionHouse.getInstance().getEconomy();
+    private LinkedList<AuctionItem> itemList;
+    private final Bidder bidder;
+    private Economy econ = AuctionHouse.getInstance().getEconomy();
     private final Database db;
 
     public ItemContainer(Bidder bidder)
@@ -41,25 +41,25 @@ public class ItemContainer
 
         AuctionItem auctionItem = this.itemList.getFirst();
 
-        ItemStack tmp = player.getInventory().addItem(this.itemList.getFirst().cloneItem().item).get(0);
+        ItemStack tmp = player.getInventory().addItem(this.itemList.getFirst().cloneItem().getItem()).get(0);
 
 
-        if (auctionItem.owner.equals(this.bidder.getName()))
+        if (auctionItem.getOwner().equals(this.bidder.getName()))
         {
-            player.sendMessage(t("i") + " " + t("cont_rec_ab", auctionItem.item.getType().toString() + "x" + auctionItem.item.getAmount()));
+            player.sendMessage(t("i") + " " + t("cont_rec_ab", auctionItem.getItem().getType().toString() + "x" + auctionItem.getItem().getAmount()));
         }
         else
         {
-            player.sendMessage(t("i") + " " + t("cont_rec", auctionItem.item.getType().toString() + "x" + auctionItem.item.getAmount(),
-                econ.format(auctionItem.price), auctionItem.owner,
-                DateFormatUtils.formatUTC(auctionItem.date, "MMM dd"))
+            player.sendMessage(t("i") + " " + t("cont_rec", auctionItem.getItem().getType().toString() + "x" + auctionItem.getItem().getAmount(),
+                econ.format(auctionItem.getPrice()), auctionItem.getOwner(),
+                DateFormatUtils.formatUTC(auctionItem.getDate(), "MMM dd"))
             );
         }
 
         if (tmp == null)
         {
             player.updateInventory();
-            db.exec("DELETE FROM `itemcontainer` WHERE `id`=?", this.itemList.getFirst().id);
+            db.exec("DELETE FROM `itemcontainer` WHERE `id`=?", this.itemList.getFirst().getId());
             this.itemList.removeFirst();
             return true;
         }
@@ -67,10 +67,15 @@ public class ItemContainer
         {
             player.sendMessage(t("i") + " " + t("cont_rec_remain"));
 
-            db.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().id);
-            itemList.getFirst().item.setAmount(tmp.getAmount());
+            db.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().getId());
+            itemList.getFirst().getItem().setAmount(tmp.getAmount());
             player.updateInventory();
             return true;
         }
+    }
+    
+    public LinkedList<AuctionItem> getItemList()
+    {
+        return this.itemList;
     }
 }

@@ -25,7 +25,7 @@ public class Auction
     public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
         this.db = AuctionHouse.getInstance().getDB();
-        this.id = Manager.getInstance().freeIds.pop();
+        this.id = Manager.getInstance().getFreeIds().pop();
         this.item = item;
         this.owner = owner;
         this.auctionEnd = auctionEnd;
@@ -47,7 +47,7 @@ public class Auction
     //Override: load in Auction from DataBase
     public Auction(int id,ItemStack item, Bidder owner, long auctionEnd)
     {
-        Manager.getInstance().freeIds.removeElement(id);
+        Manager.getInstance().getFreeIds().removeElement(id);
         this.db = AuctionHouse.getInstance().getDB();
         this.id = id;
         this.item = item;

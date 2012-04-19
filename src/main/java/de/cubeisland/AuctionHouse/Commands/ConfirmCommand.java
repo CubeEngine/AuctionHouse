@@ -25,9 +25,9 @@ public class ConfirmCommand extends AbstractCommand
     public boolean execute(CommandSender sender, String[] args)
     {
         Manager manager = Manager.getInstance();
-        if (manager.remAllConfirm.contains(Bidder.getInstance(sender)))
+        if (manager.getAllConfirm().contains(Bidder.getInstance(sender)))
         {
-            manager.remAllConfirm.remove(Bidder.getInstance(sender));
+            manager.getAllConfirm().remove(Bidder.getInstance(sender));
             int max = manager.size();
             if (max == 0)
             {
@@ -41,15 +41,15 @@ public class ConfirmCommand extends AbstractCommand
             sender.sendMessage(t("i")+" "+t("confirm_del"));
             return true;
         }
-        if (manager.remBidderConfirm.containsKey(Bidder.getInstance(sender)))
+        if (manager.getBidderConfirm().containsKey(Bidder.getInstance(sender)))
         {
-            if (manager.remBidderConfirm.get(Bidder.getInstance(sender)) instanceof ServerBidder)
+            if (manager.getBidderConfirm().get(Bidder.getInstance(sender)) instanceof ServerBidder)
             {
                 int max = ServerBidder.getInstance().getAuctions().size();
                 if (max == 0)
                 {
                     sender.sendMessage(t("i")+" "+t("confirm_no_serv"));
-                    manager.remBidderConfirm.remove(Bidder.getInstance(sender));
+                    manager.getBidderConfirm().remove(Bidder.getInstance(sender));
                     return true;
                 }
                 for (int i = max - 1; i >= 0; --i)
@@ -57,12 +57,12 @@ public class ConfirmCommand extends AbstractCommand
                     manager.cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_del_serv"));
-                manager.remBidderConfirm.remove(Bidder.getInstance(sender));
+                manager.getBidderConfirm().remove(Bidder.getInstance(sender));
                 return true;
             }
             else
             {
-                Bidder player = manager.remBidderConfirm.get(Bidder.getInstance(sender));
+                Bidder player = manager.getBidderConfirm().get(Bidder.getInstance(sender));
                 int bids = player.getActiveBids().size();
                 List<Auction> auctions = player.getActiveBids();
                 for (int i = 0; i < bids; ++i)
@@ -73,16 +73,16 @@ public class ConfirmCommand extends AbstractCommand
                     }
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_rem",bids,player.getName()));
-                manager.remBidderConfirm.remove(Bidder.getInstance(sender));
+                manager.getBidderConfirm().remove(Bidder.getInstance(sender));
                 return true;
             }
         }
-        if (manager.remSingleConfirm.containsKey(Bidder.getInstance(sender)))
+        if (manager.getSingleConfirm().containsKey(Bidder.getInstance(sender)))
         {
-            ItemStack item = Manager.getInstance().getAuction(manager.remSingleConfirm.get(Bidder.getInstance(sender))).getItem();
-            Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(manager.remSingleConfirm.get(Bidder.getInstance(sender))));
-            sender.sendMessage(t("i")+" "+t("rem_id",manager.remSingleConfirm.get(Bidder.getInstance(sender)),item.getType().toString()+"x"+item.getAmount()));
-            manager.remBidderConfirm.remove(Bidder.getInstance(sender));
+            ItemStack item = Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))).getItem();
+            Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))));
+            sender.sendMessage(t("i")+" "+t("rem_id",manager.getSingleConfirm().get(Bidder.getInstance(sender)),item.getType().toString()+"x"+item.getAmount()));
+            manager.getBidderConfirm().remove(Bidder.getInstance(sender));
             return true;
         }
         sender.sendMessage(t("e")+" "+t("confirm_no_req"));
