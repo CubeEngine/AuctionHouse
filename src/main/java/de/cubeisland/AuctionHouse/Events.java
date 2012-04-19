@@ -1,6 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
@@ -22,13 +22,22 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Events implements Listener
 {
-    private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
-    Economy econ = AuctionHouse.getInstance().getEconomy();
+    private final AuctionHouse plugin;
+    private final AuctionHouseConfiguration config;
+    private final Economy econ;
+    
+    public Events(AuctionHouse plugin)
+    {
+        this.plugin = plugin;
+        this.config = plugin.getConfigurations();
+        this.econ = plugin.getEconomy();
+    }
 
     @EventHandler
     public void goesOnline(final PlayerJoinEvent event)
     {
+        Bidder bidder = Bidder.getInstance(event.getPlayer());
+        MyUtil.updateNotifyData(bidder);
         plugin.server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
         {
             public void run()
@@ -51,8 +60,6 @@ public class Events implements Listener
                 }
             };
         });
-        Bidder bidder = Bidder.getInstance(event.getPlayer());
-        MyUtil.updateNotifyData(bidder);
     }
     
     @EventHandler
@@ -75,7 +82,6 @@ public class Events implements Listener
         {
             Bidder.getInstance(event.getPlayer()).setNotifyState(Bidder.NOTIFY_ITEMS);
         }
-        Database data = AuctionHouse.getInstance().database;
         MyUtil.updateNotifyData(bidder);
     }
    

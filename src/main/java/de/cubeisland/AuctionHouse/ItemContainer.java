@@ -1,6 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.LinkedList;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -16,9 +16,11 @@ public class ItemContainer
     LinkedList<AuctionItem> itemList;
     public final Bidder bidder;
     Economy econ = AuctionHouse.getInstance().getEconomy();
+    private final Database db;
 
     public ItemContainer(Bidder bidder)
     {
+        this.db = AuctionHouse.getInstance().getDB();
         this.bidder = bidder;
         this.itemList = new LinkedList<AuctionItem>();
     }
@@ -31,7 +33,7 @@ public class ItemContainer
     public boolean giveNextItem()
     {
         Player player = this.bidder.getPlayer();
-        Database data = AuctionHouse.getInstance().database;
+
         if (this.itemList.isEmpty())
         {
             return false;
@@ -57,7 +59,7 @@ public class ItemContainer
         if (tmp == null)
         {
             player.updateInventory();
-            data.exec("DELETE FROM `itemcontainer` WHERE `id`=?", this.itemList.getFirst().id);
+            db.exec("DELETE FROM `itemcontainer` WHERE `id`=?", this.itemList.getFirst().id);
             this.itemList.removeFirst();
             return true;
         }
@@ -65,7 +67,7 @@ public class ItemContainer
         {
             player.sendMessage(t("i") + " " + t("cont_rec_remain"));
 
-            data.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().id);
+            db.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().id);
             itemList.getFirst().item.setAmount(tmp.getAmount());
             player.updateInventory();
             return true;

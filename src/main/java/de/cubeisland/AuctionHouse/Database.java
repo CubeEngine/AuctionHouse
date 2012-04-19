@@ -161,11 +161,10 @@ public class Database
     public void loadDatabase()
     {
         try{
-        Database data = AuctionHouse.getInstance().database; 
         AuctionHouse.debug("Load DataBase...");
 
         ResultSet bidderset =
-              data.query("SELECT * FROM `bidder`");
+              this.query("SELECT * FROM `bidder`");
         while (bidderset.next())
         {
             //load in Bidder
@@ -180,7 +179,7 @@ public class Database
         for (int i=0; i<max; i++)
         {
             ResultSet set =
-              data.query("SELECT * FROM `auctions` WHERE `id`=? LIMIT 1;",i);  
+              this.query("SELECT * FROM `auctions` WHERE `id`=? LIMIT 1;",i);  
             if (set.next())
             {
                 int id = set.getInt("id");
@@ -192,11 +191,11 @@ public class Database
                 AuctionHouse.debug("Auction loaded: "+newauction.getId()+"|O:"+newauction.getOwner().getName());
                 Manager.getInstance().addAuction(newauction);
                 ResultSet bidset =
-                  data.query("SELECT * FROM `bids` WHERE `auctionid`=? ;",i);
+                  this.query("SELECT * FROM `bids` WHERE `auctionid`=? ;",i);
                 while (bidset.next())
                 { 
                     //sort bids by time & fill auction with bids
-                    data.query("SELECT * FROM `bids` ORDER BY `timestamp` ;");
+                    this.query("SELECT * FROM `bids` ORDER BY `timestamp` ;");
                     AuctionHouse.debug("Bid loaded: "+newauction.getId()+"|C:"+bidset.getDouble("amount")+"|P:"+this.getBidderString(bidset.getInt("bidderid")));
                     //load in Bids
                     Bid bid = new Bid( bidset.getInt("id"),
@@ -211,7 +210,7 @@ public class Database
         }
         //load in Subs
         ResultSet subset =
-              data.query("SELECT * FROM `subscription`;");
+              this.query("SELECT * FROM `subscription`;");
         while (subset.next())
         {
             Bidder bidder = Bidder.getInstance(subset.getInt("bidderid"),this.getBidderString(subset.getInt("bidderid")));
@@ -227,7 +226,7 @@ public class Database
         }
         //load in ItemContainer
         ResultSet itemset =
-              data.query("SELECT * from `itemcontainer` ORDER BY `timestamp`;");
+              this.query("SELECT * from `itemcontainer` ORDER BY `timestamp`;");
         while (itemset.next())
         {
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
@@ -250,9 +249,8 @@ public class Database
     private String getBidderString(int id)
     {
         try{
-            Database data = AuctionHouse.getInstance().database;
             ResultSet set =
-              data.query("SELECT * from `bidder` where `id`=? LIMIT 1;",id);  
+              this.query("SELECT * from `bidder` where `id`=? LIMIT 1;",id);  
             if (set.next())
               return set.getString("name");
         }   

@@ -22,9 +22,11 @@ public class Manager
     public HashMap<Bidder, Bidder> remBidderConfirm = new HashMap();
     public HashSet<Bidder> remAllConfirm = new HashSet();
     public HashMap<Bidder, Integer> remSingleConfirm = new HashMap();
+    private final Database db;
 
     private Manager()
     {
+        this.db = AuctionHouse.getInstance().getDB();
         int maxAuctions = config.auction_maxAuctions_overall;
         if (!(maxAuctions > 0))
         {
@@ -130,8 +132,7 @@ public class Manager
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
-        Database data = AuctionHouse.getInstance().database;
-        data.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
+        db.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
 
         this.auctions.remove(auction);
         return true;
@@ -153,9 +154,7 @@ public class Manager
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
-
-        Database data = AuctionHouse.getInstance().database;
-        data.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
+        db.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
 
         this.auctions.remove(auction);
         return true;

@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse;
 
 
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -220,7 +220,7 @@ public class MyUtil
     
     public static void updateNotifyData(Bidder bidder)
     {
-        Database data = AuctionHouse.getInstance().database;
+        Database data = AuctionHouse.getInstance().getDB();
         data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                     ,bidder.getNotifyState(),bidder.getId());     
     }

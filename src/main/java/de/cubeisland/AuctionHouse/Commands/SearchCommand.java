@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.*;
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;

@@ -11,7 +11,7 @@ import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.Bidder;
 import de.cubeisland.AuctionHouse.Auction;
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
@@ -43,7 +43,6 @@ public class AddCommand extends AbstractCommand
         Double startBid = 0.0;
         long auctionEnd = 1;
         Integer multiAuction = 1;
-
         if (!Perm.get().check(sender, "auctionhouse.use.add")) return true;
         if (args.length < 1)
         {

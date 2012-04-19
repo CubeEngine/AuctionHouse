@@ -1,14 +1,16 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.*;
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
-import java.util.List;
+import de.cubeisland.AuctionHouse.AbstractCommand;
+import de.cubeisland.AuctionHouse.AuctionHouse;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
+import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.Manager;
+import de.cubeisland.AuctionHouse.MyUtil;
 import net.milkbowl.vault.economy.Economy;
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 /**
- *
+ 
  * @author Faithcaio
  */
 public class ListCommand extends AbstractCommand

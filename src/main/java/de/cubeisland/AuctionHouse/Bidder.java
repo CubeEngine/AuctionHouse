@@ -26,28 +26,28 @@ public class Bidder
     public static final byte NOTIFY_ITEMS = 4;
     public static final byte NOTIFY_CANCEL = 2;
     public static final byte NOTIFY_WIN = 1;
-    private byte notifyState;
+    private byte notifyState = 0;
     private int id;
     private static final Map<OfflinePlayer, Bidder> bidderInstances = new HashMap<OfflinePlayer, Bidder>();
+    private final Database db;
 
     public Bidder(OfflinePlayer player)
     {
+        this.db = AuctionHouse.getInstance().getDB();
         this.player = player;
         this.activeBids = new ArrayList<Auction>();
         this.itemContainer = new ItemContainer(this);
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = -1;
-        this.resetNotifyState();
         String bidder;
-        Database data = AuctionHouse.getInstance().database;
         try
         {
 
             if (player == null)
             {
                 bidder = "*Server";
-                data.exec(
+                db.exec(
                     "INSERT INTO `bidder` ("
                     + "`name` ,"
                     + "`type` ,"
@@ -58,7 +58,7 @@ public class Bidder
             else
             {
                 bidder = player.getName();
-                data.exec(
+                db.exec(
                     "INSERT INTO `bidder` ("
                     + "`name` ,"
                     + "`type` ,"
@@ -67,7 +67,7 @@ public class Bidder
                     + "VALUES ( ?, ?, ? );", bidder, 0, 0);
             }
             ResultSet set =
-                data.query("SELECT * FROM `bidder` WHERE `name`=? LIMIT 1", bidder);
+                db.query("SELECT * FROM `bidder` WHERE `name`=? LIMIT 1", bidder);
             if (set.next())
             {
                 this.id = set.getInt("id");
@@ -80,6 +80,7 @@ public class Bidder
 
     public Bidder(int id, String name)
     {
+        this.db = AuctionHouse.getInstance().getDB();
         if (name.equalsIgnoreCase("*Server"))
         {
             this.player = null;//ServerBidder
@@ -120,7 +121,12 @@ public class Bidder
 
     public static Bidder getInstance(Player player)
     {
-        return bidderInstances.get(player);
+        Bidder instance = bidderInstances.get(player);
+        if (instance == null)
+        {
+            return bidderInstances.put(player, new Bidder((OfflinePlayer)player));
+        }
+        return instance;
     }
 
     public static Bidder getInstance(OfflinePlayer player)
@@ -252,9 +258,8 @@ public class Bidder
 
     public boolean removeAuction(Auction auction)
     {
-        Database data = AuctionHouse.getInstance().database;
         //All Bid delete
-        data.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?", this.id, auction.getId());
+        db.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?", this.id, auction.getId());
 
         subscriptions.remove(auction);
         return activeBids.remove(auction);
@@ -262,17 +267,15 @@ public class Bidder
 
     public boolean removeSubscription(Auction auction)
     {
-        Database data = AuctionHouse.getInstance().database;
         //IdSub delete
-        data.exec("DELETE FROM `subscription` WHERE `playerid`=? && `auctionid`=?", this.id, auction.getId());
+        db.exec("DELETE FROM `subscription` WHERE `playerid`=? && `auctionid`=?", this.id, auction.getId());
         return subscriptions.remove(auction);
     }
 
     public boolean removeSubscription(ItemStack item)
     {
-        Database data = AuctionHouse.getInstance().database;
         //MAtSub delete
-        data.exec("DELETE FROM `subscription` WHERE `playerid`=? && `item`=?", this.id, MyUtil.convertItem(item));
+        db.exec("DELETE FROM `subscription` WHERE `playerid`=? && `item`=?", this.id, MyUtil.convertItem(item));
         return materialSub.remove(item);
     }
 
@@ -364,8 +367,7 @@ public class Bidder
 
     public Bidder addSubscription(Auction auction)
     {
-        Database data = AuctionHouse.getInstance().database;
-        data.exec(
+        db.exec(
             "INSERT INTO `subscription` ("
             + "`bidderid` ,"
             + "`auctionid` ,"
@@ -391,8 +393,7 @@ public class Bidder
 
     public Bidder addSubscription(ItemStack item)
     {
-        Database data = AuctionHouse.getInstance().database;
-        data.exec(
+        db.exec(
             "INSERT INTO `subscription` ("
             + "`bidderid` ,"
             + "`type` ,"

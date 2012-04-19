@@ -15,24 +15,25 @@ public class Bid
     private final Bidder bidder;
     private final long timestamp;
     public int id;
+    private final Database db;
 
     public Bid(Bidder bidder, double amount, Auction auction)
     {
+        this.db = AuctionHouse.getInstance().getDB();
         this.amount = amount;
         this.bidder = bidder;
         this.timestamp = System.currentTimeMillis();
         this.id = -1;
-        Database data = AuctionHouse.getInstance().database;
         try
         {
-            data.exec(
+            db.exec(
                 "INSERT INTO `bids` (`auctionid` ,`bidderid` ,`amount` ,`timestamp`) VALUES ( ?, ?, ?, ?);",
                 auction.getId(),
                 bidder.getId(),
                 amount,
                 new Timestamp(System.currentTimeMillis())
             );
-            ResultSet set = data.query("SELECT * FROM `bids` WHERE `timestamp`=? && `bidderid`=? LIMIT 1",timestamp,bidder.getId());
+            ResultSet set = db.query("SELECT * FROM `bids` WHERE `timestamp`=? && `bidderid`=? LIMIT 1",timestamp,bidder.getId());
             if (set.next())
                 this.id = set.getInt("id");
                 
@@ -45,6 +46,7 @@ public class Bid
     //Override: load in Bid from DataBase
     public Bid(int id,int bidderid ,String bidder, double amount, Timestamp timestamp)
     {
+        this.db = AuctionHouse.getInstance().getDB();
         this.amount = amount;
         if (bidder.equalsIgnoreCase("*Server"))
             this.bidder = ServerBidder.getInstance(bidderid);

@@ -6,7 +6,7 @@ import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Bidder;
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

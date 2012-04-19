@@ -1,6 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -21,9 +21,11 @@ public class AuctionTimer
     private static AuctionTimer instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private final Database db;
 
     public AuctionTimer()
     {
+        this.db = AuctionHouse.getInstance().getDB();
         timerTask = new TimerTask()
         {
             public void run()
@@ -100,7 +102,6 @@ public class AuctionTimer
                             if (auction.getBids().peek().getBidder().equals(auction.getOwner()))
                             {
                                 auction.getOwner().setNotifyState(Bidder.NOTIFY_CANCEL);
-                                Database data = AuctionHouse.getInstance().database;
                                 MyUtil.updateNotifyData(auction.getOwner());
                                 if (!(auction.getOwner() instanceof ServerBidder))
                                 {

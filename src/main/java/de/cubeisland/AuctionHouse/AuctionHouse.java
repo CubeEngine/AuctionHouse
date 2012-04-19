@@ -13,7 +13,7 @@ import de.cubeisland.AuctionHouse.Commands.SearchCommand;
 import de.cubeisland.AuctionHouse.Commands.SubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.UnSubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.UndoBidCommand;
-import de.cubeisland.AuctionHouse.Translation.Translator;
+import de.cubeisland.AuctionHouse.Translation.Translation;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,13 +29,14 @@ public class AuctionHouse extends JavaPlugin
     private static AuctionHouse instance = null;
     private static Logger logger = null;
     public static boolean debugMode = false;
+    private static Translation translation;
     
     protected Server server;
     protected PluginManager pm;
     protected AuctionHouseConfiguration config;
     protected File dataFolder;
     private Economy economy = null;
-    public Database database;
+    private Database database;
 //TODO später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO Durchschnitt Vk Preis von Items
 //TODO kürzere / weniger Meldungen so halb fertig....
@@ -43,6 +44,8 @@ public class AuctionHouse extends JavaPlugin
 //TODO ?list formatieren
 //TODO force saving Database TRUNCATE all Lists
 //TODO bei ServerStart auf abgelaufene Auktionen prüfen
+//TODO list Schild
+//TODO Amount limitieren
     public AuctionHouse()
     {
         instance = this;
@@ -71,11 +74,15 @@ public class AuctionHouse extends JavaPlugin
         this.saveConfig();
         
         this.economy = this.setupEconomy();
-        Translator.loadTranslation(config.auction_language);
+        translation = Translation.get(this.getClass(), config.auction_language);
+        if (translation == null)
+        {
+            translation = Translation.get(this.getClass(), "en");
+        }
         
         AuctionTimer.getInstance().firstschedule(Manager.getInstance());
         
-        this.pm.registerEvents(new Events(),this);
+        this.pm.registerEvents(new Events(this), this);
         
         BaseCommand baseCommand = new BaseCommand(this);
         baseCommand
@@ -160,5 +167,15 @@ public class AuctionHouse extends JavaPlugin
         {
             log("[debug] " + msg);
         }
+    }
+    
+    public static String t(String key, Object... params)
+    {
+        return translation.translate(key, params);
+    }
+    
+    public Database getDB()
+    {
+        return this.database;
     }
 }

@@ -1,6 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.sql.Timestamp;
 import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
@@ -19,9 +19,12 @@ public class Auction
     private final Stack<Bid> bids;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    
+    private final Database db;
 
     public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
+        this.db = AuctionHouse.getInstance().getDB();
         this.id = Manager.getInstance().freeIds.pop();
         this.item = item;
         this.owner = owner;
@@ -29,8 +32,7 @@ public class Auction
         this.bids = new Stack<Bid>();
         this.bids.push(new Bid(owner, startBid, this));
         
-        Database data = AuctionHouse.getInstance().database;
-        data.exec(  
+        db.exec(  
             "INSERT INTO `auctions` ("+
             "`id` ,"+
             "`ownerid` ,"+
@@ -46,6 +48,7 @@ public class Auction
     public Auction(int id,ItemStack item, Bidder owner, long auctionEnd)
     {
         Manager.getInstance().freeIds.removeElement(id);
+        this.db = AuctionHouse.getInstance().getDB();
         this.id = id;
         this.item = item;
         this.owner = owner;
@@ -102,9 +105,8 @@ public class Auction
         }
         //else: Undo Last Bid
         
-        Database data = AuctionHouse.getInstance().database;
         //Single Bid delete
-        data.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
+        db.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
                       ,bidder.getId(), this.id, this.bids.peek().getTimestamp());
         this.bids.pop();
         return true;
