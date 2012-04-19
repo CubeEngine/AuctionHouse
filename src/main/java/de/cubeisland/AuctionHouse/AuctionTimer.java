@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import net.milkbowl.vault.economy.Economy;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 /**
  *
@@ -37,33 +37,33 @@ public class AuctionTimer
                     for (int i = 0; i < size; ++i)
                     {
                         Auction auction = auctionlist.get(i);
-                        if ((System.currentTimeMillis() + 600 > auction.auctionEnd)
-                                && (System.currentTimeMillis() - 600 < auction.auctionEnd))
+                        if ((System.currentTimeMillis() + 600 > auction.getAuctionEnd())
+                                && (System.currentTimeMillis() - 600 < auction.getAuctionEnd()))
                         {
                             List<Bidder> rPlayer = new ArrayList<Bidder>();
-                            AuctionHouse.debug("Auction #"+auction.id+" ended!");
-                            while (auction.owner != auction.bids.peek().getBidder())
+                            AuctionHouse.debug("Auction #"+auction.getId()+" ended!");
+                            while (auction.getOwner() != auction.getBids().peek().getBidder())
                             {
-                                Bidder winner = auction.bids.peek().getBidder();
+                                Bidder winner = auction.getBids().peek().getBidder();
                                 if (rPlayer.contains(winner))//remove punished Player
                                 {
-                                    auction.bids.pop();
+                                    auction.getBids().pop();
                                     continue;
                                 }
 
-                                if (econ.getBalance(winner.getName()) > auction.bids.peek().getAmount())
+                                if (econ.getBalance(winner.getName()) > auction.getBids().peek().getAmount())
                                 {
-                                    double money = auction.bids.peek().getAmount();
+                                    double money = auction.getBids().peek().getAmount();
                                     econ.withdrawPlayer(winner.getName(), money);
-                                    if (!(auction.owner instanceof ServerBidder))
+                                    if (!(auction.getOwner() instanceof ServerBidder))
                                     {
 
-                                        econ.depositPlayer(auction.owner.getName(), money);
-                                        econ.withdrawPlayer(auction.owner.getName(), money * config.auction_comission / 100);
-                                        if (auction.owner.isOnline())
+                                        econ.depositPlayer(auction.getOwner().getName(), money);
+                                        econ.withdrawPlayer(auction.getOwner().getName(), money * config.auction_comission / 100);
+                                        if (auction.getOwner().isOnline())
                                         {
-                                            auction.owner.getPlayer().sendMessage(t("time_sold",
-                                                                    auction.item.getType().toString()+" x"+auction.item.getAmount(),
+                                            auction.getOwner().getPlayer().sendMessage(t("time_sold",
+                                                                    auction.getItem().getType().toString()+" x"+auction.getItem().getAmount(),
                                                                     econ.format(money - money * config.auction_comission / 100),
                                                                     econ.format(money * config.auction_comission / 100)));
                                         }
@@ -71,16 +71,13 @@ public class AuctionTimer
                                     winner.getContainer().addItem(auction);
                                     if (winner.isOnline())
                                     {
-                                        winner.getPlayer().sendMessage(t("time_won",auction.item.getType().toString()+" x"+auction.item.getAmount()
+                                        winner.getPlayer().sendMessage(t("time_won",auction.getItem().getType().toString()+" x"+auction.getItem().getAmount()
                                                                          ,econ.format(money)));
                                     }
                                     else
                                     {
-                                        winner.notify = true;
-                                        Database data = AuctionHouse.getInstance().database;
-                                        //Update BidderNotification
-                                        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-                                                    ,winner.notifyBitMask(),winner.id);  
+                                        winner.setNotifyState(Bidder.NOTIFY_WIN);
+                                        MyUtil.updateNotifyData(winner);
                                     }
                                     manager.finishAuction(auction);
                                     break; //NPE Prevention
@@ -94,28 +91,26 @@ public class AuctionTimer
                                         winner.getPlayer().sendMessage(t("time_pun3"));
                                     }
                                     rPlayer.add(winner);
-                                    econ.withdrawPlayer(winner.getName(), auction.bids.peek().getAmount() * config.auction_punish / 100);
+                                    econ.withdrawPlayer(winner.getName(), auction.getBids().peek().getAmount() * config.auction_punish / 100);
                                     winner.removeAuction(auction);
-                                    auction.bids.pop();
+                                    auction.getBids().pop();
                                 }
                             }
-                            if (auction.bids.isEmpty()) return;
-                            if (auction.bids.peek().getBidder().equals(auction.owner))
+                            if (auction.getBids().isEmpty()) return;
+                            if (auction.getBids().peek().getBidder().equals(auction.getOwner()))
                             {
-                                auction.owner.notifyCancel = true;
+                                auction.getOwner().setNotifyState(Bidder.NOTIFY_CANCEL);
                                 Database data = AuctionHouse.getInstance().database;
-                                //Update BidderNotification
-                                data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-                                            ,auction.owner.notifyBitMask(),auction.owner.id);  
-                                if (!(auction.owner instanceof ServerBidder))
+                                MyUtil.updateNotifyData(auction.getOwner());
+                                if (!(auction.getOwner() instanceof ServerBidder))
                                 {
-                                    econ.withdrawPlayer(auction.owner.getName(), auction.bids.peek().getAmount() * config.auction_comission / 100);
-                                    if (auction.owner.isOnline())
+                                    econ.withdrawPlayer(auction.getOwner().getName(), auction.getBids().peek().getAmount() * config.auction_comission / 100);
+                                    if (auction.getOwner().isOnline())
                                     {
-                                        auction.owner.getPlayer().sendMessage(t("time_stop"));
-                                        if (auction.bids.peek().getAmount() != 0)
+                                        auction.getOwner().getPlayer().sendMessage(t("time_stop"));
+                                        if (auction.getBids().peek().getAmount() != 0)
                                         {
-                                            auction.owner.getPlayer().sendMessage(t("time_pun4",config.auction_comission));
+                                            auction.getOwner().getPlayer().sendMessage(t("time_pun4",config.auction_comission));
                                         }
                                     }
                                 }
@@ -137,10 +132,10 @@ public class AuctionTimer
                 Manager manager = Manager.getInstance();
                 if (!(manager.getAuctions().isEmpty()))
                 {
-                    List<Player> playerlist = new ArrayList<Player>();
+                    List<OfflinePlayer> playerlist = new ArrayList<OfflinePlayer>();
                     for (Bidder bidder : Bidder.getInstances().values())
                     {
-                        if (bidder.isOnline() && bidder.playerNotification)
+                        if (bidder.isOnline() && bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
                         {
                             playerlist.add(bidder.getPlayer());
                         }
@@ -152,7 +147,7 @@ public class AuctionTimer
                     List<Auction> auctionlist = manager.getEndingAuctions();
                     int size = auctionlist.size();
                     int note = config.auction_notifyTime.size();
-                    long nextAuction = auctionlist.get(0).auctionEnd - System.currentTimeMillis();
+                    long nextAuction = auctionlist.get(0).getAuctionEnd() - System.currentTimeMillis();
                     if (config.auction_notifyTime.get(0) + 600 < nextAuction)
                     {
                         return; //No Notifications now
@@ -161,7 +156,7 @@ public class AuctionTimer
                     {
 
                         Auction auction = auctionlist.get(i);
-                        nextAuction = auction.auctionEnd - System.currentTimeMillis();
+                        nextAuction = auction.getAuctionEnd() - System.currentTimeMillis();
                         for (int j = 0; j < note; ++j)
                         {
                             if ((config.auction_notifyTime.get(j) + 600 > nextAuction)
@@ -173,16 +168,16 @@ public class AuctionTimer
                                 {
                                     if (Bidder.getInstance(playerlist.get(k)).getSubs().contains(auction))
                                     {
-                                        if (playerlist.get(k).equals(auction.owner.getPlayer()))
+                                        if (playerlist.get(k).equals(auction.getOwner().getPlayer()))
                                         {
-                                            playerlist.get(k).sendMessage(t("time_end1",auction.id,MyUtil.get().convertTime(auction.auctionEnd - System.currentTimeMillis())));
+                                            playerlist.get(k).getPlayer().sendMessage(t("time_end1",auction.getId(),MyUtil.convertTime(auction.getAuctionEnd() - System.currentTimeMillis())));
                                         }
                                         else
                                         {
                                             String out = "";
-                                            out += t("time_end2",auction.id,MyUtil.get().convertTime(auction.auctionEnd - System.currentTimeMillis()));
+                                            out += t("time_end2",auction.getId(),MyUtil.convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
                                             
-                                            if (playerlist.get(k) == auction.bids.peek().getBidder().getOffPlayer())
+                                            if (playerlist.get(k) == auction.getBids().peek().getBidder().getOffPlayer())
                                             {
                                                 out += t("time_high");
                                             }
@@ -191,7 +186,7 @@ public class AuctionTimer
                                                 out += t("time_low");
                                             }
 
-                                            playerlist.get(k).sendMessage(out);
+                                            playerlist.get(k).getPlayer().sendMessage(out);
                                         }
                                     }
                                 }

@@ -1,9 +1,17 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.*;
+import de.cubeisland.AuctionHouse.AbstractCommand;
+import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.Auction;
+import de.cubeisland.AuctionHouse.AuctionHouse;
+import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
+import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.Bidder;
+import de.cubeisland.AuctionHouse.Manager;
+import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.ServerBidder;
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -87,15 +95,15 @@ public class RemoveCommand extends AbstractCommand
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
                         return true;
                     }
-                    if (!Perm.get().check(sender,"auctionhouse.delete.id"))
-                    {
-                        sender.sendMessage(t("perm")+" "+t("rem_id_perm"));
-                        return true;
-                    }
-                    if (Manager.getInstance().getAuction(id).owner instanceof ServerBidder)
+                    if (!Perm.get().check(sender,"auctionhouse.delete.id")) return true;
+                    Auction auction = Manager.getInstance().getAuction(id);
+                    if (auction.getOwner() instanceof ServerBidder)
                     {
                         if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
                     }
+                    if (!auction.getOwner().equals(Bidder.getInstance(sender)))
+                        if (!Perm.get().check(sender, "auctionhouse.delete.player.other"))
+
                     if (config.auction_confirmID)
                     {
                         Manager.getInstance().remSingleConfirm.put(Bidder.getInstance(sender), id);
@@ -115,7 +123,7 @@ public class RemoveCommand extends AbstractCommand
 
                         return true;
                     }    
-                    ItemStack item = Manager.getInstance().getAuction(id).item;
+                    ItemStack item = Manager.getInstance().getAuction(id).getItem();
                     Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(id));
                     sender.sendMessage(t("i")+" "+t("rem_id",id,item.getType().toString()+"x"+item.getAmount()));
                     return true;

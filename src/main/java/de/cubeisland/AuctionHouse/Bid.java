@@ -25,26 +25,20 @@ public class Bid
         Database data = AuctionHouse.getInstance().database;
         try
         {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             data.exec(
-                        "INSERT INTO `bids` ("+
-                        "`auctionid` ,"+
-                        "`bidderid` ,"+
-                        "`amount` ,"+
-                        "`timestamp` "+
-                        ")"+
-                        "VALUES ( ?, ?, ?, ?);"
-                      ,auction.id,bidder.id,amount,timestamp);
-            ResultSet set =
-                    data.query("SELECT * FROM `bids` WHERE `timestamp`=? && `bidderid`=? LIMIT 1",timestamp,bidder.id);
+                "INSERT INTO `bids` (`auctionid` ,`bidderid` ,`amount` ,`timestamp`) VALUES ( ?, ?, ?, ?);",
+                auction.getId(),
+                bidder.getId(),
+                amount,
+                new Timestamp(System.currentTimeMillis())
+            );
+            ResultSet set = data.query("SELECT * FROM `bids` WHERE `timestamp`=? && `bidderid`=? LIMIT 1",timestamp,bidder.getId());
             if (set.next())
                 this.id = set.getInt("id");
                 
         }
         catch (SQLException ex)
-        {
-            
-        }
+        {}
         
     }
     

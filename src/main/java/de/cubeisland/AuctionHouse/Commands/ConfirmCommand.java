@@ -1,13 +1,12 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Auction;
-import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Bidder;
+import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.ServerBidder;
+import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -68,7 +67,7 @@ public class ConfirmCommand extends AbstractCommand
                 List<Auction> auctions = player.getActiveBids();
                 for (int i = 0; i < bids; ++i)
                 {
-                    if (auctions.get(i).owner == player)
+                    if (auctions.get(i).getOwner() == player)
                     {
                         manager.cancelAuction(auctions.get(i));
                     }
@@ -80,7 +79,7 @@ public class ConfirmCommand extends AbstractCommand
         }
         if (manager.remSingleConfirm.containsKey(Bidder.getInstance(sender)))
         {
-            ItemStack item = Manager.getInstance().getAuction(manager.remSingleConfirm.get(Bidder.getInstance(sender))).item;
+            ItemStack item = Manager.getInstance().getAuction(manager.remSingleConfirm.get(Bidder.getInstance(sender))).getItem();
             Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(manager.remSingleConfirm.get(Bidder.getInstance(sender))));
             sender.sendMessage(t("i")+" "+t("rem_id",manager.remSingleConfirm.get(Bidder.getInstance(sender)),item.getType().toString()+"x"+item.getAmount()));
             manager.remBidderConfirm.remove(Bidder.getInstance(sender));

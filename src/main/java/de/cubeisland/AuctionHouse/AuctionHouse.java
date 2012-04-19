@@ -1,18 +1,18 @@
 package de.cubeisland.AuctionHouse;
 
-import de.cubeisland.AuctionHouse.Commands.RemoveCommand;
 import de.cubeisland.AuctionHouse.Commands.AddCommand;
-import de.cubeisland.AuctionHouse.Commands.SubscribeCommand;
-import de.cubeisland.AuctionHouse.Commands.InfoCommand;
-import de.cubeisland.AuctionHouse.Commands.HelpCommand;
-import de.cubeisland.AuctionHouse.Commands.ListCommand;
-import de.cubeisland.AuctionHouse.Commands.UnSubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.BidCommand;
-import de.cubeisland.AuctionHouse.Commands.GetItemsCommand;
 import de.cubeisland.AuctionHouse.Commands.ConfirmCommand;
+import de.cubeisland.AuctionHouse.Commands.GetItemsCommand;
+import de.cubeisland.AuctionHouse.Commands.HelpCommand;
+import de.cubeisland.AuctionHouse.Commands.InfoCommand;
+import de.cubeisland.AuctionHouse.Commands.ListCommand;
 import de.cubeisland.AuctionHouse.Commands.NotifyCommand;
-import de.cubeisland.AuctionHouse.Commands.UndoBidCommand;
+import de.cubeisland.AuctionHouse.Commands.RemoveCommand;
 import de.cubeisland.AuctionHouse.Commands.SearchCommand;
+import de.cubeisland.AuctionHouse.Commands.SubscribeCommand;
+import de.cubeisland.AuctionHouse.Commands.UnSubscribeCommand;
+import de.cubeisland.AuctionHouse.Commands.UndoBidCommand;
 import de.cubeisland.AuctionHouse.Translation.Translator;
 import java.io.File;
 import java.util.logging.Level;
@@ -27,7 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class AuctionHouse extends JavaPlugin
 {
     private static AuctionHouse instance = null;
-    protected static Logger logger = null;
+    private static Logger logger = null;
     public static boolean debugMode = false;
     
     protected Server server;
@@ -106,6 +106,7 @@ public class AuctionHouse extends JavaPlugin
         log("Version " + this.getDescription().getVersion() + " enabled");
     }
     
+    @Override
     public void onDisable()
     {
         log("Version " + this.getDescription().getVersion() + " disabled");

@@ -39,34 +39,33 @@ public class ItemContainer
 
         AuctionItem auctionItem = this.itemList.getFirst();
 
-        ItemStack tmp = player.getInventory().addItem(this.itemList.getFirst().clone().item).get(0);
+        ItemStack tmp = player.getInventory().addItem(this.itemList.getFirst().cloneItem().item).get(0);
 
 
         if (auctionItem.owner.equals(this.bidder.getName()))
         {
-            player.sendMessage(t("i")+" "+t("cont_rec_ab",auctionItem.item.getType().toString()+"x"+auctionItem.item.getAmount()));
+            player.sendMessage(t("i") + " " + t("cont_rec_ab", auctionItem.item.getType().toString() + "x" + auctionItem.item.getAmount()));
         }
         else
         {
-            player.sendMessage(t("i")+" "+t("cont_rec",auctionItem.item.getType().toString()+"x"+auctionItem.item.getAmount(),
-                                             econ.format(auctionItem.price),auctionItem.owner,
-                                             DateFormatUtils.formatUTC(auctionItem.date, "MMM dd")));
+            player.sendMessage(t("i") + " " + t("cont_rec", auctionItem.item.getType().toString() + "x" + auctionItem.item.getAmount(),
+                econ.format(auctionItem.price), auctionItem.owner,
+                DateFormatUtils.formatUTC(auctionItem.date, "MMM dd"))
+            );
         }
 
         if (tmp == null)
         {
             player.updateInventory();
-            data.exec("DELETE FROM `itemcontainer` WHERE `id`=?"
-                      ,this.itemList.getFirst().id);
+            data.exec("DELETE FROM `itemcontainer` WHERE `id`=?", this.itemList.getFirst().id);
             this.itemList.removeFirst();
             return true;
         }
         else
         {
-            player.sendMessage(t("i")+" "+t("cont_rec_remain"));
-            
-            data.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?"
-                      ,tmp.getAmount(),this.itemList.getFirst().id);            
+            player.sendMessage(t("i") + " " + t("cont_rec_remain"));
+
+            data.exec("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().id);
             itemList.getFirst().item.setAmount(tmp.getAmount());
             player.updateInventory();
             return true;

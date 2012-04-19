@@ -18,22 +18,12 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class MyUtil {
-    
-    private static MyUtil instance = null;
+public class MyUtil
+{
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
-    public static MyUtil get()
-    {
-        if (instance == null)
-        {
-            instance = new MyUtil();
-        }
-        return instance; 
-    }
-    
-    public Integer convert(String str) //ty quick_wango
+    public static Integer convert(String str) //ty quick_wango
     {
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
@@ -75,7 +65,7 @@ public class MyUtil {
     }
     
     
-    public boolean RegisterAuction(Auction auction, CommandSender sender)
+    public static boolean RegisterAuction(Auction auction, CommandSender sender)
     {
         if (Manager.getInstance().isEmpty())
         {
@@ -94,7 +84,7 @@ public class MyUtil {
 
         for (Bidder bidder : Bidder.getInstances().values())
         {
-            if (bidder.getMatSub().contains(new ItemStack(auction.item.getType(), 1, auction.item.getDurability())))
+            if (bidder.getMatSub().contains(new ItemStack(auction.getItem().getType(), 1, auction.getItem().getDurability())))
             {
                 bidder.addSubscription(auction);
             }
@@ -102,50 +92,49 @@ public class MyUtil {
         return true;
     }
     
-    public void sendInfo(CommandSender sender, Auction auction)
+    public static void sendInfo(CommandSender sender, Auction auction)
     {
         Economy econ = plugin.getEconomy();
         String output = "";
-        output += "&e#" + auction.id + ":&f ";
-        output += auction.item.getType().toString()+" x"+auction.item.getAmount()+" ";
-        if (auction.item.getEnchantments().size() > 0)
+        output += t("info_out_1",auction.getId(),auction.getItem().getType().toString(),auction.getItem().getAmount());
+        if (auction.getItem().getEnchantments().size() > 0)
         {
-            output += " "+t("info_out_ench")+" ";
-            for (Enchantment enchantment : auction.item.getEnchantments().keySet())
+            output += " "+t("info_out_ench");
+            for (Enchantment enchantment : auction.getItem().getEnchantments().keySet())
             {
-                output += enchantment.toString() + ":";
-                output += auction.item.getEnchantments().get(enchantment).toString() + " ";
+                output += enchantment.getName() + ":";
+                output += auction.getItem().getEnchantmentLevel(enchantment);
             }
         }
-        if (auction.bids.peek().getBidder().equals(auction.owner))
+        if (auction.getBids().peek().getBidder().equals(auction.getOwner()))
         {
-            output += "&e"+t("info_out_bid",econ.format(auction.bids.peek().getAmount()))+"&f";
+            output += " "+t("info_out_bid",econ.format(auction.getBids().peek().getAmount()));
         }
         else
         {
-            if (auction.bids.peek().getBidder() instanceof ServerBidder)
+            if (auction.getBids().peek().getBidder() instanceof ServerBidder)
             {
-                output += "&c"+t("info_out_leadserv")+"&f";
+                output += " "+t("info_out_leadserv");
             }
             else
             {
-                if (auction.bids.peek().getBidder().getName().equals(sender.getName()))
-                    output += "&a";
+                if (auction.getBids().peek().getBidder().getName().equals(sender.getName()))
+                    output += " "+t("info_out_lead",auction.getBids().peek().getBidder().getName());
                 else
-                    output += "&c";
-                output += t("info_out_lead",auction.bids.peek().getBidder().getName())+"&f";
+                    output += " "+t("info_out_lead2",auction.getBids().peek().getBidder().getName());
             }
-            output +=" "+t("info_out_with",econ.format(auction.bids.peek().getAmount()));
+            output +=" "+t("info_out_with",econ.format(auction.getBids().peek().getAmount()));
         }
-        if (auction.auctionEnd-System.currentTimeMillis()>1000*60*60*24)
-            output += " "+t("info_out_end",
-                            DateFormatUtils.format(auction.auctionEnd, config.auction_timeFormat));
+        //TODO config ist hier NULL warum?????
+        if (auction.getAuctionEnd()-System.currentTimeMillis()>1000*60*60*24)
+            output += " "+t("info_out_end",DateFormatUtils.format(auction.getAuctionEnd(), 
+                    AuctionHouse.getInstance().getConfigurations().auction_timeFormat));
         else
-            output += " "+t("info_out_end2",this.convertTime(auction.auctionEnd - System.currentTimeMillis()));
+            output += " " + t("info_out_end2", convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
         sender.sendMessage(output);
     }
     
-    public void sendInfo(CommandSender sender, List<Auction> auctionlist)
+    public static void sendInfo(CommandSender sender, List<Auction> auctionlist)
     {
         int max = auctionlist.size();
         if (max == 0)
@@ -154,11 +143,11 @@ public class MyUtil {
         }
         for (int i = 0; i < max; ++i)
         {
-            this.sendInfo(sender, auctionlist.get(i));
+            sendInfo(sender, auctionlist.get(i));
         }
     }
     
-    public String convertTime(long time)
+    public static String convertTime(long time)
     {
         if (TimeUnit.MILLISECONDS.toMinutes(time)==0)
             return t("less_time");
@@ -169,7 +158,7 @@ public class MyUtil {
             );
     }
     
-    public String convertItem(ItemStack item)
+    public static String convertItem(ItemStack item)
     {
         String out = item.getTypeId()+":"+item.getDurability();
         if (!item.getEnchantments().isEmpty())
@@ -182,14 +171,14 @@ public class MyUtil {
         return out;
     }
     
-    public ItemStack convertItem (String in, int amount)
+    public static ItemStack convertItem (String in, int amount)
     {
-        ItemStack out = this.convertItem(in);
+        ItemStack out = convertItem(in);
         out.setAmount(amount);
         return out;
     }
     
-    public ItemStack convertItem(String in)
+    public static ItemStack convertItem(String in)
     {
         //id:data
         int id = Integer.valueOf(in.substring(0,in.indexOf(":")));
@@ -227,6 +216,13 @@ public class MyUtil {
                 out.addEnchantment(Enchantment.getById(enchid), enchval);
         }  
         return out;
+    }
+    
+    public static void updateNotifyData(Bidder bidder)
+    {
+        Database data = AuctionHouse.getInstance().database;
+        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+                    ,bidder.getNotifyState(),bidder.getId());     
     }
     
 }

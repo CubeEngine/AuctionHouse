@@ -15,7 +15,42 @@ description: ""
 authors:
   - "Faithcaio"
   - "Quick_Wango"
+
 permissions:
+  auctionhouse.admin:
+    description: "Can do everything"
+    children: 
+      auctionhouse.*: true
+      
+  auctionhouse.mod:
+    description: "All normal Commands"
+    children: 
+      auctionhouse.user.command: true
+      auctionhouse.delete.server: true
+      auctionhouse.delete.player.other: true
+      auctionhouse.create.*: true
+      
+  auctionhouse.user.command:
+    description: "All normal Commands"
+    children: 
+      auctionhouse.user: true
+      auctionhouse.use.*: true
+      auctionhouse.getItems.command: true
+      
+  auctionhouse.user:
+    description: "Can not Start Auction or receive items with command"
+    children:
+      auctionhouse.use.bid: true
+      auctionhouse.use.undobid: true
+      auctionhouse.use.addsign: true
+      auctionhouse.delete.id: true
+      auctionhouse.delete.player: true
+      auctionhouse.info.*: true
+      auctionhouse.getItems.sign: true
+      auctionhouse.help: true
+      auctionhouse.search: true
+      auctionhouse.notify.*: true
+
   auctionhouse.*:
     description: "Allows the player to do everything"
     default: op
@@ -27,7 +62,6 @@ permissions:
       auctionhouse.getItems.*: true
       auctionhouse.help: true
       auctionhouse.notify.*: true
-      auctionhouse.help: true
       auctionhouse.search: true
       auctionhouse.use.bid.infinite: true
       auctionhouse.create.*: true
@@ -40,7 +74,6 @@ permissions:
       auctionhouse.use.add.multi: true
       auctionhouse.use.undobid: true
       auctionhouse.use.addsign: true
-    
 
   auctionhouse.use.bid:
     description: ""
@@ -118,7 +151,6 @@ permissions:
     children:
       auctionhouse.getItems.command: true
       auctionhouse.getItems.sign: true
-      auctionhouse.getItems.signplace: true
   
   auctionhouse.getItems.command:
     description: ""
@@ -126,9 +158,6 @@ permissions:
   auctionhouse.getItems.sign:
     description: ""
   
-  auctionhouse.getItems.signplace:
-    description: ""
-    
   auctionhouse.create.*:
     description: ""  
     children:

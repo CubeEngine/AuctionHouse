@@ -1,15 +1,15 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.Manager;
-import de.cubeisland.AuctionHouse.BaseCommand;
-import de.cubeisland.AuctionHouse.AuctionSort;
-import de.cubeisland.AuctionHouse.ServerBidder;
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.Bidder;
+import de.cubeisland.AuctionHouse.Arguments;
 import de.cubeisland.AuctionHouse.Auction;
+import de.cubeisland.AuctionHouse.AuctionHouse;
+import de.cubeisland.AuctionHouse.AuctionSort;
+import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.Bidder;
+import de.cubeisland.AuctionHouse.Manager;
+import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.ServerBidder;
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
@@ -82,12 +82,11 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage(t("i")+" "+t("bid_no_auction",arguments.getMaterial("i").toString()));
                     return true;
                 }
-                AuctionSort sorter = new AuctionSort();
-                sorter.SortAuction(auctionlist, "quantity", quantity);
-                sorter.SortAuction(auctionlist, "price");
+                AuctionSort.sortAuction(auctionlist, "quantity", quantity);
+                AuctionSort.sortAuction(auctionlist, "price");
                 for (Auction auction2 : auctionlist)
                 {
-                    if (auction2.owner == Bidder.getInstance((Player) sender))
+                    if (auction2.getOwner() == Bidder.getInstance((Player) sender))
                     {
                         auctionlist.remove(auction2);
                     }
@@ -101,7 +100,7 @@ public class BidCommand extends AbstractCommand
                 bidAmount = arguments.getDouble("1");
                 if (bidAmount != null)
                 {
-                    if (auction.owner == Bidder.getInstance((Player) sender))
+                    if (auction.getOwner() == Bidder.getInstance((Player) sender))
                     {
                         sender.sendMessage(t("pro")+" "+t("bid_own"));
                         return true;
@@ -133,7 +132,7 @@ public class BidCommand extends AbstractCommand
                     return true;
                 }
                 auction = Manager.getInstance().getAuction(id);
-                if (auction.owner == Bidder.getInstance((Player) sender))
+                if (auction.getOwner() == Bidder.getInstance((Player) sender))
                 {
                     sender.sendMessage(t("pro")+" "+t("bid_own"));
                     return true;
@@ -153,12 +152,12 @@ public class BidCommand extends AbstractCommand
 
     public void SendBidInfo(Auction auction, CommandSender sender)
     {
-        sender.sendMessage(t("bid_out",econ.format(auction.bids.peek().getAmount()),auction.item.toString(),auction.id));
-        if (!(auction.owner instanceof ServerBidder) && auction.owner.isOnline())
+        sender.sendMessage(t("bid_out",econ.format(auction.getBids().peek().getAmount()),auction.getItem().toString(),auction.getId()));
+        if (!(auction.getOwner() instanceof ServerBidder) && auction.getOwner().isOnline())
         {
-            if (auction.owner.playerNotification)
+            if (auction.getOwner().hasNotifyState(Bidder.NOTIFY_STATUS))
             {
-                auction.owner.getPlayer().sendMessage(t("bid_owner",auction.id));
+                auction.getOwner().getPlayer().sendMessage(t("bid_owner",auction.getId()));
             }
         }
     }

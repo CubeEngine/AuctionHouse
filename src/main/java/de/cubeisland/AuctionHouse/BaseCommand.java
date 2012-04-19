@@ -71,11 +71,15 @@ public class BaseCommand implements CommandExecutor
 
     private boolean executeSub(CommandSender sender, AbstractCommand command, String[] args)
     {
+        /*
+         * 
         if (!sender.hasPermission(command.getPermission()))
         {
-            sender.sendMessage(ChatColor.RED + "Permisssion denied!");
+            sender.sendMessage(ChatColor.RED + "Permission denied!");
             return true;
         }
+        * 
+        */
 
         int argc = (args.length < 1 ? 0 : args.length - 1);
         String[] subArgs = new String[argc];

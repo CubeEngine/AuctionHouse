@@ -10,18 +10,18 @@ import java.util.List;
  */
 public class AuctionSort
 {
-    Comparator compareId;
-    Comparator comparePrice;
-    Comparator compareDate;
-    Comparator compareQuantity;
+    private static final Comparator compareId;
+    private static final Comparator comparePrice;
+    private static final Comparator compareDate;
+    private static final Comparator compareQuantity;
 
-    public AuctionSort()
+    static
     {
         compareId = new Comparator()
         {
             public int compare(Object a1, Object a2)
             {
-                if (((Auction) a2).id <= ((Auction) a1).id)
+                if (((Auction) a2).getId() <= ((Auction) a1).getId())
                 {
                     return 1;
                 }
@@ -33,7 +33,7 @@ public class AuctionSort
         {
             public int compare(Object a1, Object a2)
             {
-                if (((Auction) a2).bids.peek().getAmount() <= ((Auction) a1).bids.peek().getAmount())
+                if (((Auction) a2).getBids().peek().getAmount() <= ((Auction) a1).getBids().peek().getAmount())
                 {
                     return 1;
                 }
@@ -45,7 +45,7 @@ public class AuctionSort
         {
             public int compare(Object a1, Object a2)
             {
-                if (((Auction) a2).auctionEnd <= ((Auction) a1).auctionEnd)
+                if (((Auction) a2).getAuctionEnd() <= ((Auction) a1).getAuctionEnd())
                 {
                     return 1;
                 }
@@ -57,7 +57,7 @@ public class AuctionSort
         {
             public int compare(Object a1, Object a2)
             {
-                if (((Auction) a1).item.getAmount() <= ((Auction) a2).item.getAmount())
+                if (((Auction) a1).getItem().getAmount() <= ((Auction) a2).getItem().getAmount())
                 {
                     return 1;
                 }
@@ -67,7 +67,7 @@ public class AuctionSort
         };
     }
 
-    public List<Auction> SortAuction(List<Auction> auctionlist, String type)
+    public static List<Auction> sortAuction(List<Auction> auctionlist, String type)
     {
         if (type.equalsIgnoreCase("id"))
         {
@@ -88,9 +88,9 @@ public class AuctionSort
         return auctionlist;
     }
 
-    public List<Auction> SortAuction(List<Auction> auctionlist, String type, int quantity)
+    public static List<Auction> sortAuction(List<Auction> auctionlist, String type, int quantity)
     {
-        this.SortAuction(auctionlist, type);
+        sortAuction(auctionlist, type);
 
         if (type.equalsIgnoreCase("quantity"))
         {
@@ -98,7 +98,7 @@ public class AuctionSort
             {
                 return null;
             }
-            while (auctionlist.get(auctionlist.size() - 1).item.getAmount() < quantity)
+            while (auctionlist.get(auctionlist.size() - 1).getItem().getAmount() < quantity)
             {
                 auctionlist.remove(auctionlist.size() - 1);
                 if (auctionlist.isEmpty())

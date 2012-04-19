@@ -27,7 +27,7 @@ public class AuctionHouseConfiguration
     public final boolean  auction_confirmID;            //need confirm to delete Auction per id
     
     public final String   auction_database_host;            
-    public final short      auction_database_port;
+    public final short    auction_database_port;
     public final String   auction_database_user;
     public final String   auction_database_pass;
     public final String   auction_database_name;
@@ -51,9 +51,9 @@ public class AuctionHouseConfiguration
         this.auction_database_pass = config.getString("auction.database.pass");
         this.auction_database_name = config.getString("auction.database.name");
         
-        this.auction_undoTime = MyUtil.get().convert(config.getString("auction.undoTime"));
-        this.auction_maxLength = MyUtil.get().convert(config.getString("auction.maxLength"));
-        this.auction_standardLength = MyUtil.get().convert(config.getString("auction.standardLength"));
+        this.auction_undoTime = MyUtil.convert(config.getString("auction.undoTime"));
+        this.auction_maxLength = MyUtil.convert(config.getString("auction.maxLength"));
+        this.auction_standardLength = MyUtil.convert(config.getString("auction.standardLength"));
 
         this.auction_notifyTime = this.convertlist(config.getStringList("auction.notifyTime"));
 
@@ -65,7 +65,7 @@ public class AuctionHouseConfiguration
         List<Integer> list = new ArrayList<Integer>();
         for (int i = 0; i < str.size(); ++i)
         {
-            list.add(MyUtil.get().convert(str.get(i)));
+            list.add(MyUtil.convert(str.get(i)));
         }
         return list;
 

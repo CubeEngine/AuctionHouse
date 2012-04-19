@@ -48,25 +48,24 @@ public class SearchCommand extends AbstractCommand
         auctionlist = Manager.getInstance().getAuctionItems(arguments.getMaterial("1"));
         if (arguments.getString("s") != null)
         {
-            AuctionSort sorter = new AuctionSort();
             if (arguments.getString("s").equalsIgnoreCase("date"))
             {
-                sorter.SortAuction(auctionlist, "date");
+                AuctionSort.sortAuction(auctionlist, "date");
             }
             if (arguments.getString("s").equalsIgnoreCase("id"))
             {
-                sorter.SortAuction(auctionlist, "id");
+                AuctionSort.sortAuction(auctionlist, "id");
             }
             if (arguments.getString("s").equalsIgnoreCase("price"))
             {
-                sorter.SortAuction(auctionlist, "price");
+                AuctionSort.sortAuction(auctionlist, "price");
             }
         }
         if (auctionlist.isEmpty())
         {
             sender.sendMessage(t("i")+" "+t("search_found"));
         }
-        MyUtil.get().sendInfo(sender, auctionlist);
+        MyUtil.sendInfo(sender, auctionlist);
         return true;
     }
 

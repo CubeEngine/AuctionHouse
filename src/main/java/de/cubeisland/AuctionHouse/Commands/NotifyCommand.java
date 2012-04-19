@@ -47,24 +47,21 @@ public class NotifyCommand extends AbstractCommand
         Bidder bidder = Bidder.getInstance((Player) sender);
         if (arguments.getString("1").equalsIgnoreCase("true") || arguments.getString("1").equalsIgnoreCase("on"))
         {
-            bidder.playerNotification = true;
+            bidder.setNotifyState(Bidder.NOTIFY_STATUS);
         }
         if (arguments.getString("1").equalsIgnoreCase("false") || arguments.getString("1").equalsIgnoreCase("off"))
         {
-            bidder.playerNotification = false;
+            bidder.unsetNotifyState(Bidder.NOTIFY_STATUS);
         }
         if (arguments.getString("1").equalsIgnoreCase("toggle") || arguments.getString("1").equalsIgnoreCase("t"))
         {
-            bidder.playerNotification = !bidder.playerNotification;
+            bidder.toggleNotifyState(Bidder.NOTIFY_STATUS);
         }
-        if (bidder.playerNotification)
+        if (bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
             sender.sendMessage(t("i")+" "+t("note_on"));
         else
             sender.sendMessage(t("i")+" "+t("note_off"));
-        Database data = AuctionHouse.getInstance().database;
-        //Update BidderNotification
-        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-                      ,bidder.notifyBitMask(),bidder.id);   
+        MyUtil.updateNotifyData(bidder);
         return true;
     }
 

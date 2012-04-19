@@ -160,7 +160,6 @@ public class Database
     
     public void loadDatabase()
     {
-        //TODO resolve BitMask for bidder
         try{
         Database data = AuctionHouse.getInstance().database; 
         AuctionHouse.debug("Load DataBase...");
@@ -171,7 +170,11 @@ public class Database
         {
             //load in Bidder
             Bidder bidderer = Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("name"));
-            AuctionHouse.debug("Bidder loaded: "+bidderer.id+"|"+bidderer.getName());
+            AuctionHouse.debug("Bidder loaded: "+bidderer.getId()+"|"+bidderer.getName());
+            //bitmask
+            //TODO notify in Database zu byte ändern
+            bidderer.resetNotifyState(bidderset.getByte("notify"));
+           
         }
         int max = AuctionHouse.getInstance().config.auction_maxAuctions_overall;
         for (int i=0; i<max; i++)
@@ -181,12 +184,12 @@ public class Database
             if (set.next())
             {
                 int id = set.getInt("id");
-                ItemStack item = MyUtil.get().convertItem(set.getString("item"),set.getInt("amount"));
+                ItemStack item = MyUtil.convertItem(set.getString("item"),set.getInt("amount"));
                 Bidder owner = Bidder.getInstance(set.getInt("ownerid"),this.getBidderString(set.getInt("ownerid")));
                 long auctionEnd = set.getTimestamp("timestamp").getTime();
                 Auction newauction = new Auction (id,item,owner,auctionEnd);
                 //load in auction
-                AuctionHouse.debug("Auction loaded: "+newauction.id+"|O:"+newauction.owner.getName());
+                AuctionHouse.debug("Auction loaded: "+newauction.getId()+"|O:"+newauction.getOwner().getName());
                 Manager.getInstance().addAuction(newauction);
                 ResultSet bidset =
                   data.query("SELECT * FROM `bids` WHERE `auctionid`=? ;",i);
@@ -194,14 +197,14 @@ public class Database
                 { 
                     //sort bids by time & fill auction with bids
                     data.query("SELECT * FROM `bids` ORDER BY `timestamp` ;");
-                    AuctionHouse.debug("Bid loaded: "+newauction.id+"|C:"+bidset.getDouble("amount")+"|P:"+this.getBidderString(bidset.getInt("bidderid")));
+                    AuctionHouse.debug("Bid loaded: "+newauction.getId()+"|C:"+bidset.getDouble("amount")+"|P:"+this.getBidderString(bidset.getInt("bidderid")));
                     //load in Bids
                     Bid bid = new Bid( bidset.getInt("id"),
                                      bidset.getInt("bidderid"),
                                      this.getBidderString(bidset.getInt("bidderid")),
                                      bidset.getDouble("amount"),
                                      bidset.getTimestamp("timestamp"));
-                    Manager.getInstance().getAuction(newauction.id).bids.push(bid);
+                    Manager.getInstance().getAuction(newauction.getId()).getBids().push(bid);
                    
                 }
             }
@@ -219,7 +222,7 @@ public class Database
             }
             else
             {//MatSub
-                bidder.addDataBaseSub(MyUtil.get().convertItem(subset.getString("item")));
+                bidder.addDataBaseSub(MyUtil.convertItem(subset.getString("item")));
             }
         }
         //load in ItemContainer
@@ -230,7 +233,7 @@ public class Database
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
             bidder.getContainer().itemList.add(
                     new AuctionItem( bidder,
-                    MyUtil.get().convertItem(itemset.getString("item"),itemset.getInt("amount")),
+                    MyUtil.convertItem(itemset.getString("item"),itemset.getInt("amount")),
                     itemset.getTimestamp("timestamp"),
                     this.getBidderString(itemset.getInt("ownerid")),
                     itemset.getDouble("price"),

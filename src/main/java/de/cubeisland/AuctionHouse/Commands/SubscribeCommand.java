@@ -45,7 +45,7 @@ public class SubscribeCommand extends AbstractCommand
             {
                 bidder.addSubscription(arguments.getMaterial("m"));
                 sender.sendMessage(t("i")+" "+t("sub_add_mat",arguments.getMaterial("m").getType().toString()));
-                if (!bidder.playerNotification)
+                if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
                 {
                     sender.sendMessage(t("i")+" "+t("sub_note"));
                 }
@@ -61,7 +61,7 @@ public class SubscribeCommand extends AbstractCommand
                 if (Manager.getInstance().getAuction(arguments.getInt("i")) != null)
                 {
                     sender.sendMessage(t("i")+" "+t("sub_add",arguments.getInt("i")));
-                    if (!bidder.playerNotification)
+                    if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
                     {
                         sender.sendMessage(t("i")+" "+t("sub_note"));
                     }

@@ -81,7 +81,7 @@ public class AddCommand extends AbstractCommand
                 }
                 if (arguments.getString("2") != null)
                 {
-                    Integer length = MyUtil.get().convert(arguments.getString("2"));
+                    Integer length = MyUtil.convert(arguments.getString("2"));
                     if (length == null)
                     {
                         sender.sendMessage(t("e")+" "+t("add_invalid_length"));
@@ -147,7 +147,7 @@ public class AddCommand extends AbstractCommand
             newItem.setDurability(arguments.getMaterial("1").getDurability());
             if (arguments.getString("3") != null)
             {
-                Integer length = MyUtil.get().convert(arguments.getString("3"));
+                Integer length = MyUtil.convert(arguments.getString("3"));
                 if (length == null)
                 {
                     sender.sendMessage(t("e") + " " + t("add_invalid_length"));
@@ -159,7 +159,7 @@ public class AddCommand extends AbstractCommand
                 }
                 else
                 {
-                    sender.sendMessage(t("i")+" "+t("add_max_length",MyUtil.get().convertTime(config.auction_maxLength)));
+                    sender.sendMessage(t("i")+" "+t("add_max_length",MyUtil.convertTime(config.auction_maxLength)));
                     return true;
                 }
             }
@@ -231,7 +231,7 @@ public class AddCommand extends AbstractCommand
                 newAuction = new Auction(newItem, Bidder.getInstance((Player) sender), auctionEnd, startBid);//Created Auction
             }
 
-            if (!(MyUtil.get().RegisterAuction(newAuction, sender)))
+            if (!(MyUtil.RegisterAuction(newAuction, sender)))
             {
                 sender.sendMessage(t("i")+" "+t("add_all_stop"));
                 sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));

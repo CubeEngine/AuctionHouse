@@ -1,7 +1,10 @@
 package de.cubeisland.AuctionHouse;
 
-import java.util.*;
-import org.bukkit.command.CommandSender;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -50,7 +53,7 @@ public class Manager
         int size = this.auctions.size();
         for (int i = 0; i < size; i++)
         {
-            if (this.auctions.get(i).id == id)
+            if (this.auctions.get(i).getId() == id)
             {
                 auction = this.auctions.get(i);
             }
@@ -88,8 +91,8 @@ public class Manager
             {
                 return null;
             }
-            if ((this.auctions.get(i).item.getType() == material.getType()
-                    && (this.auctions.get(i).item.getDurability() == material.getDurability())))
+            if ((this.auctions.get(i).getItem().getType() == material.getType()
+                && (this.auctions.get(i).getItem().getDurability() == material.getDurability())))
             {
                 auctionlist.add(this.auctions.get(i));
             }
@@ -107,68 +110,53 @@ public class Manager
         {
             auctionlist.add(this.auctions.get(i));
         }
-        Collections.sort(auctionlist,
-                new Comparator()
-                {
-                    public int compare(Object a1, Object a2)
-                    {
-                        if (((Auction) a1).auctionEnd >= ((Auction) a2).auctionEnd)
-                        {
-                            return 1;
-                        }
-                        //else
-                        return -1;
-                    }
-                });
-        return auctionlist;
+        return AuctionSort.sortAuction(auctionlist, "date");
     }
 
     public boolean cancelAuction(Auction auction)
     {
-        this.freeIds.push(auction.id);
-        if (!(auction.owner instanceof ServerBidder))
+        this.freeIds.push(auction.getId());
+        if (!(auction.getOwner() instanceof ServerBidder))
         {
-            Bidder.getInstance(auction.owner.getPlayer()).removeAuction(auction);
-            while (!(auction.bids.isEmpty()))
+            Bidder.getInstance(auction.getOwner().getPlayer()).removeAuction(auction);
+            while (!(auction.getBids().isEmpty()))
             {
-                Bidder.getInstance(auction.bids.peek().getBidder().getPlayer()).removeAuction(auction);
-                auction.bids.pop();
+                Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);
+                auction.getBids().pop();
             }
-            auction.owner.getContainer().addItem(auction);
+            auction.getOwner().getContainer().addItem(auction);
         }
         else
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
         Database data = AuctionHouse.getInstance().database;
-        data.exec("DELETE FROM `auctions` WHERE `id`=?"
-                      ,auction.id);
-        
+        data.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
+
         this.auctions.remove(auction);
         return true;
     }
 
     public boolean finishAuction(Auction auction)
     {
-        this.freeIds.push(auction.id);
-        if (!(auction.owner instanceof ServerBidder))
+        this.freeIds.push(auction.getId());
+        if (!(auction.getOwner() instanceof ServerBidder))
         {
-            Bidder.getInstance(auction.owner.getPlayer()).removeAuction(auction);
-            while (!(auction.bids.isEmpty()))
+            Bidder.getInstance(auction.getOwner().getPlayer()).removeAuction(auction);
+            while (!(auction.getBids().isEmpty()))
             {
-                Bidder.getInstance(auction.bids.peek().getBidder().getPlayer()).removeAuction(auction);
-                auction.bids.pop();
+                Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);
+                auction.getBids().pop();
             }
         }
         else
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
-        
+
         Database data = AuctionHouse.getInstance().database;
-        data.exec("DELETE FROM `auctions` WHERE `id`=?"
-                      ,auction.id);
-        
+        data.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
+
         this.auctions.remove(auction);
         return true;
     }

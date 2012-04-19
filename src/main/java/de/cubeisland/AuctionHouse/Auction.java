@@ -3,7 +3,6 @@ package de.cubeisland.AuctionHouse;
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
 import java.sql.Timestamp;
 import java.util.Stack;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -13,11 +12,11 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Auction
 {
-    public int id;
-    public final ItemStack item;
-    public final Bidder owner;
-    public final long auctionEnd;
-    public final Stack<Bid> bids;
+    private int id;
+    private final ItemStack item;
+    private final Bidder owner;
+    private final long auctionEnd;
+    private final Stack<Bid> bids;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
 
@@ -40,7 +39,7 @@ public class Auction
             "`timestamp`"+
             ")"+
             "VALUES (?, ?, ?, ?, ?)"
-        ,this.id,owner.id,MyUtil.get().convertItem(item),item.getAmount(),new Timestamp(auctionEnd));
+        ,this.id, owner.getId(), MyUtil.convertItem(item), item.getAmount(), new Timestamp(auctionEnd));
     }
 
     //Override: load in Auction from DataBase
@@ -106,8 +105,38 @@ public class Auction
         Database data = AuctionHouse.getInstance().database;
         //Single Bid delete
         data.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
-                      ,bidder.id,this.id,this.bids.peek().getTimestamp());
+                      ,bidder.getId(), this.id, this.bids.peek().getTimestamp());
         this.bids.pop();
         return true;
+    }
+    
+    public int getId()
+    {
+       return this.id; 
+    }
+    
+    public void setId(int id)
+    {
+        this.id = id;
+    }
+    
+    public ItemStack getItem()
+    {
+        return this.item;
+    }    
+    
+    public Bidder getOwner()
+    {
+        return this.owner;
+    }
+    
+    public long getAuctionEnd()
+    {
+        return this.auctionEnd;
+    }
+    
+    public Stack<Bid> getBids()
+    {
+        return this.bids;
     }
 }

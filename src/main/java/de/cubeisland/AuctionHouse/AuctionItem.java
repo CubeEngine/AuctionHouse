@@ -20,25 +20,25 @@ public class AuctionItem
 
     public AuctionItem(Auction auction)
     {
-        if (auction.bids.isEmpty())
+        if (auction.getBids().isEmpty())
         {
-            this.bidder = auction.owner;
+            this.bidder = auction.getOwner();
             this.price = 0.0;
         }
         else
         {
-            this.bidder = auction.bids.peek().getBidder();
-            this.price = auction.bids.peek().getAmount();
+            this.bidder = auction.getBids().peek().getBidder();
+            this.price = auction.getBids().peek().getAmount();
         }
-        this.item = auction.item.clone();// = new ItemStack(auction.item.getType(),auction.item.getAmount());
+        this.item = auction.getItem().clone();// = new ItemStack(auction.item.getType(),auction.item.getAmount());
         this.date = System.currentTimeMillis();
-        if (auction.owner instanceof ServerBidder)
+        if (auction.getOwner() instanceof ServerBidder)
         {
             this.owner = "Server";
         }
         else
         {
-            this.owner = auction.owner.getName();
+            this.owner = auction.getOwner().getName();
         }
         this.id = -1;
         try
@@ -54,8 +54,8 @@ public class AuctionItem
                     "`ownerid`"+
                     ")"+
                     "VALUES ( ?, ?, ?, ?, ?, ? );"
-                  ,this.bidder.id,MyUtil.get().convertItem(this.item),
-                  this.item.getAmount(),this.price,new Timestamp(this.date),auction.owner.id);
+                  ,this.bidder.getId(),MyUtil.convertItem(this.item),
+                  this.item.getAmount(),this.price,new Timestamp(this.date),auction.getOwner().getId());
             ResultSet set =
                     data.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
              if (set.next())
@@ -100,8 +100,8 @@ public class AuctionItem
                     "`ownerid`"+
                     ")"+
                     "VALUES ( ?, ?, ?, ?, ?, ?);"
-                  ,bidder.id,MyUtil.get().convertItem(item),
-                  item.getAmount(),this.price,this.date,bidder.id);
+                  ,bidder.getId(),MyUtil.convertItem(item),
+                  item.getAmount(),this.price,this.date,bidder.getId());
             ResultSet set =
                     data.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
             if (set.next())
@@ -123,7 +123,7 @@ public class AuctionItem
         this.price = price;
     }
 
-    public AuctionItem clone()
+    public AuctionItem cloneItem()
     {
         return new AuctionItem(bidder, item, date, owner, price);
     }

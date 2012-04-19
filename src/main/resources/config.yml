@@ -8,7 +8,7 @@ auction:
   maxLength: 7d
   standardLength: 30m
   opCanCheat: true
-  timeFormat: "dd/MM/yy HH:mm"
+  timeFormat: 'dd/MM/yy HH:mm'
   punish: 20
   itemContainerLength: 2
   comission: 3

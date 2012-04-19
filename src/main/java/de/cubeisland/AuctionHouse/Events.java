@@ -1,20 +1,15 @@
 package de.cubeisland.AuctionHouse;
 
 import static de.cubeisland.AuctionHouse.Translation.Translator.t;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,15 +22,9 @@ import org.bukkit.inventory.ItemStack;
  */
 public class Events implements Listener
 {
-    private static Events instance;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     Economy econ = AuctionHouse.getInstance().getEconomy();
-
-    public Events()
-    {
-        instance = this;
-    }
 
     @EventHandler
     public void goesOnline(final PlayerJoinEvent event)
@@ -45,28 +34,25 @@ public class Events implements Listener
             public void run()
             {
                 Bidder bidder = Bidder.getInstance(event.getPlayer());
-                if (bidder.notify)
+                if (bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
                 {
                     event.getPlayer().sendMessage(t("i")+" "+t("event_new"));
-                    Bidder.getInstance(event.getPlayer()).notify = false;
+                    bidder.unsetNotifyState(Bidder.NOTIFY_STATUS);
                 }
-                if (bidder.notifyCancel)
+                if (bidder.hasNotifyState(Bidder.NOTIFY_CANCEL))
                 {
                     event.getPlayer().sendMessage(t("i")+" "+t("event_fail"));
-                    Bidder.getInstance(event.getPlayer()).notifyCancel = false;
+                    bidder.unsetNotifyState(Bidder.NOTIFY_CANCEL);
                 }
-                if (bidder.notifyContainer)
+                if (bidder.hasNotifyState(Bidder.NOTIFY_ITEMS))
                 {
                     event.getPlayer().sendMessage(t("i")+" "+t("event_old",config.auction_itemContainerLength));
-                    Bidder.getInstance(event.getPlayer()).notifyCancel = false;
+                    bidder.unsetNotifyState(Bidder.NOTIFY_ITEMS);
                 }
             };
         });
         Bidder bidder = Bidder.getInstance(event.getPlayer());
-        Database data = AuctionHouse.getInstance().database;
-        //Update BidderNotification
-        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-                      ,bidder.notifyBitMask(),bidder.id); 
+        MyUtil.updateNotifyData(bidder);
     }
     
     @EventHandler
@@ -87,15 +73,12 @@ public class Events implements Listener
         }
         if (!(items.itemList.isEmpty()))
         {
-            Bidder.getInstance(event.getPlayer()).notifyContainer = true;
+            Bidder.getInstance(event.getPlayer()).setNotifyState(Bidder.NOTIFY_ITEMS);
         }
         Database data = AuctionHouse.getInstance().database;
-        //Update BidderNotification
-        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-                      ,bidder.notifyBitMask(),bidder.id);  
+        MyUtil.updateNotifyData(bidder);
     }
    
-
     @EventHandler
     public void onSignChange(SignChangeEvent event)
     {
@@ -119,7 +102,7 @@ public class Events implements Listener
                         event.setCancelled(true);
                         return;
                     }
-                    if (MyUtil.get().convert(event.getLine(2))==null)
+                    if (MyUtil.convert(event.getLine(2))==null)
                     {
                         event.getPlayer().sendMessage(t("event_sign_fail"));
                         event.setCancelled(true);
@@ -176,7 +159,7 @@ public class Events implements Listener
                         if (!Perm.get().check(player, "auctionhouse.use.addsign")) return;
 
                         Double startbid;
-                        Integer length = MyUtil.get().convert(((Sign) block.getState()).getLine(2));
+                        Integer length = MyUtil.convert(((Sign) block.getState()).getLine(2));
                         if (length == null)
                         return;
                         try
@@ -202,7 +185,7 @@ public class Events implements Listener
                                                         Bidder.getInstance(player),
                                                         System.currentTimeMillis()+length,
                                                         startbid);
-                        if (!(MyUtil.get().RegisterAuction(newAuction, player)))
+                        if (!(MyUtil.RegisterAuction(newAuction, player)))
                         {
                             player.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
                         }
@@ -210,8 +193,8 @@ public class Events implements Listener
                         {
                             player.getInventory().removeItem(player.getItemInHand());
                             player.updateInventory();
-                            player.sendMessage(t("i")+" "+t("add_start",1,newAuction.item.toString(),econ.format(startbid),
-                                    DateFormatUtils.format(newAuction.auctionEnd, config.auction_timeFormat))); 
+                            player.sendMessage(t("i")+" "+t("add_start",1,newAuction.getItem().toString(),econ.format(startbid),
+                                    DateFormatUtils.format(newAuction.getAuctionEnd(), config.auction_timeFormat))); 
                         }    
                     }
                 }
