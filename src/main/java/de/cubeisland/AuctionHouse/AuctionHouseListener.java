@@ -124,9 +124,6 @@ public class AuctionHouseListener implements Listener
                         event.setCancelled(true);
                         return;
                     }
-                    try {Integer.parseInt(event.getLine(2));}
-                    catch (NumberFormatException ex) {event.setLine(2, "");}
-                    
                     event.setLine(1, "Start");
                     event.setLine(3, "");
                 }
