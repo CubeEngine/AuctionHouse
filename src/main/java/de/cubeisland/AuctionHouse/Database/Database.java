@@ -60,6 +60,18 @@ public class Database
         this.setupStructure();
     }
 
+    public void close()
+    {
+        try
+        {
+            this.connection.close();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace(System.err);
+        }
+    }
+
     private PreparedStatement createStatement(String query, Object... params) throws SQLException
     {
         PreparedStatement statement = this.connection.prepareStatement(query);

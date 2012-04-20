@@ -42,7 +42,7 @@ public class AuctionHouseListener implements Listener
     {
         Bidder bidder = Bidder.getInstance(event.getPlayer());
         Util.updateNotifyData(bidder);
-        plugin.server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
+        plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
         {
             public void run()
             {

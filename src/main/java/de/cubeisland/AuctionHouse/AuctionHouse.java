@@ -32,10 +32,10 @@ public class AuctionHouse extends JavaPlugin
     public static boolean debugMode = false;
     private static Translation translation;
     
-    protected Server server;
-    protected PluginManager pm;
-    protected AuctionHouseConfiguration config;
-    protected File dataFolder;
+    private Server server;
+    private PluginManager pm;
+    private AuctionHouseConfiguration config;
+    private File dataFolder;
     private Economy economy = null;
     private Database database;
 //TODO post-release: später eigene AuktionsBox als Kiste mit separatem inventar 
@@ -105,13 +105,15 @@ public class AuctionHouse extends JavaPlugin
         this.getCommand("auctionhouse").setExecutor(baseCommand);
         
         AuctionTimer.getInstance().firstschedule(Manager.getInstance());
-        log("Version " + this.getDescription().getVersion() + " enabled");
     }
     
     @Override
     public void onDisable()
     {
-        log("Version " + this.getDescription().getVersion() + " disabled");
+        this.database.close();
+        this.database = null;
+        this.economy = null;
+        this.config = null;
     }
     
     private Economy setupEconomy()
