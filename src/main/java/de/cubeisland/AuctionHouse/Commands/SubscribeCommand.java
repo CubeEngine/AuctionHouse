@@ -26,10 +26,12 @@ public class SubscribeCommand extends AbstractCommand
     {
         if (args.length < 1)
         {
-            sender.sendMessage("/ah sub <i:<AuctionID>");
-            sender.sendMessage("/ah sub <m:<Material>");
-            sender.sendMessage("/ah unsub <i:<AuctionID>");
-            sender.sendMessage("/ah unsub <m:<Material>");
+            sender.sendMessage(t("sub_title1"));
+            sender.sendMessage(t("sub_title2"));
+            sender.sendMessage(t("sub_title3"));
+            sender.sendMessage(t("unsub_title2"));
+            sender.sendMessage(t("unsub_title3"));
+            sender.sendMessage("");
             return true;
         }
         if (sender instanceof ConsoleCommandSender)
@@ -80,7 +82,7 @@ public class SubscribeCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <i:<AuctionID>]|m:<Material>>";
+        return super.getUsage() + " m:<Material>";
     }
 
     public String getDescription()

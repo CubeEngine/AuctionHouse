@@ -29,16 +29,18 @@ public class InfoCommand extends AbstractCommand
     {
         if (args.length < 1)
         {
-            sender.sendMessage("/ah info <AuctionID>");
-            sender.sendMessage("/ah info <Player>");
-            sender.sendMessage("/ah info Bids");
-            sender.sendMessage("/ah info lead");
-            sender.sendMessage("/ah info own");
-            sender.sendMessage("/ah info *Server");
+            sender.sendMessage(t("info_title1"));
+            sender.sendMessage(t("info_title2"));
+            sender.sendMessage(t("info_title3"));
+            sender.sendMessage(t("info_title4"));
+            sender.sendMessage(t("info_title5"));
+            sender.sendMessage(t("info_title6"));
+            sender.sendMessage(t("info_title7"));
+            sender.sendMessage("");
             return true;
         }
         Arguments arguments = new Arguments(args);
-        if (!Perm.get().check(sender,"auctionhouse.info"))
+        if (!Perm.get().check(sender,"auctionhouse.command.info"))
         {
             
             return true;
@@ -128,7 +130,7 @@ public class InfoCommand extends AbstractCommand
                         }
                         else
                         {
-                            if (!Perm.get().check(sender,"auctionhouse.info.others")) return true;
+                            if (!Perm.get().check(sender,"auctionhouse.command.info.others")) return true;
                             Bidder player = arguments.getBidder("1");
                             if (player != null)
                             {
@@ -163,7 +165,7 @@ public class InfoCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <<AuctionId>|<Player>> )";
+        return super.getUsage() + " <AuctionId>";
     }
 
     public String getDescription()

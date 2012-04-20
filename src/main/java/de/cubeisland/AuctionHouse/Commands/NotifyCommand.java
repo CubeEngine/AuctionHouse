@@ -27,12 +27,14 @@ public class NotifyCommand extends AbstractCommand
     {
         if (args.length < 1)
         {
-            sender.sendMessage("/ah notify true|false|toggle");
-            sender.sendMessage("/ah notify on|off|t");
-            sender.sendMessage("Aliases notify|n");
+            sender.sendMessage(t("note_title1"));
+            sender.sendMessage(t("note_title2"));
+            sender.sendMessage(t("note_title3"));
+            sender.sendMessage(t("note_title4"));
+            sender.sendMessage("");
             return true;
         }
-        if (!Perm.get().check(sender,"auctionhouse.notify.command")) return true;
+        if (!Perm.get().check(sender,"auctionhouse.command.notify")) return true;
         Arguments arguments = new Arguments(args);
         if (arguments.getString("1") == null)
         {
@@ -67,7 +69,7 @@ public class NotifyCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " true|false|toggle";
+        return super.getUsage() + " toggle";
     }
 
     public String getDescription()

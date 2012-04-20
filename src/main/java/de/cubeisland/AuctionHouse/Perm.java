@@ -32,26 +32,27 @@ public class Perm {
         //TODO enum oder so später
         if (!sender.hasPermission(perm))
         {
-                 if (perm.equalsIgnoreCase("auctionhouse.use.add"))              sender.sendMessage(t("perm")+" "+t("add_Auc_perm")); 
-            else if (perm.equalsIgnoreCase("auctionhouse.use.add.multi"))        sender.sendMessage(t("perm")+" "+t("add_multi_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.use.bid"))              sender.sendMessage(t("perm")+" "+t("bid_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.getItems.sign"))        sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.getItems.command"))     sender.sendMessage(t("perm")+" "+t("get_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.help"))                 sender.sendMessage(t("perm")+" "+t("help_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.info"))                 sender.sendMessage(t("perm")+" "+t("info_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.info.others"))          sender.sendMessage(t("perm")+" "+t("info_perm_other"));
-            else if (perm.equalsIgnoreCase("auctionhouse.notify.command"))       sender.sendMessage(t("perm")+" "+t("note_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.delete.all"))           sender.sendMessage(t("perm")+" "+t("rem_all_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.delete.id"))            sender.sendMessage(t("perm")+" "+t("rem_id_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.delete.server"))        sender.sendMessage(t("perm")+" "+t("rem_allserv_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.delete.server"))        sender.sendMessage(t("perm")+" "+t("rem_serv_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.delete.player"))        sender.sendMessage(t("perm")+" "+t("rem_own_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.delete.player.other"))  sender.sendMessage(t("perm")+" "+t("rem_other_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.search"))               sender.sendMessage(t("perm")+" "+t("search_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.use.undobid"))          sender.sendMessage(t("perm")+" "+t("undo_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.use.addsign"))          sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.create.boxsign"))       sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.create.addsign"))       sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
+                 if (perm.equalsIgnoreCase("auctionhouse.command.add"))                 sender.sendMessage(t("perm")+" "+t("add_Auc_perm")); 
+            else if (perm.equalsIgnoreCase("auctionhouse.command.add.multi"))           sender.sendMessage(t("perm")+" "+t("add_multi_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.bid"))                 sender.sendMessage(t("perm")+" "+t("bid_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.auctionbox"))             sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.getItems"))            sender.sendMessage(t("perm")+" "+t("get_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.help"))                        sender.sendMessage(t("perm")+" "+t("help_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.info"))                sender.sendMessage(t("perm")+" "+t("info_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.info.others"))         sender.sendMessage(t("perm")+" "+t("info_perm_other"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.notify"))              sender.sendMessage(t("perm")+" "+t("note_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.all"))          sender.sendMessage(t("perm")+" "+t("rem_all_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.id"))           sender.sendMessage(t("perm")+" "+t("rem_id_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.server"))       sender.sendMessage(t("perm")+" "+t("rem_allserv_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.server"))       sender.sendMessage(t("perm")+" "+t("rem_serv_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.player"))       sender.sendMessage(t("perm")+" "+t("rem_own_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.player.other")) sender.sendMessage(t("perm")+" "+t("rem_other_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.search"))              sender.sendMessage(t("perm")+" "+t("search_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.undobid"))             sender.sendMessage(t("perm")+" "+t("undo_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.start"))                  sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.boxsign"))         sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.addsign"))         sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.command.sub"))                 sender.sendMessage(t("perm")+" "+t("sub_perm"));
             return false;
         }
         return true;

@@ -22,7 +22,7 @@ public class ListCommand extends AbstractCommand
     
     public ListCommand(BaseCommand base)
     {
-        super(base, "List");
+        super(base, "list");
     }
 
     public boolean execute(CommandSender sender, String[] args)

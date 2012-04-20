@@ -26,10 +26,12 @@ public class SearchCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.search")) return true;
+        if (!Perm.get().check(sender,"auctionhouse.command.search")) return true;
         if (args.length < 1)
         {
-            sender.sendMessage("/ah search <Item> [s:<date|id|price>]");
+            sender.sendMessage(t("search_title1"));
+            sender.sendMessage(t("search_title2"));
+            sender.sendMessage("");
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -84,6 +86,6 @@ public class SearchCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <Item> [s:<date|id|price>]";
+        return super.getUsage() + " <Item>";
     }
 }

@@ -1,9 +1,11 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Perm;
+import java.util.Collection;
 import org.bukkit.command.CommandSender;
 
 /**
@@ -22,14 +24,33 @@ public class HelpCommand extends AbstractCommand
     {
         if (!Perm.get().check(sender,"auctionhouse.help")) return true;
         sender.sendMessage(t("help_list"));
-        sender.sendMessage("");
         for (AbstractCommand command : getBase().getRegisteredCommands())
         {
+            if (this.check(command,"add"))         if (!sender.hasPermission("auctionhouse.command.add")) continue;
+            if (this.check(command,"bid"))         if (!sender.hasPermission("auctionhouse.command.bid")) continue;
+            if (this.check(command,"confirm"))     continue;//if (!sender.hasPermission("auctionhouse.command.delete.id")) continue;
+            if (this.check(command,"getItems","get"))    if (!sender.hasPermission("auctionhouse.command.getItems")) continue;
+            if (this.check(command,"Info"))        if (!sender.hasPermission("auctionhouse.command.info")) continue;
+            if (this.check(command,"list"))        if (!sender.hasPermission("auctionhouse.command.info")) continue;
+            if (this.check(command,"notify","n"))      if (!sender.hasPermission("auctionhouse.command.notify")) continue;
+            if (this.check(command,"remove","rem","delete","cancel"))      if (!sender.hasPermission("auctionhouse.command.delete.id")) continue;
+            if (this.check(command,"search"))      if (!sender.hasPermission("auctionhouse.command.search")) continue;
+            if (this.check(command,"subscribe","sub"))   if (!sender.hasPermission("auctionhouse.command.sub")) continue;
+            if (this.check(command,"unsubscribe","unsub")) if (!sender.hasPermission("auctionhouse.command.sub")) continue;
+            if (this.check(command,"undobid"))     if (!sender.hasPermission("auctionhouse.command.undobid")) continue;
             sender.sendMessage(command.getUsage());
             sender.sendMessage("    " + command.getDescription());
-            sender.sendMessage("");
         }
+        sender.sendMessage("");
         return true;
+    }
+    
+    private boolean check(AbstractCommand command, String... label)
+    {
+        int max = label.length;
+        for (int i=0;i<max;i++)
+            if (command.getLabel().equalsIgnoreCase(label[i])) return true;
+        return false;
     }
 
     @Override

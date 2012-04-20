@@ -96,7 +96,7 @@ public class AuctionHouseListener implements Listener
         {
             if (event.getLine(1).equalsIgnoreCase("AuctionBox"))
             {
-                if (!Perm.get().check(event.getPlayer(), "auctionhouse.create.boxsign"))
+                if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.boxsign"))
                 {
                     event.setCancelled(true);
                     return;
@@ -107,7 +107,7 @@ public class AuctionHouseListener implements Listener
             {
                 if (event.getLine(1).equalsIgnoreCase("Start"))
                 {
-                    if (!Perm.get().check(event.getPlayer(), "auctionhouse.create.addsign"))
+                    if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.addsign"))
                     {
                         event.setCancelled(true);
                         return;
@@ -153,7 +153,7 @@ public class AuctionHouseListener implements Listener
                     if (((Sign)block.getState()).getLine(1).equals("AuctionBox"))
                     {
                         //AuktionBox GetItems
-                        if (!Perm.get().check(player,"auctionhouse.getItems.sign")) return;
+                        if (!Perm.get().check(player,"auctionhouse.sign.auctionbox")) return;
                         if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
                         {
                             player.sendMessage(t("i")+" "+t("time_sign_empty"));
@@ -167,7 +167,7 @@ public class AuctionHouseListener implements Listener
                             return;
                         }
                         //AuktionBox Start Auktion
-                        if (!Perm.get().check(player, "auctionhouse.use.addsign")) return;
+                        if (!Perm.get().check(player, "auctionhouse.sign.start")) return;
 
                         Double startbid;
                         Integer length = Util.convertTimeToMillis(((Sign) block.getState()).getLine(2));

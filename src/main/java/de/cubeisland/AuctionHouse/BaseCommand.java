@@ -20,6 +20,7 @@ public class BaseCommand implements CommandExecutor
     public final String permissinBase;
     private final Plugin plugin;
     private final PluginManager pm;
+    private final HashMap<String, AbstractCommand> allSubCommands;
     private final HashMap<String, AbstractCommand> subCommands;
     private final Permission parentPermission;
     private String defaultCommand;
@@ -31,6 +32,7 @@ public class BaseCommand implements CommandExecutor
         this.pm = plugin.getServer().getPluginManager();
         this.permissinBase = this.plugin.getDescription().getName().toLowerCase() + ".commands.";
         this.defaultCommand = null;
+        this.allSubCommands = new HashMap<String, AbstractCommand>();
         this.subCommands = new HashMap<String, AbstractCommand>();
         this.parentPermission = new Permission(permissinBase + "*", PermissionDefault.OP);
         try
@@ -47,7 +49,7 @@ public class BaseCommand implements CommandExecutor
         this.label = label;
         if (args.length > 0)
         {
-            AbstractCommand cmd = this.subCommands.get(args[0].toLowerCase());
+            AbstractCommand cmd = this.allSubCommands.get(args[0].toLowerCase());
             if (cmd != null)
             {
                 return executeSub(sender, cmd, args);
@@ -56,11 +58,11 @@ public class BaseCommand implements CommandExecutor
 
         if (this.defaultCommand != null)
         {
-            return executeSub(sender, this.subCommands.get(this.defaultCommand), args);
+            return executeSub(sender, this.allSubCommands.get(this.defaultCommand), args);
         }
 
         sender.sendMessage("Available commands:");
-        for (String commandLabel : this.subCommands.keySet())
+        for (String commandLabel : this.allSubCommands.keySet())
         {
             sender.sendMessage(" - " + commandLabel);
         }
@@ -99,8 +101,9 @@ public class BaseCommand implements CommandExecutor
     {
         for (String subLabel : command.getLabels())
         {
-            this.subCommands.put(subLabel.toLowerCase(), command);
+            this.allSubCommands.put(subLabel.toLowerCase(), command);
         }
+        this.subCommands.put(command.getLabel().toLowerCase(), command);
         final Permission perm = command.getPermission();
         try
         {
@@ -122,7 +125,7 @@ public class BaseCommand implements CommandExecutor
      */
     public BaseCommand unregisterSubCommand(String name)
     {
-        this.subCommands.remove(name);
+        this.allSubCommands.remove(name);
         if (name.equals(this.defaultCommand))
         {
             this.defaultCommand = null;
@@ -137,7 +140,7 @@ public class BaseCommand implements CommandExecutor
      */
     public BaseCommand unregisterAllSubCommands()
     {
-        this.subCommands.clear();
+        this.allSubCommands.clear();
         return this;
     }
 
@@ -150,7 +153,7 @@ public class BaseCommand implements CommandExecutor
     public BaseCommand setDefaultCommand(String name)
     {
         name = name.toLowerCase();
-        if (this.subCommands.containsKey(name))
+        if (this.allSubCommands.containsKey(name))
         {
             this.defaultCommand = name;
         }
@@ -158,7 +161,17 @@ public class BaseCommand implements CommandExecutor
     }
 
     /**
-     * Returns a collection of the registered sub commands
+     * Returns a collection of the registered sub commands with alias
+     *
+     * @return the commands
+     */
+    public Collection<AbstractCommand> getAllRegisteredCommands()
+    {
+        return this.allSubCommands.values();
+    }
+    
+    /**
+     * Returns a collection of the registered sub commands without alias
      *
      * @return the commands
      */

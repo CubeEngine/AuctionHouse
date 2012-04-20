@@ -33,7 +33,7 @@ public class BidCommand extends AbstractCommand
     public boolean execute(CommandSender sender, String[] args)
     {
         Manager manager = Manager.getInstance();
-        if (!Perm.get().check(sender,"auctionhouse.use.bid")) return true;
+        if (!Perm.get().check(sender,"auctionhouse.command.bid")) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             sender.sendMessage(t("bid_console"));
@@ -45,9 +45,11 @@ public class BidCommand extends AbstractCommand
         Integer quantity;
         if (args.length < 2)
         {
-            sender.sendMessage("/ah bid <AuctionID> <BidAmount>");
-            sender.sendMessage("/ah bid i:<Item> [q:<Quantity>] <BidAmount>");
+            sender.sendMessage(t("bid_title1"));
+            sender.sendMessage(t("bid_title2"));
+            sender.sendMessage(t("bid_title3"));
             sender.sendMessage(t("bid_use"));
+            sender.sendMessage("");
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -160,7 +162,7 @@ public class BidCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <AuctionID> <BidAmount>";
+        return super.getUsage() + " <#ID> <amount>";
     }
 
     public String getDescription()

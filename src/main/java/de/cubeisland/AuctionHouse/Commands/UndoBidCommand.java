@@ -23,11 +23,13 @@ public class UndoBidCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.use.undobid")) return true;
+        if (!Perm.get().check(sender,"auctionhouse.command.undobid")) return true;
         if (args.length < 1)
         {
-            sender.sendMessage("/ah undoBid last");
-            sender.sendMessage("/ah undoBid <AuctionID>");
+            sender.sendMessage(t("undo_title1"));
+            sender.sendMessage(t("undo_title2"));
+            sender.sendMessage(t("undo_title3"));
+            sender.sendMessage("");
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -75,7 +77,7 @@ public class UndoBidCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <last|<AuctionId>>";
+        return super.getUsage() + " last";
     }
 
     public String getDescription()

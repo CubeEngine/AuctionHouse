@@ -33,11 +33,13 @@ public class RemoveCommand extends AbstractCommand
     {
         if (args.length < 1)
         {
-            sender.sendMessage("/ah remove <AuctionID>");
-            sender.sendMessage("/ah remove p:<Player>");
-            sender.sendMessage("/ah remove Server");
-            sender.sendMessage("/ah remove all");
-            sender.sendMessage("Aliases: remove|cancel|delete|rem");
+            sender.sendMessage(t("rem_title1"));
+            sender.sendMessage(t("rem_title2"));
+            sender.sendMessage(t("rem_title3"));
+            sender.sendMessage(t("rem_title4"));
+            sender.sendMessage(t("rem_title5"));
+            sender.sendMessage(t("rem_title6"));
+            sender.sendMessage("");
             return true;
         }
         Arguments arguments = new Arguments(args);
@@ -46,7 +48,7 @@ public class RemoveCommand extends AbstractCommand
         {
             if (arguments.getString("1").equalsIgnoreCase("all"))
             {
-                if (!Perm.get().check(sender,"auctionhouse.delete.all")) return true;
+                if (!Perm.get().check(sender,"auctionhouse.command.delete.all")) return true;
                 Manager.getInstance().getAllConfirm().add(Bidder.getInstance(sender));
                 sender.sendMessage(t("rem_all"));
                 sender.sendMessage(t("rem_confirm"));
@@ -67,7 +69,7 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (arguments.getString("1").equalsIgnoreCase("Server"))
                 {
-                    if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
+                    if (!Perm.get().check(sender,"auctionhouse.command.delete.server")) return true;
                     Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
                     sender.sendMessage(t("rem_allserv"));
                     sender.sendMessage(t("rem_confirm"));
@@ -90,7 +92,7 @@ public class RemoveCommand extends AbstractCommand
                 Integer id = arguments.getInt("1");
                 if (id != null)
                 {
-                    if (!Perm.get().check(sender,"auctionhouse.delete.id")) return true;
+                    if (!Perm.get().check(sender,"auctionhouse.command.delete.id")) return true;
                     if (Manager.getInstance().getAuction(id) == null)
                     {
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
@@ -100,10 +102,10 @@ public class RemoveCommand extends AbstractCommand
                     Auction auction = Manager.getInstance().getAuction(id);
                     if (auction.getOwner() instanceof ServerBidder)
                     {
-                        if (!Perm.get().check(sender,"auctionhouse.delete.server")) return true;
+                        if (!Perm.get().check(sender,"auctionhouse.command.delete.server")) return true;
                     }
                     if (!auction.getOwner().equals(Bidder.getInstance(sender)))
-                        if (!Perm.get().check(sender, "auctionhouse.delete.player.other"))
+                        if (!Perm.get().check(sender, "auctionhouse.command.delete.player.other"))
 
                     if (config.auction_removeTime < System.currentTimeMillis() - auction.getBids().firstElement().getTimestamp())
                     {
@@ -151,11 +153,11 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (player.getPlayer().equals((Player) sender))
                 {
-                    if (!Perm.get().check(sender,"auctionhouse.delete.player")) return true;
+                    if (!Perm.get().check(sender,"auctionhouse.command.delete.player")) return true;
                 }
                 else
                 {
-                    if (!Perm.get().check(sender,"auctionhouse.delete.player.other")) return true;
+                    if (!Perm.get().check(sender,"auctionhouse.command.delete.player.other")) return true;
                 }
 
                 if (!(player.getAuctions().isEmpty()))
@@ -184,7 +186,7 @@ public class RemoveCommand extends AbstractCommand
     @Override
     public String getUsage()
     {
-        return super.getUsage() + " <<AuctionId>|p:<Player>|all>";
+        return super.getUsage() + " <AuctionId>";
     }
 
     public String getDescription()

@@ -75,10 +75,10 @@ public class Auction
             return false;
         }
         if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) >= amount)
-                || Perm.get().check(bidder,"auctionhouse.use.bid.infinite"))
+                || Perm.get().check(bidder,"auctionhouse.command.bid.infinite"))
         {
             if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) - bidder.getTotalBidAmount() >= amount
-                    || Perm.get().check(bidder,"auctionhouse.use.bid.infinite"))
+                    || Perm.get().check(bidder,"auctionhouse.command.bid.infinite"))
             {
                 this.bids.push(new Bid(bidder, amount, this));
                 return true;
