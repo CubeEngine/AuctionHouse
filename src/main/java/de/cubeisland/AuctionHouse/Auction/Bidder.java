@@ -44,34 +44,34 @@ public class Bidder
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = -1;
-        String bidder;
+        String name;
         try
         {
 
             if (player == null)
             {
-                bidder = "*Server";
+                name = "*Server";
                 db.exec(
                     "INSERT INTO `bidder` ("
                     + "`name` ,"
                     + "`type` ,"
                     + "`notify` "
                     + ") "
-                    + "VALUES ( ?, ?, ? );", bidder, 1, 0);
+                    + "VALUES ( ?, ?, ? );", name, 1, 0);
             }
             else
             {
-                bidder = player.getName();
+                name = player.getName();
                 db.exec(
                     "INSERT INTO `bidder` ("
                     + "`name` ,"
                     + "`type` ,"
                     + "`notify` "
                     + ") "
-                    + "VALUES ( ?, ?, ? );", bidder, 0, 0);
+                    + "VALUES ( ?, ?, ? );", name, 0, 0);
             }
             ResultSet set =
-                db.query("SELECT * FROM `bidder` WHERE `name`=? LIMIT 1", bidder);
+                db.query("SELECT * FROM `bidder` WHERE `name`=? LIMIT 1", name);
             if (set.next())
             {
                 this.id = set.getInt("id");
@@ -125,17 +125,18 @@ public class Bidder
 
     public static Bidder getInstance(Player player)
     {
-        Bidder instance = bidderInstances.get(player);
-        if (instance == null)
-        {
-            return bidderInstances.put(player, new Bidder((OfflinePlayer)player));
-        }
-        return instance;
+        return getInstance((OfflinePlayer)player);
     }
 
     public static Bidder getInstance(OfflinePlayer player)
     {
-        return bidderInstances.get(player);
+        Bidder instance = bidderInstances.get(player);
+        if (instance == null)
+        {
+            instance = new Bidder(player);
+            bidderInstances.put(player, instance);
+        }
+        return instance;
     }
 
     public static Bidder getInstance(CommandSender player)

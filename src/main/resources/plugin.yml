@@ -47,7 +47,7 @@ permissions:
       auctionhouse.command.delete.player: true
       auctionhouse.command.info.*: true
       auctionhouse.sign.auctionbox: true
-      auctionhouse.help: true
+      auctionhouse.use: true
       auctionhouse.command.search: true
       auctionhouse.command.notify: true
       auctionhouse.sign.use: true
@@ -58,7 +58,7 @@ permissions:
     children:
       auctionhouse.command.add.cheatItems: true
       auctionhouse.command.*: true
-      auctionhouse.help: true
+      auctionhouse.use: true
       auctionhouse.command.bid.infinite: true
       auctionhouse.sign.*: true
 
@@ -132,7 +132,7 @@ permissions:
   auctionhouse.command.notify:
     description: ""
 
-  auctionhouse.help:
+  auctionhouse.use:
     description: ""
     
   auctionhouse.command.search:

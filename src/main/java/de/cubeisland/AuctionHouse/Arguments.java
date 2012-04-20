@@ -76,6 +76,7 @@ public class Arguments
 
     public ItemStack getMaterial(String name)
     {
+        //TODO Datavalue mit : angebar machen
         String tmp = this.getString(name);
         tmp = tmp.replace(".", ":");
         int parambreak = tmp.indexOf(":");

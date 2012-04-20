@@ -42,6 +42,8 @@ public class AuctionHouseListener implements Listener
     @EventHandler
     public void goesOnline(final PlayerJoinEvent event)
     {
+        if (!event.getPlayer().hasPermission("auctionhouse.use")) return;
+        
         Bidder bidder = Bidder.getInstance(event.getPlayer());
         Util.updateNotifyData(bidder);
         plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()

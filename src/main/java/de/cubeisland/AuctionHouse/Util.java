@@ -223,11 +223,10 @@ public class Util
     
     public static void updateNotifyData(Bidder bidder)
     {
-        //TODO bidder ist hier manchmal null warum?
         Database db = AuctionHouse.getInstance().getDB();
         db.execUpdate(
-            "UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-            ,bidder.getNotifyState(),
+            "UPDATE `bidder` SET `notify`=? WHERE `id`=?",
+            bidder.getNotifyState(),
             bidder.getId()
         );
     }

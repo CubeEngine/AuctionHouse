@@ -37,7 +37,7 @@ public class Perm {
             else if (perm.equalsIgnoreCase("auctionhouse.command.bid"))                 sender.sendMessage(t("perm")+" "+t("bid_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.sign.auctionbox"))             sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.getItems"))            sender.sendMessage(t("perm")+" "+t("get_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.help"))                        sender.sendMessage(t("perm")+" "+t("help_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.use"))                         sender.sendMessage(t("perm")+" "+t("help_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.info"))                sender.sendMessage(t("perm")+" "+t("info_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.info.others"))         sender.sendMessage(t("perm")+" "+t("info_perm_other"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.notify"))              sender.sendMessage(t("perm")+" "+t("note_perm"));
@@ -50,8 +50,9 @@ public class Perm {
             else if (perm.equalsIgnoreCase("auctionhouse.command.search"))              sender.sendMessage(t("perm")+" "+t("search_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.undobid"))             sender.sendMessage(t("perm")+" "+t("undo_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.sign.start"))                  sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.box"))         sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.add"))         sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.list"))                   sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.box"))             sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.add"))             sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.sub"))                 sender.sendMessage(t("perm")+" "+t("sub_perm"));
             return false;
         }

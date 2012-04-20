@@ -22,7 +22,7 @@ public class HelpCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.help")) return true;
+        if (!Perm.get().check(sender,"auctionhouse.use")) return true;
         sender.sendMessage(t("help_list"));
         for (AbstractCommand command : getBase().getRegisteredCommands())
         {
