@@ -38,7 +38,7 @@ public class Auction
         this.bids = new Stack<Bid>();
         this.bids.push(new Bid(owner, startBid, this));
         
-        db.exec(  
+        db.exec(
             "INSERT INTO `auctions` ("+
             "`id` ,"+
             "`ownerid` ,"+
@@ -112,7 +112,7 @@ public class Auction
         //else: Undo Last Bid
         
         //Single Bid delete
-        db.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
+        db.execUpdate("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
                       ,bidder.getId(), this.id, this.bids.peek().getTimestamp());
         this.bids.pop();
         return true;

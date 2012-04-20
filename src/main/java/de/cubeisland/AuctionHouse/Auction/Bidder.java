@@ -263,7 +263,7 @@ public class Bidder
     public boolean removeAuction(Auction auction)
     {
         //All Bid delete
-        db.exec("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?", this.id, auction.getId());
+        db.execUpdate("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=?", this.id, auction.getId());
         this.removeSubscription(auction);
         return activeBids.remove(auction);
     }
@@ -271,14 +271,14 @@ public class Bidder
     public boolean removeSubscription(Auction auction)
     {
         //IdSub delete
-        db.exec("DELETE FROM `subscription` WHERE `bidderid`=? && `auctionid`=?", this.id, auction.getId());
+        db.execUpdate("DELETE FROM `subscription` WHERE `bidderid`=? && `auctionid`=?", this.id, auction.getId());
         return subscriptions.remove(auction);
     }
 
     public boolean removeSubscription(ItemStack item)
     {
         //MAtSub delete
-        db.exec("DELETE FROM `subscription` WHERE `bidderid`=? && `item`=?", this.id, Util.convertItem(item));
+        db.execUpdate("DELETE FROM `subscription` WHERE `bidderid`=? && `item`=?", this.id, Util.convertItem(item));
         return materialSub.remove(item);
     }
 

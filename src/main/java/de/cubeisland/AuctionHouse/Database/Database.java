@@ -29,6 +29,11 @@ public class Database
 
     private final Connection connection;
 
+    public Database(String user, String pass, String name)
+    {
+        this("localhost", (short)3306, user, pass, name);
+    }
+
     public Database(String host, short port, String user, String pass, String name)
     {
         try
@@ -114,11 +119,6 @@ public class Database
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
                  );
     }
-    
-    public Database(String user, String pass, String name)
-    {
-        this("localhost", (short)3306, user, pass, name);
-    }
 
     public String getHost()
     {
@@ -157,11 +157,23 @@ public class Database
         }
     }
 
-    public int exec(String query, Object... params)
+    public int execUpdate(String query, Object... params)
     {
         try
         {
             return createStatement(query, params).executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new IllegalStateException("Failed to execute a query!", e);
+        }
+    }
+
+    public boolean exec(String query, Object... params)
+    {
+        try
+        {
+            return createStatement(query, params).execute();
         }
         catch (SQLException e)
         {
@@ -362,7 +374,7 @@ public class Database
             query.append(" OFFSET ").append(offset);
         }
 
-        return this.exec(query.toString(), params);
+        return this.execUpdate(query.toString(), params);
     }
 
     private String generateTableList(String... tables)

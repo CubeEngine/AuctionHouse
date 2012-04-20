@@ -225,7 +225,7 @@ public class Util
     {
         //TODO bidder ist hier manchmal null warum?
         Database db = AuctionHouse.getInstance().getDB();
-        db.exec(
+        db.execUpdate(
             "UPDATE `bidder` SET `notify`=? WHERE `id`=?"
             ,bidder.getNotifyState(),
             bidder.getId()

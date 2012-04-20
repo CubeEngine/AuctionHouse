@@ -154,7 +154,7 @@ public class Manager
         {
             ServerBidder.getInstance().removeAuction(auction);
         }
-        db.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
+        db.execUpdate("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
 
         this.auctions.remove(auction);
         return true;
