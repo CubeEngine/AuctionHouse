@@ -248,9 +248,11 @@ public class AddCommand extends AbstractCommand
             AuctionHouse.log("ServerAuction(s) added succesfully!");
         }
 
-        sender.sendMessage(t("i")+" "+t("add_start",multiAuction,newItem.getType().toString()+" x"+newItem.getAmount()
-                                ,econ.format(startBid),
-                                DateFormatUtils.format(auctionEnd, config.auction_timeFormat)));                     
+        sender.sendMessage(t("i")+" "+t("add_start",
+                                        multiAuction,
+                                        newItem.getType().toString()+"x"+newItem.getAmount(),
+                                        econ.format(startBid),
+                                        DateFormatUtils.format(auctionEnd, config.auction_timeFormat)));                     
         return true;
     }
 

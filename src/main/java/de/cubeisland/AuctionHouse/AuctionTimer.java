@@ -43,7 +43,6 @@ public class AuctionTimer
                                 && (System.currentTimeMillis() - 600 < auction.getAuctionEnd()))
                         {
                             List<Bidder> rPlayer = new ArrayList<Bidder>();
-                            AuctionHouse.debug("Auction #"+auction.getId()+" ended!");
                             while (auction.getOwner() != auction.getBids().peek().getBidder())
                             {
                                 Bidder winner = auction.getBids().peek().getBidder();
@@ -178,13 +177,13 @@ public class AuctionTimer
                                             String out = "";
                                             out += t("time_end2",auction.getId(),MyUtil.convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
                                             
-                                            if (playerlist.get(k) == auction.getBids().peek().getBidder().getOffPlayer())
+                                            if (playerlist.get(k).equals(auction.getBids().peek().getBidder().getPlayer()))
                                             {
-                                                out += t("time_high");
+                                                out += " "+t("time_high");
                                             }
                                             else
                                             {
-                                                out += t("time_low");
+                                                out += " "+t("time_low");
                                             }
 
                                             playerlist.get(k).getPlayer().sendMessage(out);

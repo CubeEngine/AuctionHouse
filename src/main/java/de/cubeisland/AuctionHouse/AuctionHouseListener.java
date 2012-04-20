@@ -118,6 +118,7 @@ public class AuctionHouseListener implements Listener
                 }
                 else
                 {
+                    
                     event.getPlayer().sendMessage(t("event_sign_fail"));
                     event.setCancelled(true);
                     return;
@@ -199,7 +200,9 @@ public class AuctionHouseListener implements Listener
                         {
                             player.getInventory().removeItem(player.getItemInHand());
                             player.updateInventory();
-                            player.sendMessage(t("i")+" "+t("add_start",1,newAuction.getItem().toString(),econ.format(startbid),
+                            player.sendMessage(t("i")+" "+t("add_start",1,
+                                    newAuction.getItem().getType().toString()+"x"+newAuction.getItem().getAmount(),
+                                    econ.format(startbid),
                                     DateFormatUtils.format(newAuction.getAuctionEnd(), config.auction_timeFormat))); 
                         }    
                     }

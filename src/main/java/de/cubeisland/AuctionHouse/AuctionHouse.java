@@ -70,16 +70,21 @@ public class AuctionHouse extends JavaPlugin
         configuration.options().copyDefaults(true);
         debugMode = configuration.getBoolean("debug");
         this.config = new AuctionHouseConfiguration(configuration);
-        
         this.saveConfig();
         
         this.economy = this.setupEconomy();
+        
         translation = Translation.get(this.getClass(), config.auction_language);
-        if (translation == null)
-        {
-            translation = Translation.get(this.getClass(), "en");
-        }
+        if (translation == null) translation = Translation.get(this.getClass(), "en");
 
+        database = new Database(config.auction_database_host,
+                                config.auction_database_port,
+                                config.auction_database_user,
+                                config.auction_database_pass,
+                                config.auction_database_name);
+        
+        database.loadDatabase();
+        
         this.pm.registerEvents(new AuctionHouseListener(this), this);
         
         BaseCommand baseCommand = new BaseCommand(this);
@@ -100,13 +105,6 @@ public class AuctionHouse extends JavaPlugin
         .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);
         
-        database = new Database(config.auction_database_host,
-                                config.auction_database_port,
-                                config.auction_database_user,
-                                config.auction_database_pass,
-                                config.auction_database_name);
-        
-        database.loadDatabase();
         AuctionTimer.getInstance().firstschedule(Manager.getInstance());
         log("Version " + this.getDescription().getVersion() + " enabled");
     }

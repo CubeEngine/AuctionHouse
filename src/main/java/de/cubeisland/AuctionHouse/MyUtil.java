@@ -102,7 +102,7 @@ public class MyUtil
             output += " "+t("info_out_ench");
             for (Enchantment enchantment : auction.getItem().getEnchantments().keySet())
             {
-                output += enchantment.getName() + ":";
+                output += " "+enchantment.getName() + ":";
                 output += auction.getItem().getEnchantmentLevel(enchantment);
             }
         }
@@ -125,7 +125,6 @@ public class MyUtil
             }
             output +=" "+t("info_out_with",econ.format(auction.getBids().peek().getAmount()));
         }
-        //TODO config ist hier NULL warum?????
         if (auction.getAuctionEnd()-System.currentTimeMillis()>1000*60*60*24)
             output += " "+t("info_out_end",DateFormatUtils.format(auction.getAuctionEnd(), 
                     AuctionHouse.getInstance().getConfigurations().auction_timeFormat));
@@ -220,8 +219,10 @@ public class MyUtil
     
     public static void updateNotifyData(Bidder bidder)
     {
-        Database data = AuctionHouse.getInstance().getDB();
-        data.exec("UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+        //TODO db ist hier manchmal null warum?
+        Database db = AuctionHouse.getInstance().getDB();
+        db.exec(
+                    "UPDATE `bidder` SET `notify`=? WHERE `id`=?"
                     ,bidder.getNotifyState(),bidder.getId());     
     }
     

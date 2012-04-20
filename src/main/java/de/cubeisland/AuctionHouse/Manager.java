@@ -1,10 +1,12 @@
 package de.cubeisland.AuctionHouse;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -83,9 +85,9 @@ public class Manager
         return auctions.size();
     }
 
-    public List<Auction> getAuctionItems(ItemStack material) //Get all Auctions with material
+    public List<Auction> getAuctionItem(ItemStack material) //Get all Auctions with material
     {
-        ArrayList<Auction> auctionlist = new ArrayList<Auction>();
+        List<Auction> auctionlist = new ArrayList<Auction>();
         int size = this.auctions.size();
         for (int i = 0; i < size; i++)
         {
@@ -101,12 +103,25 @@ public class Manager
         }
         return auctionlist;
     }
+    
+    public List<Auction> getAuctionItem(ItemStack material, Bidder bidder) //Get all Auctions with material without bidder
+    {
+        List<Auction> auctionlist = this.getAuctionItem(material);
+        //TODO ConcurrentModificationException taucht manchmal auf
+        //wenn eigene Auktionen dabei
+        for (Auction auction : bidder.getActiveBids())
+        {
+            if (auction.getOwner() == bidder)
+            {
+                auctionlist.remove(auction);
+            }
+        }
+        return auctionlist;
+    }
 
     public List<Auction> getEndingAuctions() //Get soon Ending Auctions
     {
-        ArrayList<Auction> auctionlist = new ArrayList<Auction>()
-        {
-        };
+        List<Auction> auctionlist = new ArrayList<Auction>();
         int size = this.auctions.size();
         for (int i = 0; i < size; i++)
         {
@@ -118,6 +133,9 @@ public class Manager
     public boolean cancelAuction(Auction auction)
     {
         this.freeIds.push(auction.getId());
+        Collections.sort(this.freeIds);
+        Collections.reverse(this.freeIds);
+
         if (!(auction.getOwner() instanceof ServerBidder))
         {
             auction.getOwner().removeAuction(auction);
@@ -140,10 +158,13 @@ public class Manager
 
     public boolean finishAuction(Auction auction)
     {
+        //TODO fast 100% redundant mit dem drüber
         this.freeIds.push(auction.getId());
+        Collections.sort(this.freeIds);
+        Collections.reverse(this.freeIds);
         if (!(auction.getOwner() instanceof ServerBidder))
         {
-            Bidder.getInstance(auction.getOwner().getPlayer()).removeAuction(auction);
+            auction.getOwner().removeAuction(auction);
             while (!(auction.getBids().isEmpty()))
             {
                 Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);

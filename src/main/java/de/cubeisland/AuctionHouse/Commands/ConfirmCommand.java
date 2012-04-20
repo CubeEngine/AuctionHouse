@@ -2,6 +2,7 @@ package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Auction;
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Bidder;
 import de.cubeisland.AuctionHouse.Manager;
@@ -63,16 +64,26 @@ public class ConfirmCommand extends AbstractCommand
             else
             {
                 Bidder player = manager.getBidderConfirm().get(Bidder.getInstance(sender));
-                int bids = player.getActiveBids().size();
                 List<Auction> auctions = player.getActiveBids();
-                for (int i = 0; i < bids; ++i)
+                int max = auctions.size();
+                for (int i = 0; i < max; ++i)
                 {
                     if (auctions.get(i).getOwner() == player)
                     {
+                        if (AuctionHouse.getInstance().getConfigurations().auction_removeTime < 
+                            System.currentTimeMillis() - auctions.get(i).getBids().firstElement().getTimestamp())
+                        {
+                            if (!sender.hasPermission("aucionhouse.delete.player.other"))
+                                {
+                                     sender.sendMessage(t("i")+" "+t("rem_time"));
+                                     return true;
+                                }
+                           
+                        }
                         manager.cancelAuction(auctions.get(i));
                     }
                 }
-                sender.sendMessage(t("i")+" "+t("confirm_rem",bids,player.getName()));
+                sender.sendMessage(t("i")+" "+t("confirm_rem",max,player.getName()));
                 manager.getBidderConfirm().remove(Bidder.getInstance(sender));
                 return true;
             }

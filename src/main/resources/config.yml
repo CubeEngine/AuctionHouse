@@ -5,6 +5,7 @@ auction:
     overall: 150
     opIgnore: true
   undoTime: 20s
+  removeTime: 1m
   maxLength: 7d
   standardLength: 30m
   opCanCheat: true

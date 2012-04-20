@@ -90,12 +90,13 @@ public class RemoveCommand extends AbstractCommand
                 Integer id = arguments.getInt("1");
                 if (id != null)
                 {
+                    if (!Perm.get().check(sender,"auctionhouse.delete.id")) return true;
                     if (Manager.getInstance().getAuction(id) == null)
                     {
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
                         return true;
                     }
-                    if (!Perm.get().check(sender,"auctionhouse.delete.id")) return true;
+                    
                     Auction auction = Manager.getInstance().getAuction(id);
                     if (auction.getOwner() instanceof ServerBidder)
                     {
@@ -104,6 +105,12 @@ public class RemoveCommand extends AbstractCommand
                     if (!auction.getOwner().equals(Bidder.getInstance(sender)))
                         if (!Perm.get().check(sender, "auctionhouse.delete.player.other"))
 
+                    if (config.auction_removeTime < System.currentTimeMillis() - auction.getBids().firstElement().getTimestamp())
+                    {
+                        sender.sendMessage(t("i")+" "+t("rem_time"));
+                        return true;
+                    }
+                            
                     if (config.auction_confirmID)
                     {
                         Manager.getInstance().getSingleConfirm().put(Bidder.getInstance(sender), id);
@@ -123,8 +130,8 @@ public class RemoveCommand extends AbstractCommand
 
                         return true;
                     }    
-                    ItemStack item = Manager.getInstance().getAuction(id).getItem();
-                    Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(id));
+                    ItemStack item = auction.getItem();
+                    Manager.getInstance().cancelAuction(auction);
                     sender.sendMessage(t("i")+" "+t("rem_id",id,item.getType().toString()+"x"+item.getAmount()));
                     return true;
                 }

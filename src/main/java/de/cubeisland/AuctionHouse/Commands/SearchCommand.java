@@ -2,6 +2,7 @@ package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.*;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import java.util.Collections;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
@@ -45,20 +46,24 @@ public class SearchCommand extends AbstractCommand
             sender.sendMessage(t("e")+" "+t("item_no_exist",arguments.getString("1")));
             return true;
         }
-        auctionlist = Manager.getInstance().getAuctionItems(arguments.getMaterial("1"));
+        auctionlist = Manager.getInstance().getAuctionItem(arguments.getMaterial("1"));
         if (arguments.getString("s") != null)
         {
             if (arguments.getString("s").equalsIgnoreCase("date"))
             {
                 AuctionSort.sortAuction(auctionlist, "date");
+                Collections.reverse(auctionlist);
             }
             if (arguments.getString("s").equalsIgnoreCase("id"))
             {
                 AuctionSort.sortAuction(auctionlist, "id");
+                Collections.reverse(auctionlist);
             }
             if (arguments.getString("s").equalsIgnoreCase("price"))
             {
+                AuctionSort.sortAuction(auctionlist, "date");
                 AuctionSort.sortAuction(auctionlist, "price");
+                Collections.reverse(auctionlist);
             }
         }
         if (auctionlist.isEmpty())

@@ -4,13 +4,14 @@ import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Arguments;
 import de.cubeisland.AuctionHouse.Auction;
 import de.cubeisland.AuctionHouse.AuctionHouse;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AuctionSort;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Bidder;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
 import de.cubeisland.AuctionHouse.ServerBidder;
-import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import java.util.ArrayList;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,7 @@ public class BidCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
+        Manager manager = Manager.getInstance();
         if (!Perm.get().check(sender,"auctionhouse.use.bid")) return true;
         if (sender instanceof ConsoleCommandSender)
         {
@@ -76,27 +78,21 @@ public class BidCommand extends AbstractCommand
                     }
                 }
 
-                List<Auction> auctionlist = Manager.getInstance().getAuctionItems(arguments.getMaterial("i"));
-                if (auctionlist.isEmpty())
+                List<Auction> auctions = manager.getAuctionItem(arguments.getMaterial("i"),Bidder.getInstance(sender));
+                
+                if (auctions.isEmpty())
                 {
                     sender.sendMessage(t("i")+" "+t("bid_no_auction",arguments.getMaterial("i").toString()));
                     return true;
                 }
-                AuctionSort.sortAuction(auctionlist, "quantity", quantity);
-                AuctionSort.sortAuction(auctionlist, "price");
-                for (Auction auction2 : auctionlist)
-                {
-                    if (auction2.getOwner() == Bidder.getInstance((Player) sender))
-                    {
-                        auctionlist.remove(auction2);
-                    }
-                }
-                if (auctionlist.isEmpty())
+                AuctionSort.sortAuction(auctions, "quantity", quantity);
+                AuctionSort.sortAuction(auctions, "price");
+                if (auctions.isEmpty())
                 {
                     sender.sendMessage(t("i")+" "+t("bid_no_auc_least",quantity,arguments.getMaterial("i").toString()));
                     return true;
                 }
-                auction = auctionlist.get(0);//First is Cheapest after Sort
+                auction = auctions.get(0);//First is Cheapest after Sort
                 bidAmount = arguments.getDouble("1");
                 if (bidAmount != null)
                 {
@@ -126,12 +122,12 @@ public class BidCommand extends AbstractCommand
             bidAmount = arguments.getDouble("2");
             if (bidAmount != null)
             {
-                if (Manager.getInstance().getAuction(id) == null)
+                if (manager.getAuction(id) == null)
                 {
                     sender.sendMessage(t("i")+" "+t("auction_no_exist",id));
                     return true;
                 }
-                auction = Manager.getInstance().getAuction(id);
+                auction = manager.getAuction(id);
                 if (auction.getOwner() == Bidder.getInstance((Player) sender))
                 {
                     sender.sendMessage(t("pro")+" "+t("bid_own"));

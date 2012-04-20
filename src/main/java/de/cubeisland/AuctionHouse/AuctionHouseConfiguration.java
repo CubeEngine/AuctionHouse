@@ -25,6 +25,7 @@ public class AuctionHouseConfiguration
     public final int      auction_comission;            //Cost for Owner in %
     public final String   auction_language;             //en / de
     public final boolean  auction_confirmID;            //need confirm to delete Auction per id
+    public final long     auction_removeTime;           //in d h m s | -1 is infinite
     
     public final String   auction_database_host;            
     public final short    auction_database_port;
@@ -52,6 +53,7 @@ public class AuctionHouseConfiguration
         this.auction_database_name = config.getString("auction.database.name");
         
         this.auction_undoTime = MyUtil.convert(config.getString("auction.undoTime"));
+        this.auction_removeTime = MyUtil.convert(config.getString("auction.removeTime"));
         this.auction_maxLength = MyUtil.convert(config.getString("auction.maxLength"));
         this.auction_standardLength = MyUtil.convert(config.getString("auction.standardLength"));
 
