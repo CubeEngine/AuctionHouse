@@ -393,12 +393,11 @@ public class Bidder
     public Bidder addSubscription(ItemStack item)
     {
         db.exec(
-            "INSERT INTO `subscription` ("
-            + "`bidderid` ,"
-            + "`type` ,"
-            + "`item` "
-            + ")"
-            + "VALUES ( ?, ?, ? );", this.id, 0, MyUtil.convertItem(item));
+            "INSERT INTO `subscription` (`bidderid` ,`type` ,`item` ) VALUES ( ?, ?, ? );",
+            this.id,
+            0,
+            MyUtil.convertItem(item)
+        );
         this.materialSub.add(item);
         return this;
     }

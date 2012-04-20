@@ -23,25 +23,23 @@ public class MyUtil
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfigurations();
     
-    public static Integer convert(String str) //ty quick_wango
+    public static int convertTimeToMillis(String str) //ty quick_wango
     {
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(str);
         matcher.find();
-        int tmp;
+
+        int time;
         try
         {
-            tmp = Integer.valueOf(String.valueOf(matcher.group(1)));
+            time = Integer.parseInt(String.valueOf(matcher.group(1)));
         }
-        catch (NumberFormatException e)
+        catch (Throwable t)
         {
-            return null;
+            AuctionHouse.error("Failed to convert to a number", t);
+            return -1;
         }
-        catch (IllegalStateException ex)
-        {
-            return null;
-        }
-        if (tmp == -1)
+        if (time < 0)
         {
             return -1;
         }
@@ -53,19 +51,19 @@ public class MyUtil
         switch (unitSuffix.toLowerCase().charAt(0))
         {
             case 'd':
-                tmp *= 24;
+                time *= 24;
             case 'h':
-                tmp *= 60;
+                time *= 60;
             case 'm':
-                tmp *= 60;
+                time *= 60;
             case 's':
-                tmp *= 1000;
+                time *= 1000;
         }
-        return tmp;
+        return time;
     }
     
     
-    public static boolean RegisterAuction(Auction auction, CommandSender sender)
+    public static boolean registerAuction(Auction auction, CommandSender sender)
     {
         if (Manager.getInstance().isEmpty())
         {
@@ -211,8 +209,10 @@ public class MyUtil
                 enchval = Integer.valueOf(in.substring(in.indexOf(":")+1,in.indexOf(" ")));
                 in.replace(in.substring(0, in.indexOf(" ")+1), "");
             }
-            if (Enchantment.getById(id)!=null)
+            if (Enchantment.getById(id) != null)
+            {
                 out.addEnchantment(Enchantment.getById(enchid), enchval);
+            }
         }  
         return out;
     }
@@ -222,8 +222,10 @@ public class MyUtil
         //TODO db ist hier manchmal null warum?
         Database db = AuctionHouse.getInstance().getDB();
         db.exec(
-                    "UPDATE `bidder` SET `notify`=? WHERE `id`=?"
-                    ,bidder.getNotifyState(),bidder.getId());     
+            "UPDATE `bidder` SET `notify`=? WHERE `id`=?"
+            ,bidder.getNotifyState(),
+            bidder.getId()
+        );
     }
     
 }

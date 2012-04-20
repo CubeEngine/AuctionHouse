@@ -108,7 +108,7 @@ public class AuctionHouseListener implements Listener
                         event.setCancelled(true);
                         return;
                     }
-                    if (MyUtil.convert(event.getLine(2))==null)
+                    if (MyUtil.convertTimeToMillis(event.getLine(2)) < 0)
                     {
                         event.getPlayer().sendMessage(t("event_sign_fail"));
                         event.setCancelled(true);
@@ -166,7 +166,7 @@ public class AuctionHouseListener implements Listener
                         if (!Perm.get().check(player, "auctionhouse.use.addsign")) return;
 
                         Double startbid;
-                        Integer length = MyUtil.convert(((Sign) block.getState()).getLine(2));
+                        Integer length = MyUtil.convertTimeToMillis(((Sign) block.getState()).getLine(2));
                         if (length == null)
                         return;
                         try
@@ -192,7 +192,7 @@ public class AuctionHouseListener implements Listener
                                                         Bidder.getInstance(player),
                                                         System.currentTimeMillis()+length,
                                                         startbid);
-                        if (!(MyUtil.RegisterAuction(newAuction, player)))
+                        if (!(MyUtil.registerAuction(newAuction, player)))
                         {
                             player.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
                         }
