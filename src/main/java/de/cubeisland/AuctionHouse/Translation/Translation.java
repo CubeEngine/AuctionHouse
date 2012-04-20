@@ -62,7 +62,7 @@ public class Translation
                 continue;
             }
 
-            translations.put(line.substring(0, equalsOffset).trim(), ChatColor.translateAlternateColorCodes('&', line.substring(equalsOffset + 1)));
+            translations.put(line.substring(0, equalsOffset).trim(), ChatColor.translateAlternateColorCodes('&', line.substring(equalsOffset + 1).trim()));
         }
 
         this.language = language;
