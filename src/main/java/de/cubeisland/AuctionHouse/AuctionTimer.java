@@ -1,6 +1,10 @@
 package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.Database.Database;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -20,7 +24,7 @@ public class AuctionTimer
     private Timer notifyTimer;
     private static AuctionTimer instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     private final Database db;
 
     public AuctionTimer()
@@ -78,7 +82,7 @@ public class AuctionTimer
                                     else
                                     {
                                         winner.setNotifyState(Bidder.NOTIFY_WIN);
-                                        MyUtil.updateNotifyData(winner);
+                                        Util.updateNotifyData(winner);
                                     }
                                     manager.cancelAuction(auction, true);
                                     break; //NPE Prevention
@@ -101,7 +105,7 @@ public class AuctionTimer
                             if (auction.getBids().peek().getBidder().equals(auction.getOwner()))
                             {
                                 auction.getOwner().setNotifyState(Bidder.NOTIFY_CANCEL);
-                                MyUtil.updateNotifyData(auction.getOwner());
+                                Util.updateNotifyData(auction.getOwner());
                                 if (!(auction.getOwner() instanceof ServerBidder))
                                 {
                                     econ.withdrawPlayer(auction.getOwner().getName(), auction.getBids().peek().getAmount() * config.auction_comission / 100);
@@ -170,12 +174,12 @@ public class AuctionTimer
                                     {
                                         if (playerlist.get(k).equals(auction.getOwner().getPlayer()))
                                         {
-                                            playerlist.get(k).getPlayer().sendMessage(t("time_end1",auction.getId(),MyUtil.convertTime(auction.getAuctionEnd() - System.currentTimeMillis())));
+                                            playerlist.get(k).getPlayer().sendMessage(t("time_end1",auction.getId(),Util.convertTime(auction.getAuctionEnd() - System.currentTimeMillis())));
                                         }
                                         else
                                         {
                                             String out = "";
-                                            out += t("time_end2",auction.getId(),MyUtil.convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
+                                            out += t("time_end2",auction.getId(),Util.convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
                                             
                                             if (playerlist.get(k).equals(auction.getBids().peek().getBidder().getPlayer()))
                                             {

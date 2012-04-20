@@ -2,8 +2,6 @@ package de.cubeisland.AuctionHouse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.inventory.ItemStack;
@@ -52,10 +50,10 @@ public class AuctionHouseConfiguration
         this.auction_database_pass = config.getString("auction.database.pass");
         this.auction_database_name = config.getString("auction.database.name");
         
-        this.auction_undoTime = MyUtil.convertTimeToMillis(config.getString("auction.undoTime"));
-        this.auction_removeTime = MyUtil.convertTimeToMillis(config.getString("auction.removeTime"));
-        this.auction_maxLength = MyUtil.convertTimeToMillis(config.getString("auction.maxLength"));
-        this.auction_standardLength = MyUtil.convertTimeToMillis(config.getString("auction.standardLength"));
+        this.auction_undoTime = Util.convertTimeToMillis(config.getString("auction.undoTime"));
+        this.auction_removeTime = Util.convertTimeToMillis(config.getString("auction.removeTime"));
+        this.auction_maxLength = Util.convertTimeToMillis(config.getString("auction.maxLength"));
+        this.auction_standardLength = Util.convertTimeToMillis(config.getString("auction.standardLength"));
 
         this.auction_notifyTime = this.convertlist(config.getStringList("auction.notifyTime"));
 
@@ -67,7 +65,7 @@ public class AuctionHouseConfiguration
         List<Integer> list = new ArrayList<Integer>();
         for (int i = 0; i < str.size(); ++i)
         {
-            list.add(MyUtil.convertTimeToMillis(str.get(i)));
+            list.add(Util.convertTimeToMillis(str.get(i)));
         }
         return list;
 

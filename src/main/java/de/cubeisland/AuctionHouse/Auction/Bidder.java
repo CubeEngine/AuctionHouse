@@ -1,5 +1,9 @@
-package de.cubeisland.AuctionHouse;
+package de.cubeisland.AuctionHouse.Auction;
 
+import de.cubeisland.AuctionHouse.AuctionHouse;
+import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Manager;
+import de.cubeisland.AuctionHouse.Util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -87,7 +91,7 @@ public class Bidder
         }
         else
         {
-            this.player = AuctionHouse.getInstance().server.getOfflinePlayer(name);
+            this.player = AuctionHouse.getInstance().getServer().getOfflinePlayer(name);
         }
         this.activeBids = new ArrayList<Auction>();
         this.itemContainer = new ItemContainer(this);
@@ -104,7 +108,7 @@ public class Bidder
             return ServerBidder.getInstance(id);
         }
         
-        instance = bidderInstances.get(AuctionHouse.getInstance().server.getOfflinePlayer(player));
+        instance = bidderInstances.get(AuctionHouse.getInstance().getServer().getOfflinePlayer(player));
 
         if (instance == null)
         {
@@ -274,7 +278,7 @@ public class Bidder
     public boolean removeSubscription(ItemStack item)
     {
         //MAtSub delete
-        db.exec("DELETE FROM `subscription` WHERE `bidderid`=? && `item`=?", this.id, MyUtil.convertItem(item));
+        db.exec("DELETE FROM `subscription` WHERE `bidderid`=? && `item`=?", this.id, Util.convertItem(item));
         return materialSub.remove(item);
     }
 
@@ -396,7 +400,7 @@ public class Bidder
             "INSERT INTO `subscription` (`bidderid` ,`type` ,`item` ) VALUES ( ?, ?, ? );",
             this.id,
             0,
-            MyUtil.convertItem(item)
+            Util.convertItem(item)
         );
         this.materialSub.add(item);
         return this;

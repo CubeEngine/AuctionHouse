@@ -1,5 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Bidder;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.Material;

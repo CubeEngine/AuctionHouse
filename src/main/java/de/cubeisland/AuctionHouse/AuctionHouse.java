@@ -13,6 +13,7 @@ import de.cubeisland.AuctionHouse.Commands.SearchCommand;
 import de.cubeisland.AuctionHouse.Commands.SubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.UnSubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.UndoBidCommand;
+import de.cubeisland.AuctionHouse.Database.Database;
 import de.cubeisland.AuctionHouse.Translation.Translation;
 import java.io.File;
 import java.util.logging.Level;
@@ -137,7 +138,7 @@ public class AuctionHouse extends JavaPlugin
         return this.economy;
     }
        
-    public AuctionHouseConfiguration getConfigurations()
+    public AuctionHouseConfiguration getConfiguration()
     {
         return this.config;
     }

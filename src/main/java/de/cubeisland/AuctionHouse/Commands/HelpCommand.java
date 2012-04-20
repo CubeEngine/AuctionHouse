@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AbstractCommand;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Perm;
 import org.bukkit.command.CommandSender;

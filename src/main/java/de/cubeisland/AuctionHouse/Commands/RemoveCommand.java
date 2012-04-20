@@ -2,15 +2,15 @@ package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.Auction;
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
+import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
 import de.cubeisland.AuctionHouse.BaseCommand;
-import de.cubeisland.AuctionHouse.Bidder;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.ServerBidder;
-import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
 public class RemoveCommand extends AbstractCommand
 {
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     
     public RemoveCommand(BaseCommand base)
     {

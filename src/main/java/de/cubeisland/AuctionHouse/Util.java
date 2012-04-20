@@ -1,7 +1,11 @@
 package de.cubeisland.AuctionHouse;
 
 
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.Database.Database;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -18,10 +22,10 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class MyUtil
+public class Util
 {
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     
     public static int convertTimeToMillis(String str) //ty quick_wango
     {
@@ -125,7 +129,7 @@ public class MyUtil
         }
         if (auction.getAuctionEnd()-System.currentTimeMillis()>1000*60*60*24)
             output += " "+t("info_out_end",DateFormatUtils.format(auction.getAuctionEnd(), 
-                    AuctionHouse.getInstance().getConfigurations().auction_timeFormat));
+                    AuctionHouse.getInstance().getConfiguration().auction_timeFormat));
         else
             output += " " + t("info_out_end2", convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
         sender.sendMessage(output);

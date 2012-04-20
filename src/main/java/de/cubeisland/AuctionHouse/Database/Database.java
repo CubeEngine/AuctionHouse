@@ -1,7 +1,13 @@
-package de.cubeisland.AuctionHouse;
+package de.cubeisland.AuctionHouse.Database;
+
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.AuctionItem;
+import de.cubeisland.AuctionHouse.Auction.Bid;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.AuctionHouse;
+import de.cubeisland.AuctionHouse.Manager;
+import de.cubeisland.AuctionHouse.Util;
 import java.sql.*;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -175,7 +181,7 @@ public class Database
             bidderer.resetNotifyState(bidderset.getByte("notify"));
            
         }
-        int max = AuctionHouse.getInstance().config.auction_maxAuctions_overall;
+        int max = AuctionHouse.getInstance().getConfiguration().auction_maxAuctions_overall;
         for (int i=0; i<max; i++)
         {
             ResultSet set =
@@ -183,7 +189,7 @@ public class Database
             if (set.next())
             {
                 int id = set.getInt("id");
-                ItemStack item = MyUtil.convertItem(set.getString("item"),set.getInt("amount"));
+                ItemStack item = Util.convertItem(set.getString("item"),set.getInt("amount"));
                 Bidder owner = Bidder.getInstance(set.getInt("ownerid"),this.getBidderString(set.getInt("ownerid")));
                 long auctionEnd = set.getTimestamp("timestamp").getTime();
                 Auction newauction = new Auction (id,item,owner,auctionEnd);
@@ -221,7 +227,7 @@ public class Database
             }
             else
             {//MatSub
-                bidder.addDataBaseSub(MyUtil.convertItem(subset.getString("item")));
+                bidder.addDataBaseSub(Util.convertItem(subset.getString("item")));
             }
         }
         //load in ItemContainer
@@ -232,7 +238,7 @@ public class Database
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
             bidder.getContainer().getItemList().add(
                     new AuctionItem( bidder,
-                    MyUtil.convertItem(itemset.getString("item"),itemset.getInt("amount")),
+                    Util.convertItem(itemset.getString("item"),itemset.getInt("amount")),
                     itemset.getTimestamp("timestamp"),
                     this.getBidderString(itemset.getInt("ownerid")),
                     itemset.getDouble("price"),

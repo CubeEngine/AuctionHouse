@@ -1,14 +1,13 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.AbstractCommand;
+import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.Bidder;
-import de.cubeisland.AuctionHouse.Database;
-import de.cubeisland.AuctionHouse.MyUtil;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.Util;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -61,7 +60,7 @@ public class NotifyCommand extends AbstractCommand
             sender.sendMessage(t("i")+" "+t("note_on"));
         else
             sender.sendMessage(t("i")+" "+t("note_off"));
-        MyUtil.updateNotifyData(bidder);
+        Util.updateNotifyData(bidder);
         return true;
     }
 

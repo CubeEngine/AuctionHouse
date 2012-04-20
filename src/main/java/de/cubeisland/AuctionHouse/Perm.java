@@ -1,9 +1,8 @@
 package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Bidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**

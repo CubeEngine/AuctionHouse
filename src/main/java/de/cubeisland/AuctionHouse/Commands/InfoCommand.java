@@ -1,6 +1,9 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.*;
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.List;
 import org.bukkit.command.CommandSender;
@@ -14,7 +17,7 @@ public class InfoCommand extends AbstractCommand
 {
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     
     
     public InfoCommand(BaseCommand base)
@@ -54,7 +57,7 @@ public class InfoCommand extends AbstractCommand
                 Auction auction = auctions.get(i);
                 if (auction.getOwner() != (Player) sender)
                 {
-                    MyUtil.sendInfo(sender, auction);
+                    Util.sendInfo(sender, auction);
                 }
             }
         }
@@ -71,7 +74,7 @@ public class InfoCommand extends AbstractCommand
                 for (int i = 0; i < max; ++i)
                 {
                     Auction auction = auctions.get(i);
-                    MyUtil.sendInfo(sender, auction);
+                    Util.sendInfo(sender, auction);
                 }
             }
             else
@@ -89,7 +92,7 @@ public class InfoCommand extends AbstractCommand
                     for (int i = 0; i < max; ++i)
                     {
                         Auction auction = auctions.get(i);
-                        MyUtil.sendInfo(sender, auction);
+                        Util.sendInfo(sender, auction);
                     }
                 }
                 else
@@ -106,7 +109,7 @@ public class InfoCommand extends AbstractCommand
                         for (int i = 0; i < max; ++i)
                         {
                             Auction auction = auctions.get(i);
-                            MyUtil.sendInfo(sender, auction);
+                            Util.sendInfo(sender, auction);
                         }
                     }
                     else
@@ -116,7 +119,7 @@ public class InfoCommand extends AbstractCommand
                         {
                             if (Manager.getInstance().getAuction(id) != null)
                             {
-                                MyUtil.sendInfo(sender, Manager.getInstance().getAuction(id));
+                                Util.sendInfo(sender, Manager.getInstance().getAuction(id));
                             }
                             else
                             {
@@ -140,7 +143,7 @@ public class InfoCommand extends AbstractCommand
                                 for (int i = 0; i < max; ++i)
                                 {
                                     Auction auction = auctions.get(i);
-                                    MyUtil.sendInfo(sender, auction);
+                                    Util.sendInfo(sender, auction);
                                 }
                             }
                             else

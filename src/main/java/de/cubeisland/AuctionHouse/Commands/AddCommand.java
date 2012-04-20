@@ -1,17 +1,17 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 
-import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.Arguments;
-import de.cubeisland.AuctionHouse.BaseCommand;
-import de.cubeisland.AuctionHouse.MyUtil;
-import de.cubeisland.AuctionHouse.ServerBidder;
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
+import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.Bidder;
-import de.cubeisland.AuctionHouse.Auction;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
+import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.Util;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
@@ -27,7 +27,7 @@ import org.bukkit.inventory.ItemStack;
 public class AddCommand extends AbstractCommand
 {
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     Economy econ = AuctionHouse.getInstance().getEconomy();
 
     public AddCommand(BaseCommand base)
@@ -80,7 +80,7 @@ public class AddCommand extends AbstractCommand
                 }
                 if (arguments.getString("2") != null)
                 {
-                    Integer length = MyUtil.convertTimeToMillis(arguments.getString("2"));
+                    Integer length = Util.convertTimeToMillis(arguments.getString("2"));
                     if (length == null)
                     {
                         sender.sendMessage(t("e")+" "+t("add_invalid_length"));
@@ -146,7 +146,7 @@ public class AddCommand extends AbstractCommand
             newItem.setDurability(arguments.getMaterial("1").getDurability());
             if (arguments.getString("3") != null)
             {
-                Integer length = MyUtil.convertTimeToMillis(arguments.getString("3"));
+                Integer length = Util.convertTimeToMillis(arguments.getString("3"));
                 if (length == null)
                 {
                     sender.sendMessage(t("e") + " " + t("add_invalid_length"));
@@ -158,7 +158,7 @@ public class AddCommand extends AbstractCommand
                 }
                 else
                 {
-                    sender.sendMessage(t("i")+" "+t("add_max_length",MyUtil.convertTime(config.auction_maxLength)));
+                    sender.sendMessage(t("i")+" "+t("add_max_length",Util.convertTime(config.auction_maxLength)));
                     return true;
                 }
             }
@@ -230,7 +230,7 @@ public class AddCommand extends AbstractCommand
                 newAuction = new Auction(newItem, Bidder.getInstance((Player) sender), auctionEnd, startBid);//Created Auction
             }
 
-            if (!(MyUtil.registerAuction(newAuction, sender)))
+            if (!(Util.registerAuction(newAuction, sender)))
             {
                 sender.sendMessage(t("i")+" "+t("add_all_stop"));
                 sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));

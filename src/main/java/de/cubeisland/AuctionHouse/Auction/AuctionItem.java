@@ -1,5 +1,8 @@
-package de.cubeisland.AuctionHouse;
+package de.cubeisland.AuctionHouse.Auction;
 
+import de.cubeisland.AuctionHouse.AuctionHouse;
+import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -55,7 +58,7 @@ public class AuctionItem
                     "`ownerid`"+
                     ")"+
                     "VALUES ( ?, ?, ?, ?, ?, ? );"
-                  ,this.bidder.getId(),MyUtil.convertItem(this.item),
+                  ,this.bidder.getId(),Util.convertItem(this.item),
                   this.item.getAmount(),this.price,new Timestamp(this.date),auction.getOwner().getId());
             ResultSet set =
                     db.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
@@ -102,7 +105,7 @@ public class AuctionItem
                     "`ownerid`"+
                     ")"+
                     "VALUES ( ?, ?, ?, ?, ?, ?);"
-                  ,bidder.getId(),MyUtil.convertItem(item),
+                  ,bidder.getId(),Util.convertItem(item),
                   item.getAmount(),this.price,this.date,bidder.getId());
             ResultSet set =
                     db.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");

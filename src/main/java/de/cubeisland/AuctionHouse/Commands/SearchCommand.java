@@ -1,5 +1,6 @@
 package de.cubeisland.AuctionHouse.Commands;
 
+import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.*;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.Collections;
@@ -15,7 +16,7 @@ public class SearchCommand extends AbstractCommand
 {
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     Economy econ = AuctionHouse.getInstance().getEconomy();
     
     public SearchCommand(BaseCommand base)
@@ -70,7 +71,7 @@ public class SearchCommand extends AbstractCommand
         {
             sender.sendMessage(t("i")+" "+t("search_found"));
         }
-        MyUtil.sendInfo(sender, auctionlist);
+        Util.sendInfo(sender, auctionlist);
         return true;
     }
 

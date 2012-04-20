@@ -1,5 +1,9 @@
 package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.AuctionItem;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ItemContainer;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -29,7 +33,7 @@ public class AuctionHouseListener implements Listener
     public AuctionHouseListener(AuctionHouse plugin)
     {
         this.plugin = plugin;
-        this.config = plugin.getConfigurations();
+        this.config = plugin.getConfiguration();
         this.econ = plugin.getEconomy();
     }
 
@@ -37,7 +41,7 @@ public class AuctionHouseListener implements Listener
     public void goesOnline(final PlayerJoinEvent event)
     {
         Bidder bidder = Bidder.getInstance(event.getPlayer());
-        MyUtil.updateNotifyData(bidder);
+        Util.updateNotifyData(bidder);
         plugin.server.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable()
         {
             public void run()
@@ -82,7 +86,7 @@ public class AuctionHouseListener implements Listener
         {
             Bidder.getInstance(event.getPlayer()).setNotifyState(Bidder.NOTIFY_ITEMS);
         }
-        MyUtil.updateNotifyData(bidder);
+        Util.updateNotifyData(bidder);
     }
    
     @EventHandler
@@ -108,7 +112,7 @@ public class AuctionHouseListener implements Listener
                         event.setCancelled(true);
                         return;
                     }
-                    if (MyUtil.convertTimeToMillis(event.getLine(2)) < 0)
+                    if (Util.convertTimeToMillis(event.getLine(2)) < 0)
                     {
                         event.getPlayer().sendMessage(t("event_sign_fail"));
                         event.setCancelled(true);
@@ -166,7 +170,7 @@ public class AuctionHouseListener implements Listener
                         if (!Perm.get().check(player, "auctionhouse.use.addsign")) return;
 
                         Double startbid;
-                        Integer length = MyUtil.convertTimeToMillis(((Sign) block.getState()).getLine(2));
+                        Integer length = Util.convertTimeToMillis(((Sign) block.getState()).getLine(2));
                         if (length == null)
                         return;
                         try
@@ -192,7 +196,7 @@ public class AuctionHouseListener implements Listener
                                                         Bidder.getInstance(player),
                                                         System.currentTimeMillis()+length,
                                                         startbid);
-                        if (!(MyUtil.registerAuction(newAuction, player)))
+                        if (!(Util.registerAuction(newAuction, player)))
                         {
                             player.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
                         }

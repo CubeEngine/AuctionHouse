@@ -1,6 +1,8 @@
-package de.cubeisland.AuctionHouse;
+package de.cubeisland.AuctionHouse.Auction;
 
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.Database.Database;
 import java.util.LinkedList;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;

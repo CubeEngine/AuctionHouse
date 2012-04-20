@@ -1,13 +1,13 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Auction;
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
-import de.cubeisland.AuctionHouse.BaseCommand;
-import de.cubeisland.AuctionHouse.Bidder;
-import de.cubeisland.AuctionHouse.Manager;
-import de.cubeisland.AuctionHouse.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.Manager;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -70,7 +70,7 @@ public class ConfirmCommand extends AbstractCommand
                 {
                     if (auctions.get(i).getOwner() == player)
                     {
-                        if (AuctionHouse.getInstance().getConfigurations().auction_removeTime < 
+                        if (AuctionHouse.getInstance().getConfiguration().auction_removeTime <
                             System.currentTimeMillis() - auctions.get(i).getBids().firstElement().getTimestamp())
                         {
                             if (!sender.hasPermission("aucionhouse.delete.player.other"))

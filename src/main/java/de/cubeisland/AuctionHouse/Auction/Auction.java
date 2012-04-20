@@ -1,6 +1,12 @@
-package de.cubeisland.AuctionHouse;
+package de.cubeisland.AuctionHouse.Auction;
 
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
+import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Manager;
+import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.Util;
 import java.sql.Timestamp;
 import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +24,7 @@ public class Auction
     private final long auctionEnd;
     private final Stack<Bid> bids;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     
     private final Database db;
 
@@ -41,7 +47,7 @@ public class Auction
             "`timestamp`"+
             ")"+
             "VALUES (?, ?, ?, ?, ?)"
-        ,this.id, owner.getId(), MyUtil.convertItem(item), item.getAmount(), new Timestamp(auctionEnd));
+        ,this.id, owner.getId(), Util.convertItem(item), item.getAmount(), new Timestamp(auctionEnd));
     }
 
     //Override: load in Auction from DataBase

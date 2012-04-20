@@ -6,7 +6,7 @@ import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Manager;
-import de.cubeisland.AuctionHouse.MyUtil;
+import de.cubeisland.AuctionHouse.Util;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 /**
@@ -17,7 +17,7 @@ public class ListCommand extends AbstractCommand
 {
     
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfigurations();
+    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     Economy econ = AuctionHouse.getInstance().getEconomy();
     
     public ListCommand(BaseCommand base)
@@ -27,7 +27,7 @@ public class ListCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, String[] args)
     {
-        MyUtil.sendInfo(sender, Manager.getInstance().getAuctions());
+        Util.sendInfo(sender, Manager.getInstance().getAuctions());
         return true;
     }
 

@@ -1,4 +1,4 @@
-package de.cubeisland.AuctionHouse;
+package de.cubeisland.AuctionHouse.Auction;
 
 /**
  *

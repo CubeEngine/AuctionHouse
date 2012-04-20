@@ -1,5 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Auction;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
