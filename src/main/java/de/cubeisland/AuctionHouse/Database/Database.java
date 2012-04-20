@@ -194,7 +194,6 @@ public class Database
             Bidder bidderer = Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("name"));
             AuctionHouse.debug("Bidder loaded: "+bidderer.getId()+"|"+bidderer.getName());
             //bitmask
-            //TODO notify in Database zu byte ändern
             bidderer.resetNotifyState(bidderset.getByte("notify"));
            
         }

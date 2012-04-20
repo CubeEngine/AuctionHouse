@@ -144,10 +144,10 @@ public class Manager
             auction.getOwner().removeAuction(auction);
             while (!(auction.getBids().isEmpty()))
             {
-                Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);
+                Bidder.getInstance(auction.getBids().peek().getBidder().getOffPlayer()).removeAuction(auction);
                 auction.getBids().pop();
             }
-            if (win)
+            if (!win)
                 auction.getOwner().getContainer().addItem(auction);
         }
         else
@@ -184,5 +184,16 @@ public class Manager
     public HashMap<Bidder, Integer> getSingleConfirm()
     {
         return this.remSingleConfirm;
+    }
+    
+    public void removeOldAuctions()
+    {
+        AuctionHouse.debug("removing Auctions");
+        List<Auction> t_auctions = new ArrayList<Auction>(this.auctions);
+        for (Auction auction : t_auctions)
+        {
+            if (auction.getAuctionEnd() < System.currentTimeMillis())
+                this.cancelAuction(auction, false);
+        }
     }
 }

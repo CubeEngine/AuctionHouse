@@ -8,6 +8,7 @@ import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.Manager;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -64,23 +65,23 @@ public class ConfirmCommand extends AbstractCommand
             else
             {
                 Bidder player = manager.getBidderConfirm().get(Bidder.getInstance(sender));
-                List<Auction> auctions = player.getActiveBids();
+                ArrayList<Auction> auctions = (ArrayList<Auction>)player.getActiveBids().clone();
                 int max = auctions.size();
-                for (int i = 0; i < max; ++i)
+                for (Auction auction : auctions)
                 {
-                    if (auctions.get(i).getOwner() == player)
+                    if (auction.getOwner() == player)
                     {
                         if (AuctionHouse.getInstance().getConfiguration().auction_removeTime <
-                            System.currentTimeMillis() - auctions.get(i).getBids().firstElement().getTimestamp())
+                            System.currentTimeMillis() - auction.getBids().firstElement().getTimestamp())
                         {
                             if (!sender.hasPermission("aucionhouse.delete.player.other"))
                                 {
                                      sender.sendMessage(t("i")+" "+t("rem_time"));
-                                     return true;
+                                     continue;
                                 }
                            
                         }
-                        manager.cancelAuction(auctions.get(i), false);
+                        manager.cancelAuction(auction , false);
                     }
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_rem",max,player.getName()));
@@ -91,7 +92,7 @@ public class ConfirmCommand extends AbstractCommand
         if (manager.getSingleConfirm().containsKey(Bidder.getInstance(sender)))
         {
             ItemStack item = Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))).getItem();
-            Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))), false);
+            manager.cancelAuction(manager.getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))), false);
             sender.sendMessage(t("i")+" "+t("rem_id",manager.getSingleConfirm().get(Bidder.getInstance(sender)),item.getType().toString()+"x"+item.getAmount()));
             manager.getBidderConfirm().remove(Bidder.getInstance(sender));
             return true;

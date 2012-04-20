@@ -38,15 +38,12 @@ public class AuctionHouse extends JavaPlugin
     protected File dataFolder;
     private Economy economy = null;
     private Database database;
-//TODO später eigene AuktionsBox als Kiste mit separatem inventar 
-//TODO Durchschnitt Vk Preis von Items
-//TODO kürzere / weniger Meldungen so halb fertig....
-//TODO flatfile mit angeboten
-//TODO ?list formatieren
+//TODO post-release: später eigene AuktionsBox als Kiste mit separatem inventar 
+//TODO post-release: Durchschnitt Vk Preis von Items
+//TODO post-release: flatfile mit angeboten
 //TODO force saving Database TRUNCATE all Lists
 //TODO bei ServerStart auf abgelaufene Auktionen prüfen
 //TODO list Schild
-//TODO Amount limitieren
     public AuctionHouse()
     {
         instance = this;
@@ -85,6 +82,7 @@ public class AuctionHouse extends JavaPlugin
                                 config.auction_database_name);
         
         database.loadDatabase();
+        Manager.getInstance().removeOldAuctions();
         
         this.pm.registerEvents(new AuctionHouseListener(this), this);
         

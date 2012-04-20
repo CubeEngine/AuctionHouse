@@ -104,15 +104,18 @@ public class RemoveCommand extends AbstractCommand
                     {
                         if (!Perm.get().check(sender,"auctionhouse.command.delete.server")) return true;
                     }
-                    if (!auction.getOwner().equals(Bidder.getInstance(sender)))
-                        if (!Perm.get().check(sender, "auctionhouse.command.delete.player.other"))
-
+                    
                     if (config.auction_removeTime < System.currentTimeMillis() - auction.getBids().firstElement().getTimestamp())
                     {
-                        sender.sendMessage(t("i")+" "+t("rem_time"));
-                        return true;
+                        if (!sender.hasPermission("aucionhouse.delete.player.all"))
+                        {
+                            sender.sendMessage(t("i")+" "+t("rem_time"));
+                            return true;
+                        }
                     }
-                            
+                    if (!auction.getOwner().equals(Bidder.getInstance(sender)))
+                        if (!Perm.get().check(sender, "auctionhouse.command.delete.player.other")) return true;
+
                     if (config.auction_confirmID)
                     {
                         Manager.getInstance().getSingleConfirm().put(Bidder.getInstance(sender), id);

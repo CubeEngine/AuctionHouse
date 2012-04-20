@@ -29,7 +29,7 @@ public class Perm {
         {
             return false;
         }
-        //TODO enum oder so später
+        //TODO post-release: enum oder so
         if (!sender.hasPermission(perm))
         {
                  if (perm.equalsIgnoreCase("auctionhouse.command.add"))                 sender.sendMessage(t("perm")+" "+t("add_Auc_perm")); 
