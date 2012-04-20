@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
@@ -29,9 +29,9 @@ public class RemoveCommand extends AbstractCommand
         super(base, "remove", "cancel", "delete", "rem");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("rem_title1"));
             sender.sendMessage(t("rem_title2"));
@@ -42,11 +42,10 @@ public class RemoveCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        Arguments arguments = new Arguments(args);
 
-        if (arguments.getString("1") != null)
+        if (args.getString("1") != null)
         {
-            if (arguments.getString("1").equalsIgnoreCase("all"))
+            if (args.getString("1").equalsIgnoreCase("all"))
             {
                 if (!Perm.get().check(sender,"auctionhouse.command.delete.all")) return true;
                 Manager.getInstance().getAllConfirm().add(Bidder.getInstance(sender));
@@ -67,7 +66,7 @@ public class RemoveCommand extends AbstractCommand
             }
             else
             {
-                if (arguments.getString("1").equalsIgnoreCase("Server"))
+                if (args.getString("1").equalsIgnoreCase("Server"))
                 {
                     if (!Perm.get().check(sender,"auctionhouse.command.delete.server")) return true;
                     Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
@@ -89,7 +88,7 @@ public class RemoveCommand extends AbstractCommand
                 }
             }
             {
-                Integer id = arguments.getInt("1");
+                Integer id = args.getInt("1");
                 if (id != null)
                 {
                     if (!Perm.get().check(sender,"auctionhouse.command.delete.id")) return true;
@@ -146,10 +145,10 @@ public class RemoveCommand extends AbstractCommand
         }
         else
         {
-            Bidder player = arguments.getBidder("p");
+            Bidder player = args.getBidder("p");
             if (player == null)
             {
-                sender.sendMessage(t("i")+" "+t("info_p_no_auction",arguments.getString("p")));
+                sender.sendMessage(t("i")+" "+t("info_p_no_auction",args.getString("p")));
                 return true;
             }
             else
@@ -180,7 +179,7 @@ public class RemoveCommand extends AbstractCommand
                         }, 200L);
                     return true;
                 }
-                sender.sendMessage(t("i")+" "+t("rem_no_auc",arguments.getString("p")));
+                sender.sendMessage(t("i")+" "+t("rem_no_auc",args.getString("p")));
                 return true;
             }
         }

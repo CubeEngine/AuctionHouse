@@ -2,7 +2,7 @@ package de.cubeisland.AuctionHouse.Commands;
 
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
@@ -35,7 +35,7 @@ public class AddCommand extends AbstractCommand
         super(base, "add");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         ItemStack newItem = null;
         Material newMaterial;
@@ -44,7 +44,7 @@ public class AddCommand extends AbstractCommand
         long auctionEnd = 1;
         Integer multiAuction = 1;
         if (!Perm.get().check(sender, "auctionhouse.command.add")) return true;
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("add_title1"));
             sender.sendMessage(t("add_title2"));
@@ -53,11 +53,10 @@ public class AddCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        Arguments arguments = new Arguments(args);
 
-        if (arguments.getString("m") != null)
+        if (args.getString("m") != null)
         {
-            multiAuction = arguments.getInt("m");
+            multiAuction = args.getInt("m");
             if (multiAuction == null)
             {
                 sender.sendMessage(t("i")+" "+t("add_multi_number"));
@@ -65,12 +64,12 @@ public class AddCommand extends AbstractCommand
             }
             if (!Perm.get().check(sender, "auctionhouse.command.add.multi")) return true;
         }
-        if (arguments.getString("1")==null)
+        if (args.getString("1")==null)
         {
             sender.sendMessage(t("invalid_com"));
             return true;
         }
-        if (arguments.getString("1").equalsIgnoreCase("hand"))
+        if (args.getString("1").equalsIgnoreCase("hand"))
         {
             if (!(sender instanceof ConsoleCommandSender))
             {
@@ -80,9 +79,9 @@ public class AddCommand extends AbstractCommand
                     sender.sendMessage(t("pro")+" "+t("add_sell_hand"));
                     return true;
                 }
-                if (arguments.getString("2") != null)
+                if (args.getString("2") != null)
                 {
-                    Integer length = Util.convertTimeToMillis(arguments.getString("2"));
+                    Integer length = Util.convertTimeToMillis(args.getString("2"));
                     if (length == null)
                     {
                         sender.sendMessage(t("e")+" "+t("add_invalid_length"));
@@ -103,9 +102,9 @@ public class AddCommand extends AbstractCommand
                 {
                     auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
                 }
-                if (arguments.getString("3") != null)
+                if (args.getString("3") != null)
                 {
-                    startBid = arguments.getDouble("3");
+                    startBid = args.getDouble("3");
                     if (startBid == null)
                     {
                         sender.sendMessage(t("i")+" "+t("add_invalid_time"));
@@ -120,16 +119,16 @@ public class AddCommand extends AbstractCommand
         }
         else
         {
-            if (arguments.getMaterial("1")==null)
+            if (args.getItem("1")==null)
             {
-                sender.sendMessage(t("add_invalid_item",arguments.getString("1")));
+                sender.sendMessage(t("add_invalid_item",args.getString("1")));
                 return true;
             }
            
-            newMaterial = arguments.getMaterial("1").getType();
+            newMaterial = args.getItem("1").getType();
             if (newMaterial == null)
             {
-                sender.sendMessage(t("i") + " " +t("add_invalid_item",arguments.getString("1")));
+                sender.sendMessage(t("i") + " " +t("add_invalid_item",args.getString("1")));
                 return true;
             }
             if (newMaterial.equals(Material.AIR))
@@ -137,7 +136,7 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage(t("i") +t("add_invalid_item","AIR"));
                 return true;
             }
-            amount = arguments.getInt("2");
+            amount = args.getInt("2");
             if (amount == null)
             {
                 sender.sendMessage(t("i") + " " + t("add_no_amount"));
@@ -145,10 +144,10 @@ public class AddCommand extends AbstractCommand
             }
             
             newItem = new ItemStack(newMaterial, amount);
-            newItem.setDurability(arguments.getMaterial("1").getDurability());
-            if (arguments.getString("3") != null)
+            newItem.setDurability(args.getItem("1").getDurability());
+            if (args.getString("3") != null)
             {
-                Integer length = Util.convertTimeToMillis(arguments.getString("3"));
+                Integer length = Util.convertTimeToMillis(args.getString("3"));
                 if (length == null)
                 {
                     sender.sendMessage(t("e") + " " + t("add_invalid_length"));
@@ -168,9 +167,9 @@ public class AddCommand extends AbstractCommand
             {
                 auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
             }
-            if (arguments.getString("4") != null)
+            if (args.getString("4") != null)
             {
-                startBid = arguments.getDouble("4");
+                startBid = args.getDouble("4");
                 if (startBid == null)
                 {
                     sender.sendMessage(t("i") + " "+t("add_invalid_startbid"));

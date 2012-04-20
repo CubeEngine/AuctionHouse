@@ -5,6 +5,7 @@ import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
 import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Util;
 import net.milkbowl.vault.economy.Economy;
@@ -25,7 +26,7 @@ public class ListCommand extends AbstractCommand
         super(base, "list");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         Util.sendInfo(sender, Manager.getInstance().getAuctions());
         return true;

@@ -5,6 +5,7 @@ import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Perm;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -21,7 +22,7 @@ public class GetItemsCommand extends AbstractCommand
         super(base, "getitems", "get");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         if (!Perm.get().check(sender,"auctionhouse.command.getItems")) return true;
         if (sender instanceof ConsoleCommandSender)
