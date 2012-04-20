@@ -5,6 +5,8 @@ import de.cubeisland.AuctionHouse.Auction.AuctionItem;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ItemContainer;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import java.util.Collections;
+import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
@@ -94,20 +96,22 @@ public class AuctionHouseListener implements Listener
     {
         if(event.getLine(0).equalsIgnoreCase("[AuctionHouse]"))
         {
-            if (event.getLine(1).equalsIgnoreCase("AuctionBox"))
+            if (event.getLine(1).equalsIgnoreCase("AuctionBox")||event.getLine(1).equalsIgnoreCase("box"))
             {
-                if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.boxsign"))
+                if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.box"))
                 {
                     event.setCancelled(true);
                     return;
                 }
                 event.setLine(1, "AuctionBox");
+                event.setLine(2, "");
+                event.setLine(3, "");
             }
             else
             {
                 if (event.getLine(1).equalsIgnoreCase("Start"))
                 {
-                    if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.addsign"))
+                    if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.add"))
                     {
                         event.setCancelled(true);
                         return;
@@ -118,14 +122,35 @@ public class AuctionHouseListener implements Listener
                         event.setCancelled(true);
                         return;
                     }
+                    try {Integer.parseInt(event.getLine(2));}
+                    catch (NumberFormatException ex) {event.setLine(2, "");}
+                    
                     event.setLine(1, "Start");
+                    event.setLine(3, "");
                 }
                 else
                 {
-                    
-                    event.getPlayer().sendMessage(t("event_sign_fail"));
-                    event.setCancelled(true);
-                    return;
+                    if (event.getLine(1).equalsIgnoreCase("List")||event.getLine(1).equalsIgnoreCase("AuctionSearch"))
+                    {
+                        if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.list"))
+                        {
+                            event.setCancelled(true);
+                            return;
+                        }
+                        if (Material.matchMaterial(event.getLine(2))!=null)
+                            event.setLine(2, Material.matchMaterial(event.getLine(2)).toString());
+                        else
+                            event.setLine(2, "# All #");
+                        event.setLine(1, "AuctionSearch");
+                        event.setLine(3, "");
+                    }
+                    else
+                    {
+
+                        event.getPlayer().sendMessage(t("event_sign_fail"));
+                        event.setCancelled(true);
+                        return;
+                    }
                 }
             }
             event.getPlayer().sendMessage(t("event_sign_create"));            
@@ -147,10 +172,11 @@ public class AuctionHouseListener implements Listener
         {
             if (block.getType().equals(Material.WALL_SIGN))
             {
-                if (((Sign)block.getState()).getLine(0).equals("[AuctionHouse]"))
+                Sign sign = (Sign)block.getState();
+                if (sign.getLine(0).equals("[AuctionHouse]"))
                 {
                     event.setCancelled(true);
-                    if (((Sign)block.getState()).getLine(1).equals("AuctionBox"))
+                    if ((sign).getLine(1).equals("AuctionBox"))
                     {
                         //AuktionBox GetItems
                         if (!Perm.get().check(player,"auctionhouse.sign.auctionbox")) return;
@@ -159,7 +185,7 @@ public class AuctionHouseListener implements Listener
                             player.sendMessage(t("i")+" "+t("time_sign_empty"));
                         }
                     }
-                    if (((Sign) block.getState()).getLine(1).equals("Start"))
+                    if (sign.getLine(1).equals("Start"))
                     {
                         if (player.getItemInHand().getType().equals(Material.AIR))
                         {
@@ -170,12 +196,12 @@ public class AuctionHouseListener implements Listener
                         if (!Perm.get().check(player, "auctionhouse.sign.start")) return;
 
                         Double startbid;
-                        Integer length = Util.convertTimeToMillis(((Sign) block.getState()).getLine(2));
+                        Integer length = Util.convertTimeToMillis(sign.getLine(2));
                         if (length == null)
                         return;
                         try
                         {
-                            startbid = Double.parseDouble(((Sign) block.getState()).getLine(3));
+                            startbid = Double.parseDouble(sign.getLine(3));
                         }
                         catch (NumberFormatException ex)
                         {
@@ -209,6 +235,29 @@ public class AuctionHouseListener implements Listener
                                     econ.format(startbid),
                                     DateFormatUtils.format(newAuction.getAuctionEnd(), config.auction_timeFormat))); 
                         }    
+                    }
+                    if ((sign).getLine(1).equals("AuctionSearch"))
+                    {
+                        if (!Perm.get().check(player, "auctionhouse.sign.list")) return;
+                        List<Auction> auctions;
+                        if ((sign).getLine(2).equals("# All #"))
+                        {
+                            auctions = Manager.getInstance().getAuctions();
+                            AuctionSort.sortAuction(auctions, "date");
+                        }   
+                        else
+                        {
+                             auctions= Manager.getInstance().getAuctionItem(new ItemStack(Material.matchMaterial(sign.getLine(2)),1));
+                            AuctionSort.sortAuction(auctions, "date");
+                        }
+                        if (auctions.isEmpty())
+                        {
+                           event.getPlayer().sendMessage(t("no_detect"));
+                           return;
+                        }
+                        Collections.reverse(auctions);
+                        for (Auction auction : auctions)
+                            Util.sendInfo(event.getPlayer(), auction);
                     }
                 }
             }

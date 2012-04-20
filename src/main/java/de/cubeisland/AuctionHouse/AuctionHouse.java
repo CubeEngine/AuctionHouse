@@ -1,5 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Commands.AddCommand;
 import de.cubeisland.AuctionHouse.Commands.BidCommand;
 import de.cubeisland.AuctionHouse.Commands.ConfirmCommand;
@@ -41,8 +42,7 @@ public class AuctionHouse extends JavaPlugin
 //TODO post-release: später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO post-release: Durchschnitt Vk Preis von Items
 //TODO post-release: flatfile mit angeboten
-//TODO force saving Database TRUNCATE all Lists
-//TODO bei ServerStart auf abgelaufene Auktionen prüfen
+//TODO post-release: force saving Database TRUNCATE all Lists
 //TODO list Schild
     public AuctionHouse()
     {
@@ -114,6 +114,7 @@ public class AuctionHouse extends JavaPlugin
         this.database = null;
         this.economy = null;
         this.config = null;
+        Bidder.getInstances().clear();
     }
     
     private Economy setupEconomy()

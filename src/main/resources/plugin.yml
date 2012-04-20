@@ -152,24 +152,33 @@ permissions:
     children:
       auctionhouse.sign.auctionbox: true
       auctionhouse.sign.start: true
+      auctionhouse.sign.list: true
   
   auctionhouse.sign.auctionbox:
     description: ""
     
   auctionhouse.sign.start:
     description: ""
+    
+  auctionhouse.sign.list:
+    description: ""
   
   auctionhouse.sign.create.*:
     description: ""  
     children:
-      auctionhouse.sign.create.boxsign: true
-      auctionhouse.sign.create.addsign: true
-    
-  auctionhouse.sign.create.boxsign:
+      auctionhouse.sign.create.box: true
+      auctionhouse.sign.create.add: true
+      auctionhouse.sign.create.list: true
+
+  auctionhouse.sign.create.box:
     description: ""
     
-  auctionhouse.sign.create.addsign:
+  auctionhouse.sign.create.add:
     description: ""
+  
+  auctionhouse.sign.create.list:
+    description: ""
+
 
     
     

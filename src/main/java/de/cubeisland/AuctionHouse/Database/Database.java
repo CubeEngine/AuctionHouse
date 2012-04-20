@@ -196,15 +196,12 @@ public class Database
     public void loadDatabase()
     {
         try{
-        AuctionHouse.debug("Load DataBase...");
-
         ResultSet bidderset =
               this.query("SELECT * FROM `bidder`");
         while (bidderset.next())
         {
             //load in Bidder
             Bidder bidderer = Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("name"));
-            AuctionHouse.debug("Bidder loaded: "+bidderer.getId()+"|"+bidderer.getName());
             //bitmask
             bidderer.resetNotifyState(bidderset.getByte("notify"));
            
@@ -222,7 +219,6 @@ public class Database
                 long auctionEnd = set.getTimestamp("timestamp").getTime();
                 Auction newauction = new Auction (id,item,owner,auctionEnd);
                 //load in auction
-                AuctionHouse.debug("Auction loaded: "+newauction.getId()+"|O:"+newauction.getOwner().getName());
                 Manager.getInstance().addAuction(newauction);
                 ResultSet bidset =
                   this.query("SELECT * FROM `bids` WHERE `auctionid`=? ;",i);
@@ -230,7 +226,6 @@ public class Database
                 { 
                     //sort bids by time & fill auction with bids
                     this.query("SELECT * FROM `bids` ORDER BY `timestamp` ;");
-                    AuctionHouse.debug("Bid loaded: "+newauction.getId()+"|C:"+bidset.getDouble("amount")+"|P:"+this.getBidderString(bidset.getInt("bidderid")));
                     //load in Bids
                     Bid bid = new Bid( bidset.getInt("id"),
                                      bidset.getInt("bidderid"),

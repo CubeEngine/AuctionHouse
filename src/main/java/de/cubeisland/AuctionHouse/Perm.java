@@ -50,8 +50,8 @@ public class Perm {
             else if (perm.equalsIgnoreCase("auctionhouse.command.search"))              sender.sendMessage(t("perm")+" "+t("search_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.undobid"))             sender.sendMessage(t("perm")+" "+t("undo_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.sign.start"))                  sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.boxsign"))         sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.addsign"))         sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.box"))         sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
+            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.add"))         sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
             else if (perm.equalsIgnoreCase("auctionhouse.command.sub"))                 sender.sendMessage(t("perm")+" "+t("sub_perm"));
             return false;
         }
