@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -125,7 +126,6 @@ public class AuctionHouseListener implements Listener
                         return;
                     }
                     event.setLine(1, "Start");
-                    event.setLine(3, "");
                 }
                 else
                 {
@@ -157,6 +157,18 @@ public class AuctionHouseListener implements Listener
         }
     }
     
+    @EventHandler
+    public void onPlayerInteract(BlockBreakEvent event)
+    {
+        final Player player = event.getPlayer();
+        final Block block = event.getBlock();
+        if (block.getType().equals(Material.WALL_SIGN))
+        {
+            Sign sign = (Sign)block.getState();
+            if (sign.getLine(0).equals("[AuctionHouse]"))
+                block.getState().update();
+        }
+    }
     
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
@@ -258,6 +270,18 @@ public class AuctionHouseListener implements Listener
                         for (Auction auction : auctions)
                             Util.sendInfo(event.getPlayer(), auction);
                     }
+                }
+            }
+        }
+        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
+        {
+            if (block.getType().equals(Material.WALL_SIGN))
+            {
+                Sign sign = (Sign)block.getState();
+                if (sign.getLine(0).equals("[AuctionHouse]"))
+                {
+                    if (!player.isSneaking())
+                        event.setCancelled(true);
                 }
             }
         }
