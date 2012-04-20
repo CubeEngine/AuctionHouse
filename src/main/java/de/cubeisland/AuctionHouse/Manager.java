@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Stack;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -30,7 +29,7 @@ public class Manager
     {
         this.db = AuctionHouse.getInstance().getDB();
         int maxAuctions = config.auction_maxAuctions_overall;
-        if (!(maxAuctions > 0))
+        if (maxAuctions <= 0)
         {
             maxAuctions = 1;
         }
@@ -117,15 +116,17 @@ public class Manager
         return auctionlist;
     }
 
-    public List<Auction> getEndingAuctions() //Get soon Ending Auctions
+    public List<Auction> getEndingAuctions()
     {
-        List<Auction> auctionlist = new ArrayList<Auction>();
+        List<Auction> endingActions = new ArrayList<Auction>();
         int size = this.auctions.size();
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < size; ++i)
         {
-            auctionlist.add(this.auctions.get(i));
+            endingActions.add(this.auctions.get(i));
         }
-        return AuctionSort.sortAuction(auctionlist, "date");
+        AuctionSort.sortAuction(endingActions, "date");
+        
+        return endingActions;
     }
 
     public boolean cancelAuction(Auction auction, boolean win)

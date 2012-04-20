@@ -67,7 +67,7 @@ public class AuctionSort
         };
     }
 
-    public static List<Auction> sortAuction(List<Auction> auctionlist, String type)
+    public static void sortAuction(List<Auction> auctionlist, String type)
     {
         if (type.equalsIgnoreCase("id"))
         {
@@ -85,7 +85,6 @@ public class AuctionSort
         {
             Collections.sort(auctionlist, compareQuantity);
         }
-        return auctionlist;
     }
 
     public static List<Auction> sortAuction(List<Auction> auctionlist, String type, int quantity)
