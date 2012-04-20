@@ -5,12 +5,14 @@ import de.cubeisland.AuctionHouse.Auction.AuctionItem;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ItemContainer;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -161,12 +163,28 @@ public class AuctionHouseListener implements Listener
     public void onPlayerInteract(BlockBreakEvent event)
     {
         final Player player = event.getPlayer();
-        final Block block = event.getBlock();
-        if (block.getType().equals(Material.WALL_SIGN))
+        final Block signblock = event.getBlock();
+        if (!player.isSneaking())
         {
-            Sign sign = (Sign)block.getState();
-            if (sign.getLine(0).equals("[AuctionHouse]"))
-                block.getState().update();
+            if (signblock.getType().equals(Material.WALL_SIGN))
+            {
+                Sign sign = (Sign)signblock.getState();
+                if (sign.getLine(0).equals("[AuctionHouse]"))
+                {
+                    event.setCancelled(true);
+                    signblock.getState().update();
+                    return;
+                }
+            }
+            for(BlockFace face: BlockFace.values())
+            {
+                if (event.getBlock().getRelative(face).getType().equals(Material.WALL_SIGN))
+                {
+                    Sign sign = (Sign)event.getBlock().getRelative(face).getState();
+                    if (sign.getLine(0).equalsIgnoreCase("[auctionhouse]"))
+                        event.setCancelled(true);
+                }
+            }
         }
     }
     
@@ -270,18 +288,6 @@ public class AuctionHouseListener implements Listener
                         for (Auction auction : auctions)
                             Util.sendInfo(event.getPlayer(), auction);
                     }
-                }
-            }
-        }
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK)
-        {
-            if (block.getType().equals(Material.WALL_SIGN))
-            {
-                Sign sign = (Sign)block.getState();
-                if (sign.getLine(0).equals("[AuctionHouse]"))
-                {
-                    if (!player.isSneaking())
-                        event.setCancelled(true);
                 }
             }
         }
