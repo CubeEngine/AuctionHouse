@@ -81,14 +81,7 @@ public class BaseCommand implements CommandExecutor
         }
         * 
         */
-
-        int argc = (args.length < 1 ? 0 : args.length - 1);
-        String[] subArgs = new String[argc];
-        if (args.length > 1)
-        {
-            System.arraycopy(args, 1, subArgs, 0, argc);
-        }
-        return command.execute(sender, subArgs);
+        return command.execute(sender, new CommandArgs(args));
     }
 
     /**

@@ -24,45 +24,44 @@ public class SearchCommand extends AbstractCommand
         super(base, "search");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         if (!Perm.get().check(sender,"auctionhouse.command.search")) return true;
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("search_title1"));
             sender.sendMessage(t("search_title2"));
             sender.sendMessage("");
             return true;
         }
-        Arguments arguments = new Arguments(args);
         List<Auction> auctionlist;
 
-        if (arguments.getString("1") == null)
+        if (args.getString("1") == null)
         {
-            if (arguments.getString("s")!=null)
+            if (args.getString("s")!=null)
                sender.sendMessage(t("pro")+" "+t("search_pro")); 
             sender.sendMessage(t("e")+" "+t("invalid_com"));
             return true;
         }
-        if (arguments.getMaterial("1") == null)
+        if (args.getItem("1") == null)
         {
-            sender.sendMessage(t("e")+" "+t("item_no_exist",arguments.getString("1")));
+            sender.sendMessage(t("e")+" "+t("item_no_exist",args.getString("1")));
             return true;
         }
-        auctionlist = Manager.getInstance().getAuctionItem(arguments.getMaterial("1"));
-        if (arguments.getString("s") != null)
+        auctionlist = Manager.getInstance().getAuctionItem(args.getItem("1"));
+        if (args.getString("s") != null)
         {
-            if (arguments.getString("s").equalsIgnoreCase("date"))
+            if (args.getString("s").equalsIgnoreCase("date"))
             {
                 AuctionSort.sortAuction(auctionlist, "date");
                 Collections.reverse(auctionlist);
             }
-            if (arguments.getString("s").equalsIgnoreCase("id"))
+            if (args.getString("s").equalsIgnoreCase("id"))
             {
                 AuctionSort.sortAuction(auctionlist, "id");
                 Collections.reverse(auctionlist);
             }
-            if (arguments.getString("s").equalsIgnoreCase("price"))
+            if (args.getString("s").equalsIgnoreCase("price"))
             {
                 AuctionSort.sortAuction(auctionlist, "date");
                 AuctionSort.sortAuction(auctionlist, "price");

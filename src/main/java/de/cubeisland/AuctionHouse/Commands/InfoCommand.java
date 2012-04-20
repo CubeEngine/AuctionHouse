@@ -25,9 +25,9 @@ public class InfoCommand extends AbstractCommand
         super(base, "info");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("info_title1"));
             sender.sendMessage(t("info_title2"));
@@ -39,14 +39,13 @@ public class InfoCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        Arguments arguments = new Arguments(args);
         if (!Perm.get().check(sender,"auctionhouse.command.info"))
         {
             
             return true;
         }
 
-        if (arguments.getString("1").equalsIgnoreCase("Bids"))//bidding
+        if (args.getString("1").equalsIgnoreCase("Bids"))//bidding
         {
             List<Auction> auctions = Bidder.getInstance((Player) sender).getAuctions();
             int max = auctions.size();
@@ -65,7 +64,7 @@ public class InfoCommand extends AbstractCommand
         }
         else
         {
-            if (arguments.getString("1").equalsIgnoreCase("own"))
+            if (args.getString("1").equalsIgnoreCase("own"))
             {
                 List<Auction> auctions = Bidder.getInstance((Player) sender).getOwnAuctions();
                 int max = auctions.size();
@@ -82,7 +81,7 @@ public class InfoCommand extends AbstractCommand
             else
             {
 
-                if (arguments.getString("1").equalsIgnoreCase("lead"))
+                if (args.getString("1").equalsIgnoreCase("lead"))
                 {
                     List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
                     int max = auctions.size();
@@ -99,7 +98,7 @@ public class InfoCommand extends AbstractCommand
                 }
                 else
                 {
-                    if (arguments.getString("1").equalsIgnoreCase("*Server"))
+                    if (args.getString("1").equalsIgnoreCase("*Server"))
                     {
                         List<Auction> auctions = ServerBidder.getInstance().getAuctions();
                         int max = auctions.size();
@@ -116,7 +115,7 @@ public class InfoCommand extends AbstractCommand
                     }
                     else
                     {
-                        Integer id = arguments.getInt("1");
+                        Integer id = args.getInt("1");
                         if (id != null)
                         {
                             if (Manager.getInstance().getAuction(id) != null)
@@ -131,7 +130,7 @@ public class InfoCommand extends AbstractCommand
                         else
                         {
                             if (!Perm.get().check(sender,"auctionhouse.command.info.others")) return true;
-                            Bidder player = arguments.getBidder("1");
+                            Bidder player = args.getBidder("1");
                             if (player != null)
                             {
                                 AuctionHouse.debug("Player Auction");
@@ -150,7 +149,7 @@ public class InfoCommand extends AbstractCommand
                             }
                             else
                             {
-                                sender.sendMessage(t("perm")+" "+t("info_p_no_auction",arguments.getString("1")));
+                                sender.sendMessage(t("perm")+" "+t("info_p_no_auction",args.getString("1")));
                             }
                         }
                     }

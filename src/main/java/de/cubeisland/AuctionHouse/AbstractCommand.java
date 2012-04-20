@@ -96,5 +96,5 @@ public abstract class AbstractCommand
      * @param args the arguments
      * @return true if the command succeeded
      */
-    public abstract boolean execute(CommandSender sender, String[] args);
+    public abstract boolean execute(CommandSender sender, CommandArgs args);
 }

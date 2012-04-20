@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
@@ -22,9 +22,9 @@ public class SubscribeCommand extends AbstractCommand
         super(base, "subscribe", "sub");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("sub_title1"));
             sender.sendMessage(t("sub_title2"));
@@ -40,36 +40,35 @@ public class SubscribeCommand extends AbstractCommand
             return true;
         }
         Bidder bidder = Bidder.getInstance((Player) sender);
-        Arguments arguments = new Arguments(args);
-        if (arguments.getString("m") != null)
+        if (args.getString("m") != null)
         {
-            if (arguments.getMaterial("m") != null)
+            if (args.getItem("m") != null)
             {
-                bidder.addSubscription(arguments.getMaterial("m"));
-                sender.sendMessage(t("i")+" "+t("sub_add_mat",arguments.getMaterial("m").getType().toString()));
+                bidder.addSubscription(args.getItem("m"));
+                sender.sendMessage(t("i")+" "+t("sub_add_mat",args.getItem("m").getType().toString()));
                 if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
                 {
                     sender.sendMessage(t("i")+" "+t("sub_note"));
                 }
                 return true;
             }
-            sender.sendMessage(t("i")+" "+arguments.getString("m") + " "+t("no_valid_item"));
+            sender.sendMessage(t("i")+" "+args.getString("m") + " "+t("no_valid_item"));
             return true;
         }
-        if (arguments.getString("i") != null)
+        if (args.getString("i") != null)
         {
-            if (arguments.getInt("i") != null)
+            if (args.getInt("i") != null)
             {
-                if (Manager.getInstance().getAuction(arguments.getInt("i")) != null)
+                if (Manager.getInstance().getAuction(args.getInt("i")) != null)
                 {
-                    sender.sendMessage(t("i")+" "+t("sub_add",arguments.getInt("i")));
+                    sender.sendMessage(t("i")+" "+t("sub_add",args.getInt("i")));
                     if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
                     {
                         sender.sendMessage(t("i")+" "+t("sub_note"));
                     }
                     return true;
                 }
-                sender.sendMessage(t("e")+" "+t("auction_no_exist",arguments.getString("i")));
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",args.getString("i")));
                 return true;
             }
             sender.sendMessage(t("e")+" "+t("invalid_id"));

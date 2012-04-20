@@ -4,6 +4,7 @@ import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Perm;
 import java.util.Collection;
 import org.bukkit.command.CommandSender;
@@ -20,7 +21,7 @@ public class HelpCommand extends AbstractCommand
         super(base, "help");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         if (!Perm.get().check(sender,"auctionhouse.use")) return true;
         sender.sendMessage(t("help_list"));

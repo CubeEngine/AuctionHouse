@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
@@ -30,7 +30,7 @@ public class BidCommand extends AbstractCommand
         super(base, "bid");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         Manager manager = Manager.getInstance();
         if (!Perm.get().check(sender,"auctionhouse.command.bid")) return true;
@@ -43,7 +43,7 @@ public class BidCommand extends AbstractCommand
         Double bidAmount;
         Auction auction;
         Integer quantity;
-        if (args.length < 2)
+        if (args.size() < 2)
         {
             sender.sendMessage(t("bid_title1"));
             sender.sendMessage(t("bid_title2"));
@@ -52,49 +52,49 @@ public class BidCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        Arguments arguments = new Arguments(args);
-        if (arguments.getString("i") != null)
+        
+        if (args.getString("i") != null)
         {
-            if (arguments.getMaterial("i") != null)
+            if (args.getItem("i") != null)
             {
-                if (arguments.getString("q") == null)
+                if (args.getString("q") == null)
                 {
-                    quantity = arguments.getMaterial("i").getMaxStackSize();
+                    quantity = args.getItem("i").getMaxStackSize();
                 }
                 else
                 {
-                    if (arguments.getInt("q") == null)
+                    if (args.getInt("q") == null)
                     {
                         sender.sendMessage(t("e")+" "+t("bid_quantity_num"));
                         return true;
                     }
-                    if (arguments.getInt("q") < 1)
+                    if (args.getInt("q") < 1)
                     {
                         sender.sendMessage(t("e")+" "+t("bid_quantity"));
                         return true;
                     }
                     else
                     {
-                        quantity = arguments.getInt("q");
+                        quantity = args.getInt("q");
                     }
                 }
 
-                List<Auction> auctions = manager.getAuctionItem(arguments.getMaterial("i"),Bidder.getInstance(sender));
+                List<Auction> auctions = manager.getAuctionItem(args.getItem("i"),Bidder.getInstance(sender));
                 
                 if (auctions.isEmpty())
                 {
-                    sender.sendMessage(t("i")+" "+t("bid_no_auction",arguments.getMaterial("i").toString()));
+                    sender.sendMessage(t("i")+" "+t("bid_no_auction",args.getItem("i").toString()));
                     return true;
                 }
                 AuctionSort.sortAuction(auctions, "quantity", quantity);
                 AuctionSort.sortAuction(auctions, "price");
                 if (auctions.isEmpty())
                 {
-                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",quantity,arguments.getMaterial("i").toString()));
+                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",quantity,args.getItem("i").toString()));
                     return true;
                 }
                 auction = auctions.get(0);//First is Cheapest after Sort
-                bidAmount = arguments.getDouble("1");
+                bidAmount = args.getDouble("1");
                 if (bidAmount != null)
                 {
                     if (auction.getOwner() == Bidder.getInstance((Player) sender))
@@ -113,14 +113,14 @@ public class BidCommand extends AbstractCommand
             }
             else
             {
-                sender.sendMessage(t("i")+t("no_valid_item",arguments.getString("i")));
+                sender.sendMessage(t("i")+t("no_valid_item",args.getString("i")));
                 return true;
             }
         }
-        Integer id = arguments.getInt("1");
+        Integer id = args.getInt("1");
         if (id != null)
         {
-            bidAmount = arguments.getDouble("2");
+            bidAmount = args.getDouble("2");
             if (bidAmount != null)
             {
                 if (manager.getAuction(id) == null)
@@ -143,7 +143,7 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        sender.sendMessage(t("e")+" " + t("bid_valid_id",arguments.getString("1")));
+        sender.sendMessage(t("e")+" " + t("bid_valid_id",args.getString("1")));
         return true;
     }
 

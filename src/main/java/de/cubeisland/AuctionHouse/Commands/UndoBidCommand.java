@@ -1,10 +1,10 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
 import org.bukkit.command.CommandSender;
@@ -21,10 +21,10 @@ public class UndoBidCommand extends AbstractCommand
         super(base, "undobid");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         if (!Perm.get().check(sender,"auctionhouse.command.undobid")) return true;
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("undo_title1"));
             sender.sendMessage(t("undo_title2"));
@@ -32,9 +32,8 @@ public class UndoBidCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        Arguments arguments = new Arguments(args);
         Player psender = (Player) sender;
-        if (arguments.getString("1").equals("last"))
+        if (args.getString("1").equals("last"))
         {
             if (Bidder.getInstance(psender).getlastAuction(Bidder.getInstance(psender)) == null)
             {
@@ -52,16 +51,16 @@ public class UndoBidCommand extends AbstractCommand
                 return true;
             }
         }
-        if (arguments.getInt("1") != null)
+        if (args.getInt("1") != null)
         {
-            if (Manager.getInstance().getAuction(arguments.getInt("1")) == null)
+            if (Manager.getInstance().getAuction(args.getInt("1")) == null)
             {
-                sender.sendMessage(t("e")+" "+t("auction_no_exist",arguments.getInt("1")));
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",args.getInt("1")));
                 return true;
             }
-            if (Manager.getInstance().getAuction(arguments.getInt("1")).undobid(Bidder.getInstance(psender)))
+            if (Manager.getInstance().getAuction(args.getInt("1")).undobid(Bidder.getInstance(psender)))
             {
-                sender.sendMessage(t("i")+" "+t("undo_bid_n",arguments.getInt("1")));
+                sender.sendMessage(t("i")+" "+t("undo_bid_n",args.getInt("1")));
                 return true;
             }
             else

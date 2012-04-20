@@ -7,6 +7,7 @@ import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Manager;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ConfirmCommand extends AbstractCommand
         super(base, "confirm");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
         Manager manager = Manager.getInstance();
         if (manager.getAllConfirm().contains(Bidder.getInstance(sender)))

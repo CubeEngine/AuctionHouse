@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.Arguments;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
@@ -23,9 +23,9 @@ public class NotifyCommand extends AbstractCommand
         super(base, "notify", "n");
     }
 
-    public boolean execute(CommandSender sender, String[] args)
+    public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (args.length < 1)
+        if (args.isEmpty())
         {
             sender.sendMessage(t("note_title1"));
             sender.sendMessage(t("note_title2"));
@@ -35,8 +35,7 @@ public class NotifyCommand extends AbstractCommand
             return true;
         }
         if (!Perm.get().check(sender,"auctionhouse.command.notify")) return true;
-        Arguments arguments = new Arguments(args);
-        if (arguments.getString("1") == null)
+        if (args.getString("1") == null)
         {
             return true;
         }
@@ -46,15 +45,15 @@ public class NotifyCommand extends AbstractCommand
             return true;
         }
         Bidder bidder = Bidder.getInstance((Player) sender);
-        if (arguments.getString("1").equalsIgnoreCase("true") || arguments.getString("1").equalsIgnoreCase("on"))
+        if (args.getString("1").equalsIgnoreCase("true") || args.getString("1").equalsIgnoreCase("on"))
         {
             bidder.setNotifyState(Bidder.NOTIFY_STATUS);
         }
-        if (arguments.getString("1").equalsIgnoreCase("false") || arguments.getString("1").equalsIgnoreCase("off"))
+        if (args.getString("1").equalsIgnoreCase("false") || args.getString("1").equalsIgnoreCase("off"))
         {
             bidder.unsetNotifyState(Bidder.NOTIFY_STATUS);
         }
-        if (arguments.getString("1").equalsIgnoreCase("toggle") || arguments.getString("1").equalsIgnoreCase("t"))
+        if (args.getString("1").equalsIgnoreCase("toggle") || args.getString("1").equalsIgnoreCase("t"))
         {
             bidder.toggleNotifyState(Bidder.NOTIFY_STATUS);
         }
