@@ -2,6 +2,9 @@ package de.cubeisland.AuctionHouse.Auction;
 
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Database.DatabaseEntity;
+import de.cubeisland.AuctionHouse.Database.EntityIdentifier;
+import de.cubeisland.AuctionHouse.Database.EntityProperty;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -11,12 +14,21 @@ import java.sql.Timestamp;
  *
  * @author Faithcaio
  */
-public class Bid
+public class Bid implements DatabaseEntity
 {
-    private final double amount;
-    private final Bidder bidder;
-    private final long timestamp;
+    @EntityIdentifier
     private int id;
+
+    @EntityProperty
+    private final double amount;
+    
+    @EntityProperty
+    private final Bidder bidder;
+
+    @EntityProperty
+    private final long timestamp;
+
+    
     private final Database db;
 
     public Bid(Bidder bidder, double amount, Auction auction)
@@ -43,6 +55,11 @@ public class Bid
         catch (SQLException ex)
         {}
         
+    }
+
+    public String getTable()
+    {
+        return "bids";
     }
     
     //Override: load in Bid from DataBase
