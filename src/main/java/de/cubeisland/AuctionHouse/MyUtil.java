@@ -219,7 +219,7 @@ public class MyUtil
     
     public static void updateNotifyData(Bidder bidder)
     {
-        //TODO db ist hier manchmal null warum?
+        //TODO bidder ist hier manchmal null warum?
         Database db = AuctionHouse.getInstance().getDB();
         db.exec(
             "UPDATE `bidder` SET `notify`=? WHERE `id`=?"

@@ -131,7 +131,7 @@ public class RemoveCommand extends AbstractCommand
                         return true;
                     }    
                     ItemStack item = auction.getItem();
-                    Manager.getInstance().cancelAuction(auction);
+                    Manager.getInstance().cancelAuction(auction, false);
                     sender.sendMessage(t("i")+" "+t("rem_id",id,item.getType().toString()+"x"+item.getAmount()));
                     return true;
                 }

@@ -59,7 +59,7 @@ public class Database
                         "`id` int(11) NOT NULL AUTO_INCREMENT,"+
                         "`name` varchar(16) NOT NULL,"+
                         "`type` tinyint(1) NOT NULL COMMENT 'is ServerBidder?',"+
-                        "`notify` int(1) NOT NULL,"+
+                        "`notify` smallint(2) NOT NULL,"+
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;"
                  );

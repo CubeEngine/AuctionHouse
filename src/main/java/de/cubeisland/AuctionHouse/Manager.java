@@ -107,8 +107,6 @@ public class Manager
     public List<Auction> getAuctionItem(ItemStack material, Bidder bidder) //Get all Auctions with material without bidder
     {
         List<Auction> auctionlist = this.getAuctionItem(material);
-        //TODO ConcurrentModificationException taucht manchmal auf
-        //wenn eigene Auktionen dabei
         for (Auction auction : bidder.getActiveBids())
         {
             if (auction.getOwner() == bidder)
@@ -130,7 +128,7 @@ public class Manager
         return AuctionSort.sortAuction(auctionlist, "date");
     }
 
-    public boolean cancelAuction(Auction auction)
+    public boolean cancelAuction(Auction auction, boolean win)
     {
         this.freeIds.push(auction.getId());
         Collections.sort(this.freeIds);
@@ -144,32 +142,8 @@ public class Manager
                 Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);
                 auction.getBids().pop();
             }
-            auction.getOwner().getContainer().addItem(auction);
-        }
-        else
-        {
-            ServerBidder.getInstance().removeAuction(auction);
-        }
-        db.exec("DELETE FROM `auctions` WHERE `id`=?", auction.getId());
-
-        this.auctions.remove(auction);
-        return true;
-    }
-
-    public boolean finishAuction(Auction auction)
-    {
-        //TODO fast 100% redundant mit dem drüber
-        this.freeIds.push(auction.getId());
-        Collections.sort(this.freeIds);
-        Collections.reverse(this.freeIds);
-        if (!(auction.getOwner() instanceof ServerBidder))
-        {
-            auction.getOwner().removeAuction(auction);
-            while (!(auction.getBids().isEmpty()))
-            {
-                Bidder.getInstance(auction.getBids().peek().getBidder().getPlayer()).removeAuction(auction);
-                auction.getBids().pop();
-            }
+            if (win)
+                auction.getOwner().getContainer().addItem(auction);
         }
         else
         {

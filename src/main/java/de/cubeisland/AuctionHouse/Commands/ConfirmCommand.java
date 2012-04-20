@@ -37,7 +37,7 @@ public class ConfirmCommand extends AbstractCommand
             }
             for (int i = max - 1; i >= 0; --i)
             {
-                manager.cancelAuction(manager.getIndexAuction(i));
+                manager.cancelAuction(manager.getIndexAuction(i), false);
             }
             sender.sendMessage(t("i")+" "+t("confirm_del"));
             return true;
@@ -55,7 +55,7 @@ public class ConfirmCommand extends AbstractCommand
                 }
                 for (int i = max - 1; i >= 0; --i)
                 {
-                    manager.cancelAuction(ServerBidder.getInstance().getAuctions().get(i));
+                    manager.cancelAuction(ServerBidder.getInstance().getAuctions().get(i), false);
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_del_serv"));
                 manager.getBidderConfirm().remove(Bidder.getInstance(sender));
@@ -80,7 +80,7 @@ public class ConfirmCommand extends AbstractCommand
                                 }
                            
                         }
-                        manager.cancelAuction(auctions.get(i));
+                        manager.cancelAuction(auctions.get(i), false);
                     }
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_rem",max,player.getName()));
@@ -91,7 +91,7 @@ public class ConfirmCommand extends AbstractCommand
         if (manager.getSingleConfirm().containsKey(Bidder.getInstance(sender)))
         {
             ItemStack item = Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))).getItem();
-            Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))));
+            Manager.getInstance().cancelAuction(Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))), false);
             sender.sendMessage(t("i")+" "+t("rem_id",manager.getSingleConfirm().get(Bidder.getInstance(sender)),item.getType().toString()+"x"+item.getAmount()));
             manager.getBidderConfirm().remove(Bidder.getInstance(sender));
             return true;

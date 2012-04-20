@@ -80,7 +80,7 @@ public class AuctionTimer
                                         winner.setNotifyState(Bidder.NOTIFY_WIN);
                                         MyUtil.updateNotifyData(winner);
                                     }
-                                    manager.finishAuction(auction);
+                                    manager.cancelAuction(auction, true);
                                     break; //NPE Prevention
                                 }
                                 else
@@ -114,7 +114,7 @@ public class AuctionTimer
                                         }
                                     }
                                 }
-                                manager.cancelAuction(auction);
+                                manager.cancelAuction(auction, false);
                             }
                         }
                         else
