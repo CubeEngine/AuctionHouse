@@ -36,19 +36,19 @@ public class SearchCommand extends AbstractCommand
         }
         List<Auction> auctionlist;
 
-        if (args.getString("1") == null)
+        if (args.getString(0) == null)
         {
             if (args.getString("s")!=null)
                sender.sendMessage(t("pro")+" "+t("search_pro")); 
             sender.sendMessage(t("e")+" "+t("invalid_com"));
             return true;
         }
-        if (args.getItem("1") == null)
+        if (args.getItem(0) == null)
         {
-            sender.sendMessage(t("e")+" "+t("item_no_exist",args.getString("1")));
+            sender.sendMessage(t("e")+" "+t("item_no_exist",args.getString(0)));
             return true;
         }
-        auctionlist = Manager.getInstance().getAuctionItem(args.getItem("1"));
+        auctionlist = Manager.getInstance().getAuctionItem(args.getItem(0));
         if (args.getString("s") != null)
         {
             if (args.getString("s").equalsIgnoreCase("date"))

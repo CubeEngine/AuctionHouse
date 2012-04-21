@@ -64,12 +64,12 @@ public class AddCommand extends AbstractCommand
             }
             if (!Perm.get().check(sender, "auctionhouse.command.add.multi")) return true;
         }
-        if (args.getString("1")==null)
+        if (args.getString(0)==null)
         {
             sender.sendMessage(t("invalid_com"));
             return true;
         }
-        if (args.getString("1").equalsIgnoreCase("hand"))
+        if (args.getString(0).equalsIgnoreCase("hand"))
         {
             if (!(sender instanceof ConsoleCommandSender))
             {
@@ -79,9 +79,9 @@ public class AddCommand extends AbstractCommand
                     sender.sendMessage(t("pro")+" "+t("add_sell_hand"));
                     return true;
                 }
-                if (args.getString("2") != null)
+                if (args.getString(1) != null)
                 {
-                    Integer length = Util.convertTimeToMillis(args.getString("2"));
+                    Integer length = Util.convertTimeToMillis(args.getString(1));
                     if (length == null)
                     {
                         sender.sendMessage(t("e")+" "+t("add_invalid_length"));
@@ -102,9 +102,9 @@ public class AddCommand extends AbstractCommand
                 {
                     auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
                 }
-                if (args.getString("3") != null)
+                if (args.getString(2) != null)
                 {
-                    startBid = args.getDouble("3");
+                    startBid = args.getDouble(2);
                     if (startBid == null)
                     {
                         sender.sendMessage(t("i")+" "+t("add_invalid_time"));
@@ -119,16 +119,16 @@ public class AddCommand extends AbstractCommand
         }
         else
         {
-            if (args.getItem("1")==null)
+            if (args.getItem(0)==null)
             {
-                sender.sendMessage(t("add_invalid_item",args.getString("1")));
+                sender.sendMessage(t("add_invalid_item",args.getString(0)));
                 return true;
             }
            
-            newMaterial = args.getItem("1").getType();
+            newMaterial = args.getItem(0).getType();
             if (newMaterial == null)
             {
-                sender.sendMessage(t("i") + " " +t("add_invalid_item",args.getString("1")));
+                sender.sendMessage(t("i") + " " +t("add_invalid_item",args.getString(0)));
                 return true;
             }
             if (newMaterial.equals(Material.AIR))
@@ -136,7 +136,7 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage(t("i") +t("add_invalid_item","AIR"));
                 return true;
             }
-            amount = args.getInt("2");
+            amount = args.getInt(1);
             if (amount == null)
             {
                 sender.sendMessage(t("i") + " " + t("add_no_amount"));
@@ -144,10 +144,10 @@ public class AddCommand extends AbstractCommand
             }
             
             newItem = new ItemStack(newMaterial, amount);
-            newItem.setDurability(args.getItem("1").getDurability());
-            if (args.getString("3") != null)
+            newItem.setDurability(args.getItem(0).getDurability());
+            if (args.getString(2) != null)
             {
-                Integer length = Util.convertTimeToMillis(args.getString("3"));
+                Integer length = Util.convertTimeToMillis(args.getString(2));
                 if (length == null)
                 {
                     sender.sendMessage(t("e") + " " + t("add_invalid_length"));
@@ -167,9 +167,9 @@ public class AddCommand extends AbstractCommand
             {
                 auctionEnd = (System.currentTimeMillis() + config.auction_standardLength);
             }
-            if (args.getString("4") != null)
+            if (args.getString(3) != null)
             {
-                startBid = args.getDouble("4");
+                startBid = args.getDouble(3);
                 if (startBid == null)
                 {
                     sender.sendMessage(t("i") + " "+t("add_invalid_startbid"));
@@ -254,15 +254,6 @@ public class AddCommand extends AbstractCommand
                                         newItem.getType().toString()+"x"+newItem.getAmount(),
                                         econ.format(startBid),
                                         DateFormatUtils.format(auctionEnd, config.auction_timeFormat)));                     
-        return true;
-    }
-
-    public boolean execute(CommandSender sender, String[] args, int quantity)
-    {
-        for (int i = 0; i < quantity; ++i)
-        {
-            this.execute(sender, args);
-        }
         return true;
     }
 

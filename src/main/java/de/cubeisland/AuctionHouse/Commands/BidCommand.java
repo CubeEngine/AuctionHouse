@@ -94,7 +94,7 @@ public class BidCommand extends AbstractCommand
                     return true;
                 }
                 auction = auctions.get(0);//First is Cheapest after Sort
-                bidAmount = args.getDouble("1");
+                bidAmount = args.getDouble(0);
                 if (bidAmount != null)
                 {
                     if (auction.getOwner() == Bidder.getInstance((Player) sender))
@@ -117,10 +117,10 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        Integer id = args.getInt("1");
+        Integer id = args.getInt(0);
         if (id != null)
         {
-            bidAmount = args.getDouble("2");
+            bidAmount = args.getDouble(2);
             if (bidAmount != null)
             {
                 if (manager.getAuction(id) == null)
@@ -143,7 +143,7 @@ public class BidCommand extends AbstractCommand
                 return true;
             }
         }
-        sender.sendMessage(t("e")+" " + t("bid_valid_id",args.getString("1")));
+        sender.sendMessage(t("e")+" " + t("bid_valid_id",args.getString(0)));
         return true;
     }
 

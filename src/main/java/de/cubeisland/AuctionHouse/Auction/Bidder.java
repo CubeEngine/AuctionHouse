@@ -138,6 +138,11 @@ public class Bidder
         }
         return instance;
     }
+    
+    public static Bidder getInstanceNoCreate(OfflinePlayer player)
+    {
+        return bidderInstances.get(player);
+    }
 
     public static Bidder getInstance(CommandSender player)
     {

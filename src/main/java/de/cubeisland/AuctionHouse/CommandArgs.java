@@ -86,7 +86,8 @@ public class CommandArgs
 
     public String getString(int i)
     {
-        return this.flags.get(i);
+        try { return this.flags.get(i); }
+        catch (IndexOutOfBoundsException ex) {return null;}
     }
 
     public String getString(String param)
@@ -174,12 +175,12 @@ public class CommandArgs
 
     public Bidder getBidder(int flag)
     {
-        return Bidder.getInstance(Bukkit.getOfflinePlayer(this.getString(flag)));
+        return Bidder.getInstanceNoCreate(Bukkit.getOfflinePlayer(this.getString(flag)));
     }
 
     public Bidder getBidder(String param)
     {
-        return Bidder.getInstance(Bukkit.getOfflinePlayer(this.getString(param)));
+        return Bidder.getInstanceNoCreate(Bukkit.getOfflinePlayer(this.getString(param)));
     }
 
     public ItemStack getItem(int flag)

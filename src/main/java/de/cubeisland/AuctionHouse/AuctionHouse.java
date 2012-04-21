@@ -43,6 +43,7 @@ public class AuctionHouse extends JavaPlugin
 //TODO post-release: Durchschnitt Vk Preis von Items
 //TODO post-release: flatfile mit angeboten
 //TODO post-release: force saving Database TRUNCATE all Lists
+    //TODO info sub command
     public AuctionHouse()
     {
         instance = this;

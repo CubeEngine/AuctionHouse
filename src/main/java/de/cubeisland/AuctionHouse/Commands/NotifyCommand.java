@@ -35,7 +35,7 @@ public class NotifyCommand extends AbstractCommand
             return true;
         }
         if (!Perm.get().check(sender,"auctionhouse.command.notify")) return true;
-        if (args.getString("1") == null)
+        if (args.getString(0) == null)
         {
             return true;
         }
@@ -45,15 +45,15 @@ public class NotifyCommand extends AbstractCommand
             return true;
         }
         Bidder bidder = Bidder.getInstance((Player) sender);
-        if (args.getString("1").equalsIgnoreCase("true") || args.getString("1").equalsIgnoreCase("on"))
+        if (args.getString(0).equalsIgnoreCase("true") || args.getString(0).equalsIgnoreCase("on"))
         {
             bidder.setNotifyState(Bidder.NOTIFY_STATUS);
         }
-        if (args.getString("1").equalsIgnoreCase("false") || args.getString("1").equalsIgnoreCase("off"))
+        if (args.getString(0).equalsIgnoreCase("false") || args.getString(0).equalsIgnoreCase("off"))
         {
             bidder.unsetNotifyState(Bidder.NOTIFY_STATUS);
         }
-        if (args.getString("1").equalsIgnoreCase("toggle") || args.getString("1").equalsIgnoreCase("t"))
+        if (args.getString(0).equalsIgnoreCase("toggle") || args.getString(0).equalsIgnoreCase("t"))
         {
             bidder.toggleNotifyState(Bidder.NOTIFY_STATUS);
         }

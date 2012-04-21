@@ -88,7 +88,11 @@ public class Util
         {
             if (bidder.getMatSub().contains(new ItemStack(auction.getItem().getType(), 1, auction.getItem().getDurability())))
             {
-                bidder.addSubscription(auction);
+                if (!bidder.equals(auction.getOwner()))
+                {
+                    bidder.addSubscription(auction);
+                    bidder.getPlayer().sendMessage(t("info_new",auction.getId(),auction.getItem().getType().toString()));
+                }
             }
         }
         return true;
@@ -197,7 +201,7 @@ public class Util
         }
         
         
-        ItemStack out = new ItemStack(id,data);
+        ItemStack out = new ItemStack(id,1,data);
         //ench1:val1 ench2:val2 ...
         while (in.length()>1)
         {

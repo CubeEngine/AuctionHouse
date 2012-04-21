@@ -33,7 +33,7 @@ public class UndoBidCommand extends AbstractCommand
             return true;
         }
         Player psender = (Player) sender;
-        if (args.getString("1").equals("last"))
+        if (args.getString(0).equals("last"))
         {
             if (Bidder.getInstance(psender).getlastAuction(Bidder.getInstance(psender)) == null)
             {
@@ -51,16 +51,16 @@ public class UndoBidCommand extends AbstractCommand
                 return true;
             }
         }
-        if (args.getInt("1") != null)
+        if (args.getInt(0) != null)
         {
-            if (Manager.getInstance().getAuction(args.getInt("1")) == null)
+            if (Manager.getInstance().getAuction(args.getInt(0)) == null)
             {
-                sender.sendMessage(t("e")+" "+t("auction_no_exist",args.getInt("1")));
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",args.getInt(0)));
                 return true;
             }
-            if (Manager.getInstance().getAuction(args.getInt("1")).undobid(Bidder.getInstance(psender)))
+            if (Manager.getInstance().getAuction(args.getInt(0)).undobid(Bidder.getInstance(psender)))
             {
-                sender.sendMessage(t("i")+" "+t("undo_bid_n",args.getInt("1")));
+                sender.sendMessage(t("i")+" "+t("undo_bid_n",args.getInt(0)));
                 return true;
             }
             else

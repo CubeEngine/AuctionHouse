@@ -54,10 +54,10 @@ public class AuctionHouseListener implements Listener
             public void run()
             {
                 Bidder bidder = Bidder.getInstance(event.getPlayer());
-                if (bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                if (bidder.hasNotifyState(Bidder.NOTIFY_WIN))
                 {
                     event.getPlayer().sendMessage(t("i")+" "+t("event_new"));
-                    bidder.unsetNotifyState(Bidder.NOTIFY_STATUS);
+                    bidder.unsetNotifyState(Bidder.NOTIFY_WIN);
                 }
                 if (bidder.hasNotifyState(Bidder.NOTIFY_CANCEL))
                 {
@@ -181,7 +181,7 @@ public class AuctionHouseListener implements Listener
                 if (event.getBlock().getRelative(face).getType().equals(Material.WALL_SIGN))
                 {
                     Sign sign = (Sign)event.getBlock().getRelative(face).getState();
-                    if (sign.getLine(0).equalsIgnoreCase("[auctionhouse]"))
+                    if (sign.getLine(0).equalsIgnoreCase("[AuctionHouse]"))
                         event.setCancelled(true);
                 }
             }

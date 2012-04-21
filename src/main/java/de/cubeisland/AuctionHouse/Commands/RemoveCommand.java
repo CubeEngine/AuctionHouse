@@ -43,9 +43,9 @@ public class RemoveCommand extends AbstractCommand
             return true;
         }
 
-        if (args.getString("1") != null)
+        if (args.getString(0) != null)
         {
-            if (args.getString("1").equalsIgnoreCase("all"))
+            if (args.getString(0).equalsIgnoreCase("all"))
             {
                 if (!Perm.get().check(sender,"auctionhouse.command.delete.all")) return true;
                 Manager.getInstance().getAllConfirm().add(Bidder.getInstance(sender));
@@ -66,7 +66,7 @@ public class RemoveCommand extends AbstractCommand
             }
             else
             {
-                if (args.getString("1").equalsIgnoreCase("Server"))
+                if (args.getString(0).equalsIgnoreCase("Server"))
                 {
                     if (!Perm.get().check(sender,"auctionhouse.command.delete.server")) return true;
                     Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
@@ -88,7 +88,7 @@ public class RemoveCommand extends AbstractCommand
                 }
             }
             {
-                Integer id = args.getInt("1");
+                Integer id = args.getInt(0);
                 if (id != null)
                 {
                     if (!Perm.get().check(sender,"auctionhouse.command.delete.id")) return true;

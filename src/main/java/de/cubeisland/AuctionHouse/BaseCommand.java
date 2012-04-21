@@ -58,7 +58,7 @@ public class BaseCommand implements CommandExecutor
 
         if (this.defaultCommand != null)
         {
-            return executeSub(sender, this.allSubCommands.get(this.defaultCommand), args);
+            return executeSub(sender, this.allSubCommands.get(this.defaultCommand),new String[]{this.defaultCommand} );
         }
 
         sender.sendMessage("Available commands:");
