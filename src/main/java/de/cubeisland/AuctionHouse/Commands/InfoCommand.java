@@ -84,6 +84,8 @@ public class InfoCommand extends AbstractCommand
                 if (args.getString(0).equalsIgnoreCase("sub"))
                 {
                     List<Auction> auctions = Bidder.getInstance((Player) sender).getSubs();
+                    auctions.removeAll(Bidder.getInstance(sender).getOwnAuctions());
+                    
                     int max = auctions.size();
                     if (max == 0)
                     {
@@ -101,6 +103,7 @@ public class InfoCommand extends AbstractCommand
                     if (args.getString(0).equalsIgnoreCase("lead"))
                     {
                         List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
+                        auctions.removeAll(Bidder.getInstance(sender).getOwnAuctions());
                         int max = auctions.size();
                         AuctionHouse.debug("max: " + max);
                         if (max == 0)
@@ -166,7 +169,7 @@ public class InfoCommand extends AbstractCommand
                                 }
                                 else
                                 {
-                                    sender.sendMessage(t("perm")+" "+t("info_p_no_auction",args.getString(0)));
+                                    sender.sendMessage(t("e")+" "+t("info_p_no_auction",args.getString(0)));
                                 }
                             }
                         }

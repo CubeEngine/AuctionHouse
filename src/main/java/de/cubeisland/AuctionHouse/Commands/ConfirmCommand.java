@@ -78,6 +78,7 @@ public class ConfirmCommand extends AbstractCommand
                             if (!sender.hasPermission("aucionhouse.delete.player.other"))
                                 {
                                      sender.sendMessage(t("i")+" "+t("rem_time"));
+                                     --max;
                                      continue;
                                 }
                            
@@ -85,7 +86,8 @@ public class ConfirmCommand extends AbstractCommand
                         manager.cancelAuction(auction , false);
                     }
                 }
-                sender.sendMessage(t("i")+" "+t("confirm_rem",max,player.getName()));
+                if (max!=0)
+                    sender.sendMessage(t("i")+" "+t("confirm_rem",max,player.getName()));
                 manager.getBidderConfirm().remove(Bidder.getInstance(sender));
                 return true;
             }

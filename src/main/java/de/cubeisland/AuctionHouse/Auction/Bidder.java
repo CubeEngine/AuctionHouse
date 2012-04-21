@@ -374,9 +374,9 @@ public class Bidder
         return this;
     }
 
-    public Bidder addSubscription(Auction auction)
+    public boolean addSubscription(Auction auction)
     {
-        if (this.subscriptions.contains(auction)) return this;
+        if (this.subscriptions.contains(auction)) return false;
         db.exec(
             "INSERT INTO `subscription` ("
             + "`bidderid` ,"
@@ -386,7 +386,7 @@ public class Bidder
             + "VALUES ( ?, ?, ? );", this.id, auction.getId(), 1);
 
         this.subscriptions.add(auction);
-        return this;
+        return true;
     }
 
     public Bidder addDataBaseSub(int id)
@@ -401,9 +401,9 @@ public class Bidder
         return this;
     }
 
-    public Bidder addSubscription(ItemStack item)
+    public boolean addSubscription(ItemStack item)
     {
-        if (this.materialSub.contains(item)) return this;
+        if (this.materialSub.contains(item)) return false;
         db.exec(
             "INSERT INTO `subscription` (`bidderid` ,`type` ,`item` ) VALUES ( ?, ?, ? );",
             this.id,
@@ -411,6 +411,6 @@ public class Bidder
             Util.convertItem(item)
         );
         this.materialSub.add(item);
-        return this;
+        return true;
     }
 }

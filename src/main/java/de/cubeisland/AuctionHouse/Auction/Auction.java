@@ -151,5 +151,6 @@ public class Auction
     public void giveServer()
     {
         this.owner = ServerBidder.getInstance();
+        this.bids.peek().giveServer();
     }
 }

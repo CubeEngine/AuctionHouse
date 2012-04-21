@@ -44,11 +44,13 @@ public class SubscribeCommand extends AbstractCommand
         {
             if (args.getItem("m") != null)
             {
-                bidder.addSubscription(args.getItem("m"));
-                sender.sendMessage(t("i")+" "+t("sub_add_mat",args.getItem("m").getType().toString()));
-                if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                if (bidder.addSubscription(args.getItem("m")))
                 {
-                    sender.sendMessage(t("i")+" "+t("sub_note"));
+                    sender.sendMessage(t("i")+" "+t("sub_add_mat",args.getItem("m").getType().toString()));
+                    if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                    {
+                        sender.sendMessage(t("i")+" "+t("sub_note"));
+                    } 
                 }
                 return true;
             }
@@ -61,14 +63,17 @@ public class SubscribeCommand extends AbstractCommand
             {
                 if (Manager.getInstance().getAuction(args.getInt("i")) != null)
                 {
-                    sender.sendMessage(t("i")+" "+t("sub_add",args.getInt("i")));
-                    if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                    if (bidder.addSubscription(Manager.getInstance().getAuction(args.getInt("i"))))
                     {
-                        sender.sendMessage(t("i")+" "+t("sub_note"));
+                        sender.sendMessage(t("i")+" "+t("sub_add",args.getInt("i")));
+                        if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                        {
+                            sender.sendMessage(t("i")+" "+t("sub_note"));
+                        }
                     }
                     return true;
                 }
-                sender.sendMessage(t("e")+" "+t("auction_no_exist",args.getString("i")));
+                sender.sendMessage(t("e")+" "+t("auction_no_exist",args.getInt("i")));
                 return true;
             }
             sender.sendMessage(t("e")+" "+t("invalid_id"));

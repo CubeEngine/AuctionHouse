@@ -23,7 +23,7 @@ public class Bid implements DatabaseEntity
     private final double amount;
     
     @EntityProperty
-    private final Bidder bidder;
+    private Bidder bidder;
 
     @EntityProperty
     private final long timestamp;
@@ -93,5 +93,10 @@ public class Bid implements DatabaseEntity
     public int getId()
     {
         return this.id;
+    }
+    
+    public void giveServer()
+    {
+        this.bidder = ServerBidder.getInstance();
     }
 }

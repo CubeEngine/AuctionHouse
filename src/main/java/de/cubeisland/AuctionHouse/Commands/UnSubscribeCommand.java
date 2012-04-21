@@ -44,8 +44,12 @@ public class UnSubscribeCommand extends AbstractCommand
         {
             if (args.getItem("m") != null)
             {
-                bidder.removeSubscription(args.getItem("m"));
-                sender.sendMessage(t("i")+" "+t("sub_rem_mat",args.getItem("m").getType().toString()));
+                if (bidder.removeSubscription(args.getItem("m")))
+                {
+                    sender.sendMessage(t("i")+" "+t("sub_rem_mat",args.getItem("m").getType().toString()));
+                    return true;
+                }
+                sender.sendMessage(t("e")+" "+t("sub_rem_no_mat"));
                 return true;
             }
             sender.sendMessage(t("e")+" "+args.getString("m") + " "+t("no_valid_item"));
