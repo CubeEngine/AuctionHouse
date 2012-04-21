@@ -190,7 +190,6 @@ public class Manager
     
     public void removeOldAuctions()
     {
-        AuctionHouse.debug("removing Auctions");
         List<Auction> t_auctions = new ArrayList<Auction>(this.auctions);
         for (Auction auction : t_auctions)
         {

@@ -17,7 +17,7 @@ planned features:
 
 Permissions:
 ------------
-User with OP have the auctionhouse.* permission
+OPs have the auctionhouse.* permission
 - auctionhouse.*: Can do everything
 - auctionhouse.admin: Same
 - auctionhouse.user: General use of the plugin. Can not start auctions / receive items with commands
