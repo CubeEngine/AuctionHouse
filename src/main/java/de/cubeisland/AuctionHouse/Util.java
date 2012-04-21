@@ -102,7 +102,10 @@ public class Util
     {
         Economy econ = plugin.getEconomy();
         String output = "";
-        output += t("info_out_1",auction.getId(),auction.getItem().getType().toString(),auction.getItem().getAmount());
+        if (auction.getItem().getDurability()==0)
+            output += t("info_out_1",auction.getId(),auction.getItem().getType().toString(),auction.getItem().getAmount());
+        else
+            output += t("info_out_11",auction.getId(),auction.getItem().getType().toString(),auction.getItem().getDurability(),auction.getItem().getAmount());
         if (auction.getItem().getEnchantments().size() > 0)
         {
             output += " "+t("info_out_ench");
