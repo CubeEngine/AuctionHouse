@@ -36,6 +36,7 @@ public class InfoCommand extends AbstractCommand
             sender.sendMessage(t("info_title5"));
             sender.sendMessage(t("info_title6"));
             sender.sendMessage(t("info_title7"));
+            sender.sendMessage(t("info_title8"));
             sender.sendMessage("");
             return true;
         }
@@ -80,15 +81,13 @@ public class InfoCommand extends AbstractCommand
             }
             else
             {
-
-                if (args.getString(0).equalsIgnoreCase("lead"))
+                if (args.getString(0).equalsIgnoreCase("sub"))
                 {
-                    List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
+                    List<Auction> auctions = Bidder.getInstance((Player) sender).getSubs();
                     int max = auctions.size();
-                    AuctionHouse.debug("max: " + max);
                     if (max == 0)
                     {
-                        sender.sendMessage(t("i")+" "+t("info_no_lead"));
+                        sender.sendMessage(t("i")+" "+t("info_no_sub"));
                     }
                     for (int i = 0; i < max; ++i)
                     {
@@ -96,16 +95,17 @@ public class InfoCommand extends AbstractCommand
                         Util.sendInfo(sender, auction);
                     }
                 }
-                else
+                else    
                 {
-                    if (args.getString(0).equalsIgnoreCase("*Server"))
+
+                    if (args.getString(0).equalsIgnoreCase("lead"))
                     {
-                        List<Auction> auctions = ServerBidder.getInstance().getAuctions();
+                        List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
                         int max = auctions.size();
                         AuctionHouse.debug("max: " + max);
                         if (max == 0)
                         {
-                            sender.sendMessage(t("i")+" "+t("info_no_serv"));
+                            sender.sendMessage(t("i")+" "+t("info_no_lead"));
                         }
                         for (int i = 0; i < max; ++i)
                         {
@@ -115,41 +115,59 @@ public class InfoCommand extends AbstractCommand
                     }
                     else
                     {
-                        Integer id = args.getInt(0);
-                        if (id != null)
+                        if (args.getString(0).equalsIgnoreCase("*Server"))
                         {
-                            if (Manager.getInstance().getAuction(id) != null)
+                            List<Auction> auctions = ServerBidder.getInstance().getAuctions();
+                            int max = auctions.size();
+                            AuctionHouse.debug("max: " + max);
+                            if (max == 0)
                             {
-                                Util.sendInfo(sender, Manager.getInstance().getAuction(id));
+                                sender.sendMessage(t("i")+" "+t("info_no_serv"));
                             }
-                            else
+                            for (int i = 0; i < max; ++i)
                             {
-                                sender.sendMessage(t("i")+" "+t("auction_no_exist",id));
+                                Auction auction = auctions.get(i);
+                                Util.sendInfo(sender, auction);
                             }
                         }
                         else
                         {
-                            if (!Perm.get().check(sender,"auctionhouse.command.info.others")) return true;
-                            Bidder player = args.getBidder(0);
-                            if (player != null)
+                            Integer id = args.getInt(0);
+                            if (id != null)
                             {
-                                AuctionHouse.debug("Player Auction");
-                                List<Auction> auctions = player.getAuctions(player);
-                                int max = auctions.size();
-                                AuctionHouse.debug("max: " + max);
-                                if (max == 0)
+                                if (Manager.getInstance().getAuction(id) != null)
                                 {
-                                    sender.sendMessage(t("e")+t("info_no_auction",player.getName()));
+                                    Util.sendInfo(sender, Manager.getInstance().getAuction(id));
                                 }
-                                for (int i = 0; i < max; ++i)
+                                else
                                 {
-                                    Auction auction = auctions.get(i);
-                                    Util.sendInfo(sender, auction);
+                                    sender.sendMessage(t("i")+" "+t("auction_no_exist",id));
                                 }
                             }
                             else
                             {
-                                sender.sendMessage(t("perm")+" "+t("info_p_no_auction",args.getString(0)));
+                                if (!Perm.get().check(sender,"auctionhouse.command.info.others")) return true;
+                                Bidder player = args.getBidder(0);
+                                if (player != null)
+                                {
+                                    AuctionHouse.debug("Player Auction");
+                                    List<Auction> auctions = player.getAuctions(player);
+                                    int max = auctions.size();
+                                    AuctionHouse.debug("max: " + max);
+                                    if (max == 0)
+                                    {
+                                        sender.sendMessage(t("e")+t("info_no_auction",player.getName()));
+                                    }
+                                    for (int i = 0; i < max; ++i)
+                                    {
+                                        Auction auction = auctions.get(i);
+                                        Util.sendInfo(sender, auction);
+                                    }
+                                }
+                                else
+                                {
+                                    sender.sendMessage(t("perm")+" "+t("info_p_no_auction",args.getString(0)));
+                                }
                             }
                         }
                     }
