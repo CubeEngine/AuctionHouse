@@ -38,6 +38,7 @@ public class Util
         {
             time = Integer.parseInt(String.valueOf(matcher.group(1)));
         }
+        catch (IllegalStateException ex) {return -1;}
         catch (Throwable t)
         {
             AuctionHouse.error("Failed to convert to a number", t);
@@ -69,20 +70,17 @@ public class Util
     
     public static boolean registerAuction(Auction auction, CommandSender sender)
     {
+        return registerAuction(auction, Bidder.getInstance(sender));
+    }
+    
+    public static boolean registerAuction(Auction auction, Bidder owner)
+    {
         if (Manager.getInstance().isEmpty())
         {
             return false;
         }
         Manager.getInstance().addAuction(auction);
-
-        if (sender instanceof ConsoleCommandSender)
-        {
-            ServerBidder.getInstance().addAuction(auction);
-        }
-        else
-        {
-            Bidder.getInstance((Player) sender).addAuction(auction);
-        }
+        owner.addAuction(auction);
 
         for (Bidder bidder : Bidder.getInstances().values())
         {
@@ -97,6 +95,7 @@ public class Util
         }
         return true;
     }
+    
     
     public static void sendInfo(CommandSender sender, Auction auction)
     {

@@ -376,6 +376,7 @@ public class Bidder
 
     public Bidder addSubscription(Auction auction)
     {
+        if (this.subscriptions.contains(auction)) return this;
         db.exec(
             "INSERT INTO `subscription` ("
             + "`bidderid` ,"
@@ -402,6 +403,7 @@ public class Bidder
 
     public Bidder addSubscription(ItemStack item)
     {
+        if (this.materialSub.contains(item)) return this;
         db.exec(
             "INSERT INTO `subscription` (`bidderid` ,`type` ,`item` ) VALUES ( ?, ?, ? );",
             this.id,

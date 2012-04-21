@@ -66,7 +66,7 @@ public class AddCommand extends AbstractCommand
         }
         if (args.getString(0)==null)
         {
-            sender.sendMessage(t("invalid_com"));
+            sender.sendMessage(t("e")+" "+t("invalid_com"));
             return true;
         }
         if (args.getString(0).equalsIgnoreCase("hand"))
@@ -121,7 +121,7 @@ public class AddCommand extends AbstractCommand
         {
             if (args.getItem(0)==null)
             {
-                sender.sendMessage(t("add_invalid_item",args.getString(0)));
+                sender.sendMessage(t("e")+" "+t("add_invalid_item",args.getString(0)));
                 return true;
             }
            
@@ -148,7 +148,7 @@ public class AddCommand extends AbstractCommand
             if (args.getString(2) != null)
             {
                 Integer length = Util.convertTimeToMillis(args.getString(2));
-                if (length == null)
+                if (length == -1)
                 {
                     sender.sendMessage(t("e") + " " + t("add_invalid_length"));
                     return true;
@@ -230,23 +230,38 @@ public class AddCommand extends AbstractCommand
             {
                 newAuction = new Auction(newItem, Bidder.getInstance((Player) sender), auctionEnd, startBid);//Created Auction
             }
-
-            if (!(Util.registerAuction(newAuction, sender)))
+            if (args.getString("s") != null)
             {
-                sender.sendMessage(t("i")+" "+t("add_all_stop"));
-                sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
-                return true;
+                if (args.getString("s").equalsIgnoreCase("Server"))
+                    if (sender.hasPermission("auctionhouse.command.add.server"))
+                    {
+                        newAuction.giveServer();
+                        if (!(Util.registerAuction(newAuction, ServerBidder.getInstance())))
+                        {
+                            sender.sendMessage(t("i")+" "+t("add_all_stop"));
+                            sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
+                            return true;
+                        }
+                    }
             }
-        }
+            else
+            {
+                if (!(Util.registerAuction(newAuction, sender)))
+                {
+                    sender.sendMessage(t("i")+" "+t("add_all_stop"));
+                    sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_overall));
+                    return true;
+                }
+                if (!(sender instanceof ConsoleCommandSender))
+                {
 
-        if (!(sender instanceof ConsoleCommandSender))
-        {
-
-            ((Player) sender).getInventory().removeItem(removeItem);
-        }
-        else
-        {
-            AuctionHouse.log("ServerAuction(s) added succesfully!");
+                    ((Player) sender).getInventory().removeItem(removeItem);
+                }
+                else
+                {
+                    AuctionHouse.log("ServerAuction(s) added succesfully!");
+                }
+            }
         }
 
         sender.sendMessage(t("i")+" "+t("add_start",

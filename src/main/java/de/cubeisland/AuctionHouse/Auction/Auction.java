@@ -20,7 +20,7 @@ public class Auction
 {
     private int id;
     private final ItemStack item;
-    private final Bidder owner;
+    private Bidder owner;
     private final long auctionEnd;
     private final Stack<Bid> bids;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
@@ -146,5 +146,10 @@ public class Auction
     public Stack<Bid> getBids()
     {
         return this.bids;
+    }
+    
+    public void giveServer()
+    {
+        this.owner = ServerBidder.getInstance();
     }
 }

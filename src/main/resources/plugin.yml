@@ -75,7 +75,11 @@ permissions:
       auctionhouse.command.search: true
       auctionhouse.command.notify: true
       auctionhouse.command.getItems: true
+      auctionhouse.command.add.server: true
   
+  auctionhouse.command.add.server:
+    description: ""
+    
   auctionhouse.command.sub:
     description: ""
   

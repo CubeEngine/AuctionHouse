@@ -120,7 +120,7 @@ public class BidCommand extends AbstractCommand
         Integer id = args.getInt(0);
         if (id != null)
         {
-            bidAmount = args.getDouble(2);
+            bidAmount = args.getDouble(1);
             if (bidAmount != null)
             {
                 if (manager.getAuction(id) == null)

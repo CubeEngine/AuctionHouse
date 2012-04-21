@@ -7,6 +7,7 @@ import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Perm;
 import java.util.Collection;
+import java.util.Collections;
 import org.bukkit.command.CommandSender;
 
 /**
