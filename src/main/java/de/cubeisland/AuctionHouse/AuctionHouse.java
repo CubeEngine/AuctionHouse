@@ -15,7 +15,7 @@ import de.cubeisland.AuctionHouse.Commands.SubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.UnSubscribeCommand;
 import de.cubeisland.AuctionHouse.Commands.UndoBidCommand;
 import de.cubeisland.AuctionHouse.Database.Database;
-import de.cubeisland.AuctionHouse.Translation.Translation;
+import de.cubeisland.libMinecraft.Translation;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;

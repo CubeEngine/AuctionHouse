@@ -2,10 +2,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.cubeisland</groupId>
-    <artifactId>AuctionHouse</artifactId>
-    <version>1.0</version>
+    <artifactId>auctionhouse</artifactId>
+    <version>1.0.0</version>
     <name>AuctionHouse</name>
-    <url>http://parallel-universe.de</url>
+    <url>http://cubeisland.de</url>
     <packaging>jar</packaging>
     <description>Implements an AuctionHouse for your Minecraft-Server</description>
 
@@ -16,7 +16,11 @@
     <repositories>
         <repository>
             <id>bukkit-repo</id>
-            <url>http://repo.bukkit.org/content/groups/public</url>
+            <url>http://repo.bukkit.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>milkbowl-repo</id>
+            <url>http://ci.milkbowl.net/plugin/repository/everything/</url>
         </repository>
     </repositories>
 
@@ -28,8 +32,13 @@
         </dependency>
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
-            <artifactId>vault</artifactId>
-            <version>1.2.13</version>
+            <artifactId>Vault</artifactId>
+            <version>1.2.16-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>de.cubeisland</groupId>
+            <artifactId>libminecraft</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -71,6 +80,26 @@
                 <configuration>
                     <showDeprecation>true</showDeprecation>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>de.cubeisland:libminecraft</include>
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
