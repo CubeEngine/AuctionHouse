@@ -105,7 +105,6 @@ public class InfoCommand extends AbstractCommand
                         List<Auction> auctions = Bidder.getInstance((Player) sender).getLeadingAuctions();
                         auctions.removeAll(Bidder.getInstance(sender).getOwnAuctions());
                         int max = auctions.size();
-                        AuctionHouse.debug("max: " + max);
                         if (max == 0)
                         {
                             sender.sendMessage(t("i")+" "+t("info_no_lead"));
@@ -122,7 +121,6 @@ public class InfoCommand extends AbstractCommand
                         {
                             List<Auction> auctions = ServerBidder.getInstance().getAuctions();
                             int max = auctions.size();
-                            AuctionHouse.debug("max: " + max);
                             if (max == 0)
                             {
                                 sender.sendMessage(t("i")+" "+t("info_no_serv"));
@@ -153,10 +151,8 @@ public class InfoCommand extends AbstractCommand
                                 Bidder player = args.getBidder(0);
                                 if (player != null)
                                 {
-                                    AuctionHouse.debug("Player Auction");
                                     List<Auction> auctions = player.getAuctions(player);
                                     int max = auctions.size();
-                                    AuctionHouse.debug("max: " + max);
                                     if (max == 0)
                                     {
                                         sender.sendMessage(t("e")+t("info_no_auction",player.getName()));

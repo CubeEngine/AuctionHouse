@@ -44,7 +44,7 @@ public class Price {
         AuctionHouse.getInstance().getDB().execUpdate(
             "DELETE FROM `price` WHERE `item`=?", Util.convertItem(item));
         AuctionHouse.getInstance().getDB().execUpdate(
-            "INSERT INTO `price` (`item` ,`price` ,`amount` ) VALUES ( ?, ? );", Util.convertItem(item), t_price, t_amount);
+            "INSERT INTO `price` (`item` ,`price` ,`amount` ) VALUES ( ?, ? ,?);", Util.convertItem(item), t_price, t_amount);
         return this.setPrice(item, t_price, t_amount);
     }
     

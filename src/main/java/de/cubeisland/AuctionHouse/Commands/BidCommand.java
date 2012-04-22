@@ -149,7 +149,8 @@ public class BidCommand extends AbstractCommand
 
     public void SendBidInfo(Auction auction, CommandSender sender)
     {
-        sender.sendMessage(t("bid_out",econ.format(auction.getBids().peek().getAmount()),auction.getItem().toString(),auction.getId()));
+        sender.sendMessage(t("bid_out",econ.format(auction.getBids().peek().getAmount()),
+            auction.getItem().getType().toString()+"x"+auction.getItem().getAmount(),auction.getId()));
         if (!(auction.getOwner() instanceof ServerBidder) && auction.getOwner().isOnline())
         {
             if (auction.getOwner().hasNotifyState(Bidder.NOTIFY_STATUS))

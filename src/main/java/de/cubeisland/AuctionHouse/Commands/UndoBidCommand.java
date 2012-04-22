@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
  *
  * @author Faithcaio
  */
+//TODO undibid geht immer
 public class UndoBidCommand extends AbstractCommand
 {
     public UndoBidCommand(BaseCommand base)
