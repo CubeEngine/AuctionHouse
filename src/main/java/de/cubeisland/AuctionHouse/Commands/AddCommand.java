@@ -246,7 +246,7 @@ public class AddCommand extends AbstractCommand
             }
             else
             {
-                if (sender.hasPermission("auctionhouse.add.nolomit"))
+                if (sender.hasPermission("auctionhouse.command.add.nolomit"))
                 {
                     if (Bidder.getInstance(sender).getOwnAuctions().size()>=config.auction_maxAuctions_player)
                     {

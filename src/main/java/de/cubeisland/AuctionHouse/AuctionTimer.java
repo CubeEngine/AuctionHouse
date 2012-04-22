@@ -74,6 +74,7 @@ public class AuctionTimer
                                         }
                                     }
                                     winner.getContainer().addItem(auction);
+                                    Manager.getInstance().adjustPrice(auction.getItem(), money);
                                     if (winner.isOnline())
                                     {
                                         winner.getPlayer().sendMessage(t("time_won",auction.getItem().getType().toString()+" x"+auction.getItem().getAmount()

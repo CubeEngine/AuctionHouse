@@ -146,7 +146,7 @@ public class Util
         int max = auctionlist.size();
         if (max == 0)
         {
-            sender.sendMessage(t("no_detect"));
+            sender.sendMessage(t("i")+" "+t("no_detect"));
         }
         for (int i = 0; i < max; ++i)
         {

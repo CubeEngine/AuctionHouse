@@ -68,10 +68,11 @@ public class SearchCommand extends AbstractCommand
                 Collections.reverse(auctionlist);
             }
         }
-        if (auctionlist.isEmpty())
-        {
-            sender.sendMessage(t("i")+" "+t("search_found"));
-        }
+        if (Manager.getInstance().getPrice(args.getItem(0))==0)
+            sender.sendMessage(t("search_item1",args.getItem(0).getType().toString())+" "+t("search_item2"));
+        else
+            sender.sendMessage(t("search_item1",args.getItem(0).getType().toString())+" "+
+                               t("search_item3",Manager.getInstance().getPrice(args.getItem(0))));
         Util.sendInfo(sender, auctionlist);
         return true;
     }
