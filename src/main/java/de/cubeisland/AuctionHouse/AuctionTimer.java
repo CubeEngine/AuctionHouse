@@ -58,26 +58,27 @@ public class AuctionTimer
 
                                 if (econ.getBalance(winner.getName()) > auction.getBids().peek().getAmount())
                                 {
-                                    double money = auction.getBids().peek().getAmount();
-                                    econ.withdrawPlayer(winner.getName(), money);
+                                    double topbid = auction.getBids().peek().getAmount();
+                                    econ.withdrawPlayer(winner.getName(), topbid);
                                     if (!(auction.getOwner() instanceof ServerBidder))
                                     {
 
-                                        econ.depositPlayer(auction.getOwner().getName(), money);
-                                        econ.withdrawPlayer(auction.getOwner().getName(), money * config.auction_comission / 100);
+                                        econ.depositPlayer(auction.getOwner().getName(), topbid);
+                                        econ.withdrawPlayer(auction.getOwner().getName(), topbid * config.auction_comission / 100);
                                         if (auction.getOwner().isOnline())
                                         {
                                             auction.getOwner().getPlayer().sendMessage(t("time_sold",
                                                                     auction.getItem().getType().toString()+" x"+auction.getItem().getAmount(),
-                                                                    econ.format(money - money * config.auction_comission / 100),
-                                                                    econ.format(money * config.auction_comission / 100)));
+                                                                    econ.format(topbid - topbid * config.auction_comission / 100),
+                                                                    econ.format(topbid * config.auction_comission / 100)));
                                         }
                                     }
                                     winner.getContainer().addItem(auction);
+                                    Manager.getInstance().adjustPrice(auction.getItem(), topbid);
                                     if (winner.isOnline())
                                     {
                                         winner.getPlayer().sendMessage(t("time_won",auction.getItem().getType().toString()+" x"+auction.getItem().getAmount()
-                                                                         ,econ.format(money)));
+                                                                         ,econ.format(topbid)));
                                     }
                                     else
                                     {

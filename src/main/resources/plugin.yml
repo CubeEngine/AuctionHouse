@@ -34,36 +34,37 @@ permissions:
     description: "All normal Commands"
     children: 
       auctionhouse.user: true
-      auctionhouse.use.*: true
+      auctionhouse.command.add: true
       auctionhouse.command.getItems: true
       
   auctionhouse.user:
     description: "Can not Start Auction or receive items with command"
     children:
+      auctionhouse.use: true
       auctionhouse.command.bid: true
       auctionhouse.command.undobid: true
-      auctionhouse.sign.start: true
       auctionhouse.command.delete.id: true
       auctionhouse.command.delete.player: true
       auctionhouse.command.info.*: true
-      auctionhouse.sign.auctionbox: true
-      auctionhouse.use: true
       auctionhouse.command.search: true
       auctionhouse.command.notify: true
+      auctionhouse.sign.auctionbox: true
       auctionhouse.sign.use: true
+      auctionhouse.sign.start: true
 
   auctionhouse.*:
     description: "Allows the player to do everything"
     default: op
     children:
-      auctionhouse.command.add.cheatItems: true
-      auctionhouse.command.*: true
       auctionhouse.use: true
+      auctionhouse.command.*: true
+      auctionhouse.command.add.cheatItems: true
+      auctionhouse.command.add.nolomit: true
       auctionhouse.command.bid.infinite: true
       auctionhouse.sign.*: true
-      auctionhouse.add.nolomit: true
       
-  auctionhouse.add.nolomit:
+      
+  auctionhouse.command.add.nolomit:
       description: ""
 
   auctionhouse.command.*:

@@ -28,6 +28,7 @@ public class Manager
     private HashSet<Bidder> remAllConfirm = new HashSet();
     private HashMap<Bidder, Integer> remSingleConfirm = new HashMap();
     private final Database db;
+    private Price price = new Price();
 
     private Manager()
     {
@@ -98,8 +99,8 @@ public class Manager
             {
                 return null;
             }
-            if ((this.auctions.get(i).getItem().getType() == material.getType()
-                && (this.auctions.get(i).getItem().getDurability() == material.getDurability())))
+            if (this.auctions.get(i).getItem().getType() == material.getType())
+            //    && (this.auctions.get(i).getItem().getDurability() == material.getDurability())
             {
                 auctionlist.add(this.auctions.get(i));
             }
@@ -196,5 +197,20 @@ public class Manager
             if (auction.getAuctionEnd() < System.currentTimeMillis())
                 this.cancelAuction(auction, false);
         }
+    }
+    
+    public double getPrice(ItemStack item)
+    {
+       return this.price.getPrice(item);
+    }
+    
+    public double adjustPrice(ItemStack item, double price)
+    {
+        return this.price.adjustPrice(item, price);
+    }
+    
+    public double setPrice(ItemStack item, double price, int amount)
+    {
+        return this.price.setPrice(item, price, amount);
     }
 }

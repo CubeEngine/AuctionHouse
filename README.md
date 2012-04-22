@@ -61,7 +61,7 @@ OPs have the auctionhouse.* permission
     - auctionhouse.command.add.server
     - auctionhouse.command.add.cheatItems
     - auctionhouse.command.add.multi
-    - auctionhouse.add.nolomit
+    - auctionhouse.command.add.nolomit
     - auctionhouse.command.sub
     - auctionhouse.command.bid
     - auctionhouse.command.bid.infinite

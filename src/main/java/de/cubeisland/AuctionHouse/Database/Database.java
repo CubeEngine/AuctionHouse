@@ -130,6 +130,14 @@ public class Database
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
                  );
+        this.exec(      "CREATE TABLE IF NOT EXISTS `price` ("+
+                        "`id` int(11) NOT NULL AUTO_INCREMENT,"+
+                        "`item` varchar(42) DEFAULT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
+                        "`price` decimal(11,2) NOT NULL,"+
+                        "`amount` int(11) NOT NULL,"+
+                        "PRIMARY KEY (`id`)"+
+                        ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
+                 );
     }
 
     public String getHost()
@@ -268,7 +276,12 @@ public class Database
                     itemset.getInt("id")
                     ));
         }
-        }   
+        //load in ItemContainer
+        ResultSet priceset =
+              this.query("SELECT * from `price`");
+        while (priceset.next())
+            Manager.getInstance().setPrice(Util.convertItem(priceset.getString("item")), priceset.getDouble("price"), priceset.getInt("amount"));
+        }
         catch (SQLException ex){
         AuctionHouse.log("Error while loading DataBase!");
         }
