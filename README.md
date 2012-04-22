@@ -52,4 +52,4 @@ OPs have the auctionhouse.* permission
 - auctionhouse.sign.create.*: Create signs
 - auctionhouse.sign.create.box:
 - auctionhouse.sign.create.add:
-- auctionhouse.sign.create.list: 
+- auctionhouse.sign.create.list:
