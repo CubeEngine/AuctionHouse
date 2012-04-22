@@ -246,6 +246,14 @@ public class AddCommand extends AbstractCommand
             }
             else
             {
+                if (sender.hasPermission("auctionhouse.add.nolomit"))
+                {
+                    if (Bidder.getInstance(sender).getOwnAuctions().size()>=config.auction_maxAuctions_player)
+                    {
+                        sender.sendMessage(t("i")+" "+t("add_max_auction",config.auction_maxAuctions_player));
+                        return true;
+                    }    
+                }
                 if (!(Util.registerAuction(newAuction, sender)))
                 {
                     sender.sendMessage(t("i")+" "+t("add_all_stop"));

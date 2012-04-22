@@ -182,7 +182,12 @@ public class AuctionHouseListener implements Listener
                 {
                     Sign sign = (Sign)event.getBlock().getRelative(face).getState();
                     if (sign.getLine(0).equalsIgnoreCase("[AuctionHouse]"))
-                        event.setCancelled(true);
+                    {    
+                        if  (sign.getRawData()==0x0 && face.equals(BlockFace.NORTH)) {event.setCancelled(true); return;}
+                        if  (sign.getRawData()==0x1 && face.equals(BlockFace.EAST)) {event.setCancelled(true); return;}
+                        if  (sign.getRawData()==0x2 && face.equals(BlockFace.SOUTH)) {event.setCancelled(true); return;}
+                        if  (sign.getRawData()==0x3 && face.equals(BlockFace.WEST))  {event.setCancelled(true); return;}
+                    }    
                 }
             }
         }

@@ -1,7 +1,6 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
@@ -9,6 +8,7 @@ import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AuctionSort;
 import de.cubeisland.AuctionHouse.BaseCommand;
+import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
 import java.util.List;
@@ -83,14 +83,14 @@ public class BidCommand extends AbstractCommand
                 
                 if (auctions.isEmpty())
                 {
-                    sender.sendMessage(t("i")+" "+t("bid_no_auction",args.getItem("i").toString()));
+                    sender.sendMessage(t("i")+" "+t("bid_no_auction",args.getItem("i").getType().toString()+"x"+args.getItem("i").getAmount()));
                     return true;
                 }
                 AuctionSort.sortAuction(auctions, "quantity", quantity);
                 AuctionSort.sortAuction(auctions, "price");
                 if (auctions.isEmpty())
                 {
-                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",quantity,args.getItem("i").toString()));
+                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",args.getItem("i").getType().toString()+"x"+args.getItem("i").getAmount()));
                     return true;
                 }
                 auction = auctions.get(0);//First is Cheapest after Sort
