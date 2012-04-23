@@ -14,7 +14,6 @@ import org.bukkit.entity.Player;
  *
  * @author Faithcaio
  */
-//TODO undibid geht immer
 public class UndoBidCommand extends AbstractCommand
 {
     public UndoBidCommand(BaseCommand base)
@@ -64,11 +63,7 @@ public class UndoBidCommand extends AbstractCommand
                 sender.sendMessage(t("i")+" "+t("undo_bid_n",args.getInt(0)));
                 return true;
             }
-            else
-            {
-                sender.sendMessage(t("e")+" "+t("undo_bidder"));
-                return true;
-            }
+            else return true;
         }
         sender.sendMessage(t("e")+" "+t("undo_fail"));
         return true;

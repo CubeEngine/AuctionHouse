@@ -1,13 +1,10 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
-import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Perm;
-import java.util.Collection;
-import java.util.Collections;
 import org.bukkit.command.CommandSender;
 
 /**

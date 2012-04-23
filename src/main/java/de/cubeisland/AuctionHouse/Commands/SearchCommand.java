@@ -1,7 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
-import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.*;
+import de.cubeisland.AuctionHouse.Auction.Auction;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.Collections;
 import java.util.List;

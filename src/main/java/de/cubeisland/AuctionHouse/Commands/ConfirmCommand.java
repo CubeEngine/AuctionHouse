@@ -10,7 +10,6 @@ import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Manager;
 import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 

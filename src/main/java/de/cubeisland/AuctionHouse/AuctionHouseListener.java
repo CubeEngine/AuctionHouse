@@ -5,7 +5,6 @@ import de.cubeisland.AuctionHouse.Auction.AuctionItem;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ItemContainer;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;

@@ -40,7 +40,6 @@ public class AuctionHouse extends JavaPlugin
     private Economy economy = null;
     private Database database;
 //TODO post-release: später eigene AuktionsBox als Kiste mit separatem inventar 
-//TODO post-release: Durchschnitt Vk Preis von Items überarbeiten
 //TODO post-release: flatfile mit angeboten
 //TODO post-release: force saving Database TRUNCATE all Lists
     public AuctionHouse()

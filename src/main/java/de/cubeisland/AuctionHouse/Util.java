@@ -6,6 +6,7 @@ import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.Database.Database;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -13,9 +14,7 @@ import java.util.regex.Pattern;
 import net.milkbowl.vault.economy.Economy;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -93,6 +92,18 @@ public class Util
                 }
             }
         }
+        
+        AuctionHouse.getInstance().getDB().exec(
+            "INSERT INTO `auctions` ("+
+            "`id` ,"+
+            "`ownerid` ,"+
+            "`item` ,"+
+            "`amount` ,"+
+            "`timestamp`"+
+            ")"+
+            "VALUES (?, ?, ?, ?, ?)"
+            ,auction.getId(), auction.getOwner().getId(), Util.convertItem(auction.getItem()),
+            auction.getItem().getAmount(), new Timestamp(auction.getAuctionEnd()));
         return true;
     }
     

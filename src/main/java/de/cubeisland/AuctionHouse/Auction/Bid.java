@@ -98,5 +98,7 @@ public class Bid implements DatabaseEntity
     public void giveServer()
     {
         this.bidder = ServerBidder.getInstance();
+        db.execUpdate("UPDATE `bids` SET `bidderid`=? WHERE `id`=?", 
+                ServerBidder.getInstance().getId(), this.id);
     }
 }

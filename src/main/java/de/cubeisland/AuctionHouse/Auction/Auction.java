@@ -37,17 +37,6 @@ public class Auction
         this.auctionEnd = auctionEnd;
         this.bids = new Stack<Bid>();
         this.bids.push(new Bid(owner, startBid, this));
-        
-        db.exec(
-            "INSERT INTO `auctions` ("+
-            "`id` ,"+
-            "`ownerid` ,"+
-            "`item` ,"+
-            "`amount` ,"+
-            "`timestamp`"+
-            ")"+
-            "VALUES (?, ?, ?, ?, ?)"
-        ,this.id, owner.getId(), Util.convertItem(item), item.getAmount(), new Timestamp(auctionEnd));
     }
 
     //Override: load in Auction from DataBase
@@ -94,10 +83,12 @@ public class Auction
     {
         if (bidder != this.bids.peek().getBidder())
         {
+            bidder.getPlayer().sendMessage(t("e")+" "+t("undo_bidder"));
             return false;
         }
         if (bidder == this.owner)
         {
+            bidder.getPlayer().sendMessage(t("pro")+" "+t("undo_pro2"));
             return false;
         }
         long undoTime = config.auction_undoTime;
@@ -105,13 +96,12 @@ public class Auction
         {
             undoTime = this.auctionEnd - this.bids.peek().getTimestamp();
         }
-        if ((System.currentTimeMillis() - this.bids.peek().getTimestamp()) < undoTime)
+        if ((System.currentTimeMillis() - this.bids.peek().getTimestamp()) > undoTime)
         {
+            bidder.getPlayer().sendMessage(t("e")+" "+t("undo_time"));
             return false;
         }
         //else: Undo Last Bid
-        
-        //Single Bid delete
         db.execUpdate("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
                       ,bidder.getId(), this.id, this.bids.peek().getTimestamp());
         this.bids.pop();

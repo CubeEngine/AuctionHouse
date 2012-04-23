@@ -1,6 +1,5 @@
 package de.cubeisland.AuctionHouse;
 
-import de.cubeisland.AuctionHouse.Database.Database;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.inventory.ItemStack;
