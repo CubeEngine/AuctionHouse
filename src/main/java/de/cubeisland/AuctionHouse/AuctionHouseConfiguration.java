@@ -19,7 +19,7 @@ public class AuctionHouseConfiguration
     public final long     auction_standardLength;       //in d h m s
     public final List<Integer>   auction_notifyTime;    //List with time in d h m s
     public final int      auction_punish;               //Punishment in % of Bid 0-100
-    public final int      auction_itemContainerLength;  //in days
+    public final int      auction_itemBoxLength;  //in days
     public final int      auction_comission;            //Cost for Owner in %
     public final String   auction_language;             //en / de
     public final boolean  auction_confirmID;            //need confirm to delete Auction per id
@@ -39,7 +39,7 @@ public class AuctionHouseConfiguration
         this.auction_opCanCheat = config.getBoolean("auction.opCanCheat");
         this.auction_timeFormat = config.getString("auction.timeFormat");
         this.auction_punish = config.getInt("auction.punish");
-        this.auction_itemContainerLength = config.getInt("auction.itemContainerLength");
+        this.auction_itemBoxLength = config.getInt("auction.itemBoxLength");
         this.auction_comission = config.getInt("auction.comission");
         this.auction_language = config.getString("auction.language");
         this.auction_confirmID = config.getBoolean("auction.confirmID");

@@ -29,7 +29,7 @@ public class Bidder
     private final ArrayList<Auction> subscriptions;
     private final ArrayList<ItemStack> materialSub;
     private final OfflinePlayer player;
-    private final ItemContainer itemContainer;
+    private final AuctionBox itemContainer;
     private byte notifyState = 0;
     private int id;
     private static final Map<OfflinePlayer, Bidder> bidderInstances = new HashMap<OfflinePlayer, Bidder>();
@@ -40,7 +40,7 @@ public class Bidder
         this.db = AuctionHouse.getInstance().getDB();
         this.player = player;
         this.activeBids = new ArrayList<Auction>();
-        this.itemContainer = new ItemContainer(this);
+        this.itemContainer = new AuctionBox(this);
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = -1;
@@ -94,7 +94,7 @@ public class Bidder
             this.player = AuctionHouse.getInstance().getServer().getOfflinePlayer(name);
         }
         this.activeBids = new ArrayList<Auction>();
-        this.itemContainer = new ItemContainer(this);
+        this.itemContainer = new AuctionBox(this);
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = id;
@@ -188,7 +188,7 @@ public class Bidder
         this.notifyState &= ~state;
     }
 
-    public ItemContainer getContainer()
+    public AuctionBox getContainer()
     {
         return itemContainer;
     }

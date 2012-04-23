@@ -13,14 +13,14 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class ItemContainer
+public class AuctionBox
 {
     private LinkedList<AuctionItem> itemList;
     private final Bidder bidder;
     private Economy econ = AuctionHouse.getInstance().getEconomy();
     private final Database db;
 
-    public ItemContainer(Bidder bidder)
+    public AuctionBox(Bidder bidder)
     {
         this.db = AuctionHouse.getInstance().getDB();
         this.bidder = bidder;

@@ -3,7 +3,7 @@ package de.cubeisland.AuctionHouse;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.AuctionItem;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
-import de.cubeisland.AuctionHouse.Auction.ItemContainer;
+import de.cubeisland.AuctionHouse.Auction.AuctionBox;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.Collections;
 import java.util.List;
@@ -65,7 +65,7 @@ public class AuctionHouseListener implements Listener
                 }
                 if (bidder.hasNotifyState(Bidder.NOTIFY_ITEMS))
                 {
-                    event.getPlayer().sendMessage(t("i")+" "+t("event_old",config.auction_itemContainerLength));
+                    event.getPlayer().sendMessage(t("i")+" "+t("event_old",config.auction_itemBoxLength));
                     bidder.unsetNotifyState(Bidder.NOTIFY_ITEMS);
                 }
             };
@@ -76,13 +76,13 @@ public class AuctionHouseListener implements Listener
     public void goesOffline(PlayerQuitEvent event)
     {
         Bidder bidder = Bidder.getInstance(event.getPlayer());
-        ItemContainer items = bidder.getContainer();
+        AuctionBox items = bidder.getContainer();
         
         if (!(items.getItemList().isEmpty()))
         {
             for (AuctionItem item : items.getItemList())
             {
-                if (System.currentTimeMillis() - item.getDate() > config.auction_itemContainerLength * 24 * 60 * 60 * 1000)
+                if (System.currentTimeMillis() - item.getDate() > config.auction_itemBoxLength * 24 * 60 * 60 * 1000)
                 {
                     items.getItemList().remove(item);
                 }

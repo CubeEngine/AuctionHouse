@@ -6,8 +6,6 @@ import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
 import de.cubeisland.AuctionHouse.Database.Database;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
-import de.cubeisland.AuctionHouse.Util;
-import java.sql.Timestamp;
 import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
 

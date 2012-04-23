@@ -11,7 +11,7 @@ auction:
   opCanCheat: true
   timeFormat: 'dd/MM/yy HH:mm'
   punish: 20
-  itemContainerLength: 2
+  itemBoxLength: 2
   comission: 3
   language: de
   confirmID: false
