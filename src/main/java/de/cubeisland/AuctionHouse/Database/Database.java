@@ -203,6 +203,7 @@ public class Database
     
     public void loadDatabase()
     {
+        AuctionHouse.debug("Start loading database...");
         try{
         ResultSet bidderset =
               this.query("SELECT * FROM `bidder`");
@@ -212,8 +213,8 @@ public class Database
             Bidder bidderer = Bidder.getInstance(bidderset.getInt("id"), bidderset.getString("name"));
             //bitmask
             bidderer.resetNotifyState(bidderset.getByte("notify"));
-           
         }
+        AuctionHouse.debug("All Bidder loaded!");
         int max = AuctionHouse.getInstance().getConfiguration().auction_maxAuctions_overall;
         for (int i=0; i<max; i++)
         {
@@ -245,6 +246,7 @@ public class Database
                 }
             }
         }
+        AuctionHouse.debug("All auctions loaded!");
         //load in Subs
         ResultSet subset =
               this.query("SELECT * FROM `subscription`;");
@@ -261,6 +263,7 @@ public class Database
                 bidder.addDataBaseSub(Util.convertItem(subset.getString("item")));
             }
         }
+        AuctionHouse.debug("All subscriptions loaded!");
         //load in ItemContainer
         ResultSet itemset =
               this.query("SELECT * from `itemcontainer` ORDER BY `timestamp`;");
@@ -276,11 +279,13 @@ public class Database
                     itemset.getInt("id")
                     ));
         }
-        //load in ItemContainer
+        AuctionHouse.debug("All auctionboxes loaded!");
+        //load in PriceList
         ResultSet priceset =
               this.query("SELECT * from `price`");
         while (priceset.next())
             Manager.getInstance().setPrice(Util.convertItem(priceset.getString("item")), priceset.getDouble("price"), priceset.getInt("amount"));
+        AuctionHouse.debug("All average prices loaded!");
         }
         catch (SQLException ex){
         AuctionHouse.log("Error while loading DataBase!");
