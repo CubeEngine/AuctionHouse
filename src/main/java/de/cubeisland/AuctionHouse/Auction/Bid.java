@@ -31,6 +31,9 @@ public class Bid implements DatabaseEntity
     
     private final Database db;
 
+/**
+ * creates a bid and add it to DataBase
+ */   
     public Bid(Bidder bidder, double amount, Auction auction)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -56,13 +59,17 @@ public class Bid implements DatabaseEntity
         {}
         
     }
-
+/**
+ *  @return TableName in Database
+ */ 
     public String getTable()
     {
         return "bids";
     }
     
-    //Override: load in Bid from DataBase
+/**
+ *  load in Bid from Database
+ */ 
     public Bid(int id,int bidderid ,String bidder, double amount, Timestamp timestamp)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -74,27 +81,37 @@ public class Bid implements DatabaseEntity
         this.timestamp = timestamp.getTime();
         this.id = id;
     }
-
+    
+/**
+ *  @return Bid amount
+ */ 
     public double getAmount()
     {
         return this.amount;
     }
 
+/**
+ *  @return Bidder belonging to this bid
+ */ 
     public Bidder getBidder()
     {
         return this.bidder;
     }
-
+/**
+ *  @return timestamp as long
+ */ 
     public long getTimestamp()
     {
         return this.timestamp;
     }
-    
+ 
     public int getId()
     {
         return this.id;
     }
-    
+/**
+ *  give this bid to the Server + update Database
+ */     
     public void giveServer()
     {
         this.bidder = ServerBidder.getInstance();

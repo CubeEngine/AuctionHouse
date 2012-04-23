@@ -73,7 +73,7 @@ public class AuctionTimer
                                                                     econ.format(topbid * config.auction_comission / 100)));
                                         }
                                     }
-                                    winner.getContainer().addItem(auction);
+                                    winner.getBox().addItem(auction);
                                     Manager.getInstance().adjustPrice(auction.getItem(), topbid);
                                     if (winner.isOnline())
                                     {

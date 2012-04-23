@@ -10,7 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * Represents a box containing all Items from fished auctions
+ * 
  * @author Faithcaio
  */
 public class AuctionBox
@@ -20,18 +21,27 @@ public class AuctionBox
     private Economy econ = AuctionHouse.getInstance().getEconomy();
     private final Database db;
 
+/**
+ * creates a new AuctionBox for bidder
+ */ 
     public AuctionBox(Bidder bidder)
     {
         this.db = AuctionHouse.getInstance().getDB();
         this.bidder = bidder;
         this.itemList = new LinkedList<AuctionItem>();
     }
-
+    
+/**
+ * fills Box with auction
+ */ 
     public void addItem(Auction auction)
     {
         this.itemList.add(new AuctionItem(auction));
     }
-
+    
+/**
+ * try to give Next AuctionItem to the player
+ */ 
     public boolean giveNextItem()
     {
         Player player = this.bidder.getPlayer();
@@ -75,7 +85,10 @@ public class AuctionBox
             return true;
         }
     }
-    
+
+/**
+ * @return list of AuctionItems stored in this Box
+ */ 
     public LinkedList<AuctionItem> getItemList()
     {
         return this.itemList;

@@ -9,7 +9,8 @@ import java.sql.Timestamp;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * Represents an Item in the AuctionBox
+ * 
  * @author Faithcaio
  */
 public class AuctionItem
@@ -22,6 +23,9 @@ public class AuctionItem
     private int id;
     private final Database db;
     
+/**
+ * Creates a new AuctionItem when won auction + Add it to DataBase
+ */
     public AuctionItem(Auction auction)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -72,6 +76,9 @@ public class AuctionItem
         }
     }
 
+/**
+ * Loads in an AuctionItem from DataBase
+ */
     public AuctionItem(Bidder bidder, ItemStack item, Timestamp time,String owner, double price, int id)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -83,6 +90,9 @@ public class AuctionItem
         this.id = id; 
     }
     
+/**
+ * Creates a new AuctionItem when aborted + Add it to DataBase
+ */ 
     public AuctionItem(ItemStack item, Bidder bidder)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -118,7 +128,9 @@ public class AuctionItem
         }
     }
     
-    //Fake Auktion
+/**
+ * Creates a Fake auctionItem
+ */
     private AuctionItem(Bidder bidder, ItemStack item, long date, String owner, Double price)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -129,36 +141,57 @@ public class AuctionItem
         this.price = price;
     }
 
+/**
+ * @return A clone of this auctionItem
+ */
     public AuctionItem cloneItem()
     {
         return new AuctionItem(bidder, item, date, owner, price);
     }
-    
+
+/**
+ * @return owner of this auctionItem
+ */
     public Bidder getBidder()
     {
         return this.bidder;
     }
     
+/**
+ * @return item as Itemstack
+ */ 
     public ItemStack getItem()
     {
         return this.item;
     }
     
+/**
+ * @return date when added to Box
+ */ 
     public long getDate()
     {
         return this.date;
     }
     
+/**
+ * @return original owner
+ */ 
     public String getOwner()
     {
         return this.owner;
     }
     
+/**
+ * @return price item was bought
+ */ 
     public Double getPrice()
     {
         return this.price;
     }
     
+/**
+ * @return Id in DataBase
+ */ 
     public int getId()
     {
         return this.id;

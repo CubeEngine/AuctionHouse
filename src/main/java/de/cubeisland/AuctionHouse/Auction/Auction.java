@@ -23,9 +23,11 @@ public class Auction
     private final Stack<Bid> bids;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfiguration();
-    
     private final Database db;
-
+    
+/**
+ * Creates an new auction
+ */
     public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -37,7 +39,9 @@ public class Auction
         this.bids.push(new Bid(owner, startBid, this));
     }
 
-    //Override: load in Auction from DataBase
+/**
+ * Load in auction from DataBase
+ */
     public Auction(int id,ItemStack item, Bidder owner, long auctionEnd)
     {
         Manager.getInstance().getFreeIds().removeElement(id);
@@ -48,7 +52,11 @@ public class Auction
         this.auctionEnd = auctionEnd;
         this.bids = new Stack<Bid>();
     }
-    
+
+/**
+ * Adds a bid to auction
+ * @return true if bidded succesfully
+ */
     public boolean bid(final Bidder bidder, final double amount)//evtl nicht bool / bessere Unterscheidung
     {
         if (amount <= 0)
@@ -76,7 +84,11 @@ public class Auction
         bidder.getPlayer().sendMessage(t("e")+" "+t("auc_bid_money2"));
         return false;
     }
-
+    
+/**
+ * reverts a bid if allowed
+ * @return true if reverted succesfully
+ */
     public boolean undobid(final Bidder bidder)
     {
         if (bidder != this.bids.peek().getBidder())
@@ -105,37 +117,59 @@ public class Auction
         this.bids.pop();
         return true;
     }
-    
+
+/**
+ * @return id as int
+ */   
     public int getId()
     {
        return this.id; 
     }
     
+/**
+ * sets the AuctionID
+ * @param int id
+ */   
     public void setId(int id)
     {
         this.id = id;
     }
     
+/**
+ * @return item as ItemStack
+ */       
     public ItemStack getItem()
     {
         return this.item;
-    }    
+    }   
     
+/**
+ * @return owner as Bidder
+ */      
     public Bidder getOwner()
     {
         return this.owner;
     }
     
+/**
+ * @return auctionEnd in Milliseconds
+ */     
     public long getAuctionEnd()
     {
         return this.auctionEnd;
     }
     
+/**
+ * @return all bids
+ */       
     public Stack<Bid> getBids()
     {
         return this.bids;
     }
     
+/**
+ * gives owner (and last/initial bid) to Server
+ */    
     public void giveServer()
     {
         this.owner = ServerBidder.getInstance();

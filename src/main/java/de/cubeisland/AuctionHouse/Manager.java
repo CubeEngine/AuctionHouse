@@ -149,7 +149,7 @@ public class Manager
                 auction.getBids().pop();
             }
             if (!win)
-                auction.getOwner().getContainer().addItem(auction);
+                auction.getOwner().getBox().addItem(auction);
         }
         else
         {

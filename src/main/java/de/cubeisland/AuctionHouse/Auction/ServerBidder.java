@@ -1,7 +1,8 @@
 package de.cubeisland.AuctionHouse.Auction;
 
 /**
- *
+ * Represents the ServerConsole as Bidder
+ * 
  * @author Faithcaio
  */
 public class ServerBidder extends Bidder
@@ -13,6 +14,9 @@ public class ServerBidder extends Bidder
         super(null);
     }
 
+/*
+* @return Instance of ServerBidder
+*/
     public static Bidder getInstance()
     {
         if (instance == null)
@@ -22,11 +26,18 @@ public class ServerBidder extends Bidder
         return instance;
     }
     
+/*
+* create new ServerBidder from Database
+*/
     public ServerBidder(int id)
     {
         super(id,"*Server");
     }
-
+    
+/*
+* load in ServerBidder from Database
+* @return Instance of ServerBidder
+*/
     public static Bidder getInstance(int id)
     {
         if (instance == null)

@@ -31,7 +31,7 @@ public class GetItemsCommand extends AbstractCommand
             return true;
         }
                 
-        if (!(Bidder.getInstance((Player) sender).getContainer().giveNextItem()))
+        if (!(Bidder.getInstance((Player) sender).getBox().giveNextItem()))
         {
             sender.sendMessage(t("get_empty"));
         }

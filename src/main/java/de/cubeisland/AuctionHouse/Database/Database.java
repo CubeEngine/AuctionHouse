@@ -270,7 +270,7 @@ public class Database
         while (itemset.next())
         {
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));
-            bidder.getContainer().getItemList().add(
+            bidder.getBox().getItemList().add(
                     new AuctionItem( bidder,
                     Util.convertItem(itemset.getString("item"),itemset.getInt("amount")),
                     itemset.getTimestamp("timestamp"),

@@ -76,7 +76,7 @@ public class AuctionHouseListener implements Listener
     public void goesOffline(PlayerQuitEvent event)
     {
         Bidder bidder = Bidder.getInstance(event.getPlayer());
-        AuctionBox items = bidder.getContainer();
+        AuctionBox items = bidder.getBox();
         
         if (!(items.getItemList().isEmpty()))
         {
@@ -213,7 +213,7 @@ public class AuctionHouseListener implements Listener
                     {
                         //AuktionBox GetItems
                         if (!Perm.get().check(player,"auctionhouse.sign.auctionbox")) return;
-                        if (!(Bidder.getInstance(player).getContainer().giveNextItem()))
+                        if (!(Bidder.getInstance(player).getBox().giveNextItem()))
                         {
                             player.sendMessage(t("i")+" "+t("time_sign_empty"));
                         }
