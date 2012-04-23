@@ -62,7 +62,7 @@ permissions:
       auctionhouse.command.add.nolomit: true
       auctionhouse.command.bid.infinite: true
       auctionhouse.sign.*: true
-      auctionhouse.admun.reload: true
+      auctionhouse.admin.reload: true
       auctionhouse.admin.save: true
       
       

@@ -4,11 +4,13 @@ import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Commands.AddCommand;
 import de.cubeisland.AuctionHouse.Commands.BidCommand;
 import de.cubeisland.AuctionHouse.Commands.ConfirmCommand;
+import de.cubeisland.AuctionHouse.Commands.ForceDBSaveCommand;
 import de.cubeisland.AuctionHouse.Commands.GetItemsCommand;
 import de.cubeisland.AuctionHouse.Commands.HelpCommand;
 import de.cubeisland.AuctionHouse.Commands.InfoCommand;
 import de.cubeisland.AuctionHouse.Commands.ListCommand;
 import de.cubeisland.AuctionHouse.Commands.NotifyCommand;
+import de.cubeisland.AuctionHouse.Commands.ReloadCommand;
 import de.cubeisland.AuctionHouse.Commands.RemoveCommand;
 import de.cubeisland.AuctionHouse.Commands.SearchCommand;
 import de.cubeisland.AuctionHouse.Commands.SubscribeCommand;
@@ -102,19 +104,22 @@ public class AuctionHouse extends JavaPlugin
             .registerSubCommand(new  UnSubscribeCommand(baseCommand))
             .registerSubCommand(new         ListCommand(baseCommand))
             .registerSubCommand(new      ConfirmCommand(baseCommand))    
+            .registerSubCommand(new       ReloadCommand(baseCommand)) 
+            .registerSubCommand(new  ForceDBSaveCommand(baseCommand)) 
         .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);
         
-        AuctionTimer.getInstance().firstschedule(Manager.getInstance());
+        AuctionTimer.getInstance().firstschedule();
     }
     
     @Override
     public void onDisable()
     {
-        this.database.close();
+        //this.database.close(); //TODO gibt nach reload Fehler weil verbindung geschlossen
         this.database = null;
         this.economy = null;
         this.config = null;
+        AuctionTimer.getInstance().stop();
         Bidder.getInstances().clear();
     }
     

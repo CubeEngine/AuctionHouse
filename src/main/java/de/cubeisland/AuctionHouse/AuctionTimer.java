@@ -26,11 +26,9 @@ public class AuctionTimer
     private static AuctionTimer instance = null;
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfiguration();
-    private final Database db;
 
     public AuctionTimer()
     {
-        this.db = AuctionHouse.getInstance().getDB();
         timerTask = new TimerTask()
         {
             public void run()
@@ -219,9 +217,22 @@ public class AuctionTimer
 /**
  * start the timer!
  */ 
-    public void firstschedule(Manager auctions)
+    public void firstschedule()
     {
+
+        
         timer.schedule(timerTask, 1000, 1000);
         notifyTimer.schedule(notifyTask, 1000, 1000);
     }
+/**
+ * removes the timer!
+ */ 
+    public void stop()
+    {
+        timer.cancel();
+        notifyTimer.cancel();
+        this.instance = null;
+        Runtime.getRuntime().gc();
+    }
+    
 }

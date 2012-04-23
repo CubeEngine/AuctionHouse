@@ -38,6 +38,7 @@ public class HelpCommand extends AbstractCommand
             if (this.check(command,"subscribe","sub"))   if (!sender.hasPermission("auctionhouse.command.sub")) continue;
             if (this.check(command,"unsubscribe","unsub")) if (!sender.hasPermission("auctionhouse.command.sub")) continue;
             if (this.check(command,"undobid"))     if (!sender.hasPermission("auctionhouse.command.undobid")) continue;
+            if (this.check(command,"reload"))  if (!sender.hasPermission("auctionhouse.admin.reload")) continue;
             sender.sendMessage(command.getUsage());
             sender.sendMessage("    " + command.getDescription());
         }

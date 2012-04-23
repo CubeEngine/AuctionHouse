@@ -1,6 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
 import org.bukkit.command.CommandSender;
@@ -21,12 +22,9 @@ public class ReloadCommand extends AbstractCommand
     
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        //TODO reloadIT  
-        //TODO do not show in help perm
-        /*
-         *       auctionhouse.admun.reload: true
-      auctionhouse.admin.save: true
-         */
+        AuctionHouse.getInstance().onDisable();
+        AuctionHouse.getInstance().onEnable();
+        AuctionHouse.log("reload complete");
         return true;
     }
     
