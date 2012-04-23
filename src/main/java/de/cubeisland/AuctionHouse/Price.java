@@ -15,6 +15,9 @@ public class Price {
     
     public Price(){}
     
+/**
+ * @return average Price of item
+ */
     public double getPrice(ItemStack item)
     {
         if (this.price.get(item)==null)
@@ -22,6 +25,9 @@ public class Price {
         return this.price.get(item);
     }
     
+/**
+ * adjust average Price for item
+ */
     public double adjustPrice(ItemStack item, double price)
     {
         double t_price;
@@ -47,6 +53,9 @@ public class Price {
         return this.setPrice(item, t_price, t_amount);
     }
     
+/**
+ * set average Price for item
+ */
     public double setPrice(ItemStack item, double price, int amount)
     {
         this.price.remove(item);
@@ -56,6 +65,9 @@ public class Price {
         return this.price.get(item); 
     }
     
+/**
+ * remove average Price for item
+ */
     public void resetPrice(ItemStack item)
     {
         this.price.remove(item);

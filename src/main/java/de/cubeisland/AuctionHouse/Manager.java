@@ -30,6 +30,9 @@ public class Manager
     private final Database db;
     private Price price = new Price();
 
+/**
+ * Init Manager
+ */    
     private Manager()
     {
         this.db = AuctionHouse.getInstance().getDB();
@@ -45,7 +48,10 @@ public class Manager
             this.freeIds.push(i);
         }
     }
-
+    
+/**
+ * @return Manager or create new
+ */  
     public static Manager getInstance()
     {
         if (instance == null)
@@ -54,7 +60,10 @@ public class Manager
         }
         return instance;
     }
-
+    
+/**
+ * @return Manager or create new
+ */  
     public Auction getAuction(int id) //Get Auction with ID
     {
         Auction auction = null;
@@ -69,27 +78,42 @@ public class Manager
         return auction;
     }
 
+/**
+ * @return All auctions
+ */
     public List<Auction> getAuctions()
     {
         return auctions;
     }
-
-    public Auction getIndexAuction(int index)
+    
+/**
+ * @return auction with id
+ */
+    public Auction getIndexAuction(int id)
     {
-        return auctions.get(index);
+        return auctions.get(id);
     }
 
+/**
+ * @return true if no freeId availiable
+ */
     public boolean isEmpty()
     {
         return freeIds.isEmpty();
     }
-
+    
+/**
+ * @return amount of auctions
+ */
     public int size()
     {
         return auctions.size();
     }
-
-    public List<Auction> getAuctionItem(ItemStack material) //Get all Auctions with material
+    
+/**
+ * @return All auctions with material
+ */
+    public List<Auction> getAuctionItem(ItemStack material)
     {
         List<Auction> auctionlist = new ArrayList<Auction>();
         int size = this.auctions.size();
@@ -108,7 +132,10 @@ public class Manager
         return auctionlist;
     }
     
-    public List<Auction> getAuctionItem(ItemStack material, Bidder bidder) //Get all Auctions with material without bidder
+/**
+ * @return All auctions with material and without bidder
+ */
+    public List<Auction> getAuctionItem(ItemStack material, Bidder bidder)
     {
         List<Auction> auctionlist = this.getAuctionItem(material);
         for (Auction auction : bidder.getActiveBids())
@@ -120,7 +147,10 @@ public class Manager
         }
         return auctionlist;
     }
-
+    
+/**
+ * @return All auctions sorted by EndDate
+ */
     public List<Auction> getEndingAuctions()
     {
         List<Auction> endingActions = new ArrayList<Auction>();
@@ -133,7 +163,10 @@ public class Manager
         
         return endingActions;
     }
-
+    
+/**
+ * removes Auction completly
+ */
     public boolean cancelAuction(Auction auction, boolean win)
     {
         this.freeIds.push(auction.getId());
@@ -163,32 +196,49 @@ public class Manager
         return true;
     }
 
-    public boolean addAuction(Auction auction)
+/**
+ * Adds an auction
+ */
+    public void addAuction(Auction auction)
     {
         this.auctions.add(auction);
-        return true;
     }
     
+/**
+ * @return Stack of Free AuctionIds
+ */
     public Stack<Integer> getFreeIds()
     {
         return this.freeIds;
     }
     
+/**
+ * @return HashMap for remove Bidder-auction confirmation
+ */
     public HashMap<Bidder, Bidder> getBidderConfirm()
     {
         return this.remBidderConfirm;
     }
     
+/**
+ * @return HashMap for remove all auction confirmation
+ */
     public HashSet<Bidder> getAllConfirm()
     {
         return this.remAllConfirm;
     }
-    
+
+/**
+ * @return HashMap for remove single auction confirmation
+ */
     public HashMap<Bidder, Integer> getSingleConfirm()
     {
         return this.remSingleConfirm;
     }
     
+/**
+ * removes old auctions after starting Server
+ */
     public void removeOldAuctions()
     {
         List<Auction> t_auctions = new ArrayList<Auction>(this.auctions);
@@ -199,16 +249,25 @@ public class Manager
         }
     }
     
+/**
+ * @return average Price of item
+ */
     public double getPrice(ItemStack item)
     {
        return this.price.getPrice(item);
     }
     
+/**
+ * adjust average Price for item
+ */
     public double adjustPrice(ItemStack item, double price)
     {
         return this.price.adjustPrice(item, price);
     }
     
+/**
+ * set average Price for item
+ */
     public double setPrice(ItemStack item, double price, int amount)
     {
         return this.price.setPrice(item, price, amount);

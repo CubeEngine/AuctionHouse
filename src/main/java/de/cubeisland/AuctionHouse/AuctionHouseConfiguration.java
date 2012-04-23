@@ -6,6 +6,9 @@ import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.inventory.ItemStack;
 
+/**
+ * load in configuration file
+ */
 public class AuctionHouseConfiguration
 {
     public final long     auction_undoTime;             //in d h m s | -1 is infinite
@@ -14,12 +17,12 @@ public class AuctionHouseConfiguration
     public final boolean  auction_maxAuctions_opIgnore; //Op ignore perPlayer limit NOT Overall Limit!
     public final long     auction_maxLength;            //in d h m s | -1 is infinite
     public final boolean  auction_opCanCheat;           //Op can Cheat Items for Auction
-    public final List<ItemStack> auction_blacklist;        //Blacklist Materials
+    public final List<ItemStack> auction_blacklist;     //Blacklist Materials
     public final String   auction_timeFormat;           //Time Format Output
     public final long     auction_standardLength;       //in d h m s
     public final List<Integer>   auction_notifyTime;    //List with time in d h m s
     public final int      auction_punish;               //Punishment in % of Bid 0-100
-    public final int      auction_itemBoxLength;  //in days
+    public final int      auction_itemBoxLength;        //in days
     public final int      auction_comission;            //Cost for Owner in %
     public final String   auction_language;             //en / de
     public final boolean  auction_confirmID;            //need confirm to delete Auction per id
@@ -60,6 +63,9 @@ public class AuctionHouseConfiguration
         this.auction_blacklist = getItemList(config.getStringList("auction.blacklist"));
     }
 
+/**
+ * converts StringList to IntegerList
+ */
     private List<Integer> convertlist(List<String> str)
     {
         List<Integer> list = new ArrayList<Integer>();
@@ -70,7 +76,10 @@ public class AuctionHouseConfiguration
         return list;
 
     }
-
+    
+/**
+ * converts StringList to ItemStack-List
+ */
     private List<ItemStack> getItemList(List<String> str)
     {
         int max = str.size();

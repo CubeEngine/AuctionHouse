@@ -41,6 +41,9 @@ public class AuctionHouseListener implements Listener
         this.econ = plugin.getEconomy();
     }
 
+/**
+ * handles notification when player goes online
+ */
     @EventHandler
     public void goesOnline(final PlayerJoinEvent event)
     {
@@ -72,6 +75,9 @@ public class AuctionHouseListener implements Listener
         });
     }
     
+/**
+ * handles notification when player goes offline
+ */
     @EventHandler
     public void goesOffline(PlayerQuitEvent event)
     {
@@ -94,7 +100,10 @@ public class AuctionHouseListener implements Listener
         }
         Util.updateNotifyData(bidder);
     }
-   
+
+/**
+ * checks AuctionHouse sign creation
+ */
     @EventHandler
     public void onSignChange(SignChangeEvent event)
     {
@@ -158,6 +167,9 @@ public class AuctionHouseListener implements Listener
         }
     }
     
+/**
+ * prevent destroying signs
+ */    
     @EventHandler
     public void onBreakBlock(BlockBreakEvent event)
     {
@@ -192,6 +204,9 @@ public class AuctionHouseListener implements Listener
         }
     }
     
+/**
+ * handles RightClick on Auctionsigns
+ */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event)
     {

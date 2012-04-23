@@ -13,7 +13,8 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 
 /**
- *
+ * Checks for ending auctions and notification
+ * 
  * @author Faithcaio
  */
 public class AuctionTimer
@@ -215,6 +216,9 @@ public class AuctionTimer
         return instance;
     }
 
+/**
+ * start the timer!
+ */ 
     public void firstschedule(Manager auctions)
     {
         timer.schedule(timerTask, 1000, 1000);

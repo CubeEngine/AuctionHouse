@@ -18,7 +18,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * a lot of methods used everywhere
+ * 
  * @author Faithcaio
  */
 public class Util
@@ -26,6 +27,9 @@ public class Util
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     
+/**
+ * Converts Time in d | h | m | s  to Milliseconds
+ */ 
     public static int convertTimeToMillis(String str) //ty quick_wango
     {
         Pattern pattern = Pattern.compile("^(\\d+)([smhd])?$", Pattern.CASE_INSENSITIVE);
@@ -66,12 +70,17 @@ public class Util
         return time;
     }
     
-    
+/**
+ * register auction for sender
+ */ 
     public static boolean registerAuction(Auction auction, CommandSender sender)
     {
         return registerAuction(auction, Bidder.getInstance(sender));
     }
     
+/**
+ * register auction for bidder
+ */ 
     public static boolean registerAuction(Auction auction, Bidder owner)
     {
         if (Manager.getInstance().isEmpty())
@@ -107,7 +116,9 @@ public class Util
         return true;
     }
     
-    
+/**
+ * send Info about auction to sender
+ */ 
     public static void sendInfo(CommandSender sender, Auction auction)
     {
         Economy econ = plugin.getEconomy();
@@ -189,6 +200,9 @@ public class Util
         return out;
     }
     
+/**
+ * convert Item as String / Integer to ItemStack
+ */ 
     public static ItemStack convertItem (String in, int amount)
     {
         ItemStack out = convertItem(in);
@@ -196,6 +210,9 @@ public class Util
         return out;
     }
     
+/**
+ * convert ItemStack to String
+ */ 
     public static ItemStack convertItem(String in)
     {
         //id:data
@@ -238,6 +255,9 @@ public class Util
         return out;
     }
     
+/**
+ * update Notification for bidder in DataBase
+ */ 
     public static void updateNotifyData(Bidder bidder)
     {
         Database db = AuctionHouse.getInstance().getDB();

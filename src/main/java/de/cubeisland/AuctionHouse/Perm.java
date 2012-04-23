@@ -6,7 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Check permissions and send message to ths User
+ * 
  * @author Faithcaio
  */
 public class Perm {

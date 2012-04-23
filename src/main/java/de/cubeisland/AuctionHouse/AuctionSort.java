@@ -68,6 +68,10 @@ public class AuctionSort
         };
     }
 
+/**
+ * Sorts auctionlist
+ * @param type: id | price | date | quantity
+ */    
     public static void sortAuction(List<Auction> auctionlist, String type)
     {
         if (type.equalsIgnoreCase("id"))
@@ -88,6 +92,11 @@ public class AuctionSort
         }
     }
 
+/**
+ * Sorts auctionlist
+ * @param type: id | price | date | quantity
+ * @param quantity: filter low quantity
+ */
     public static List<Auction> sortAuction(List<Auction> auctionlist, String type, int quantity)
     {
         sortAuction(auctionlist, type);

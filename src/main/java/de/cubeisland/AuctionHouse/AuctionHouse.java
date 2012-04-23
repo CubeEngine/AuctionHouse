@@ -26,6 +26,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Main Class
+ */
 public class AuctionHouse extends JavaPlugin
 {
     private static AuctionHouse instance = null;
