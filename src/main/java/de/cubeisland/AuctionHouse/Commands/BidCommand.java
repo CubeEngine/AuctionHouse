@@ -18,7 +18,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Bids on an auction
+ * 
  * @author Faithcaio
  */
 public class BidCommand extends AbstractCommand

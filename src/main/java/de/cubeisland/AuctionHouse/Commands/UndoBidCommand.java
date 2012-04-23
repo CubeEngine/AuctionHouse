@@ -11,7 +11,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Undoing Bids
+ * 
  * @author Faithcaio
  */
 public class UndoBidCommand extends AbstractCommand

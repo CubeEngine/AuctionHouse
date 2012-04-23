@@ -10,7 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Provides Info for Auctions
+ * 
  * @author Faithcaio
  */
 public class InfoCommand extends AbstractCommand

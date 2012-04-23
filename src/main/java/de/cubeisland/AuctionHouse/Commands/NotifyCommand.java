@@ -13,7 +13,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Changes notification
+ * 
  * @author Faithcaio
  */
 public class NotifyCommand extends AbstractCommand

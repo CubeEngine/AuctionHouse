@@ -12,7 +12,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Gives you the next Item from your ItemContainer
+ * 
  * @author Faithcaio
  */
 public class GetItemsCommand extends AbstractCommand

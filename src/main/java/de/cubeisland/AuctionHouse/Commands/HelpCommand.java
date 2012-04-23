@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
  * This command prints a help message
  *
  * @author Phillip Schichtel
+ * @author Faithcaio
  */
 public class HelpCommand extends AbstractCommand
 {

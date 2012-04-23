@@ -14,7 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * Confirms a requested action
+ * 
  * @author Faithcaio
  */
 public class ConfirmCommand extends AbstractCommand

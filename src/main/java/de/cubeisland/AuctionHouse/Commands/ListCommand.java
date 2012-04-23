@@ -11,7 +11,7 @@ import de.cubeisland.AuctionHouse.Util;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 /**
- 
+ * Lists all auctions
  * @author Faithcaio
  */
 public class ListCommand extends AbstractCommand

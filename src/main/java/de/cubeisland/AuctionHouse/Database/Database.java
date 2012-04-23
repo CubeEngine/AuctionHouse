@@ -201,6 +201,9 @@ public class Database
         }
     }
     
+/*
+ * loads in DataBase
+ */
     public void loadDatabase()
     {
         AuctionHouse.debug("Start loading database...");

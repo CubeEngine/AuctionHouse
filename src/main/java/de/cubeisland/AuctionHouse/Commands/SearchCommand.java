@@ -9,7 +9,8 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 
 /**
- *
+ * Searchs for auctions
+ * 
  * @author Faithcaio
  */
 public class SearchCommand extends AbstractCommand

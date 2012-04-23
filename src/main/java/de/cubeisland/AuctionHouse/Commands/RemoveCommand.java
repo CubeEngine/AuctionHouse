@@ -16,7 +16,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * Removes an auction
+ * 
  * @author Faithcaio
  */
 public class RemoveCommand extends AbstractCommand

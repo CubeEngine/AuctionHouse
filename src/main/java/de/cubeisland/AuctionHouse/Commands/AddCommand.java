@@ -21,7 +21,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
- *
+ * Adds an auction.
+ * 
  * @author Faithcaio
  */
 public class AddCommand extends AbstractCommand

@@ -12,7 +12,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * Manages your Subscriptions
+ * 
  * @author Faithcaio
  */
 public class UnSubscribeCommand extends AbstractCommand
