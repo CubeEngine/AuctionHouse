@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-//TODO Fehler bei ah add -s Server -m 1 1 1 1 1
+
 /**
  * Adds an auction.
  * 

@@ -47,7 +47,7 @@ public class AuctionHouse extends JavaPlugin
     private Perm perm;
 //TODO später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO flatfile mit angeboten
-//TODO DatenBank leichter nutzen
+//TODO DatenBank leichter nutzen ohne SQL überall
     public AuctionHouse()
     {
         instance = this;
@@ -87,7 +87,6 @@ public class AuctionHouse extends JavaPlugin
         
         database.loadDatabase();
         Manager.getInstance().removeOldAuctions();
-        perm.Init();
         
         this.pm.registerEvents(new AuctionHouseListener(this), this);
         

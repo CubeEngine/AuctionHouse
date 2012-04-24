@@ -12,66 +12,38 @@ import org.bukkit.command.CommandSender;
  */
 public enum Perm 
 {
-            command_add,
-            command_add_multi,
-            command_bid,
-            sign_auctionbox,
-            command_getItems,
-            use,
-            command_info,
-            command_info_others,
-            command_notify,
-            command_delete_all,
-            command_delete_id,
-            command_delete_server,
-            command_delete_player,
-            command_delete_player_other,
-            command_search,
-            command_undobid,
-            sign_start,
-            sign_list,
-            sign_create_box,
-            sign_create_add,
-            sign_create_list,
-            command_sub,
-            command_bid_infinite,
-            command_add_cheatItems;
+    command_add("add_Auc_perm"),
+    command_add_multi("add_multi_perm"),
+    command_bid("bid_perm"),
+    sign_auctionbox("event_sign_perm"),
+    command_getItems("get_perm"),
+    use("help_perm"),
+    command_info("info_perm"),
+    command_info_others("info_perm_other"),
+    command_notify("note_perm"),
+    command_delete_all("rem_all_perm"),
+    command_delete_id("rem_id_perm"),
+    command_delete_server("rem_serv_perm"),
+    command_delete_player("rem_own_perm"),
+    command_delete_player_other("rem_other_perm"),
+    command_search("search_perm"),
+    command_undobid("undo_perm"),
+    sign_start("event_sign_perm"),
+    sign_list("event_sign_perm"),
+    sign_create_box("event_signplacebox_perm"),
+    sign_create_add("event_signplaceadd_perm"),
+    sign_create_list("event_signplacelist_perm"),
+    command_sub("sub_perm"),
+    command_bid_infinite(null),
+    command_add_cheatItems(null);
   
-    private Map<Perm,String> perms;
+    private final String text;
 
-    /**
-     * Initialize Permission Messages
-     */
-    public void Init()
+    private Perm(final String text)
     {
-        this.perms = new EnumMap<Perm,String>(Perm.class);
-        this.perms.put(command_add,"add_Auc_perm"); 
-        this.perms.put(command_add_multi,"add_multi_perm");
-        this.perms.put(command_bid,"bid_perm");
-        this.perms.put(sign_auctionbox,"event_sign_perm");
-        this.perms.put(command_getItems,"get_perm");
-        this.perms.put(use,"help_perm");
-        this.perms.put(command_info,"info_perm");
-        this.perms.put(command_info_others,"info_perm_other");
-        this.perms.put(command_notify,"note_perm");
-        this.perms.put(command_delete_all,"rem_all_perm");
-        this.perms.put(command_delete_id,"rem_id_perm");
-        this.perms.put(command_delete_server,"rem_serv_perm");
-        this.perms.put(command_delete_player,"rem_own_perm");
-        this.perms.put(command_delete_player_other,"rem_other_perm");
-        this.perms.put(command_search,"search_perm");
-        this.perms.put(command_undobid,"undo_perm");
-        this.perms.put(sign_start,"event_sign_perm");
-        this.perms.put(sign_list,"event_sign_perm");
-        this.perms.put(sign_create_box,"event_signplacebox_perm");
-        this.perms.put(sign_create_add,"event_signplaceadd_perm");
-        this.perms.put(sign_create_list,"event_signplacelist_perm");
-        this.perms.put(command_sub,"sub_perm");  
+        this.text = text;
     }
-
-/*
- * 
- */
+    
     /**
      * Transform perm to String and check for auctionhouse permission
      * @param sender
@@ -80,7 +52,7 @@ public enum Perm
      */
     private boolean checkPerm (CommandSender sender, Perm perm)
     {
-        return sender.hasPermission("auctionhouse."+perm.toString().replace("_", "."));
+        return sender.hasPermission("auctionhouse."+perm.name().replace("_", "."));
     }
  
     /**
@@ -110,9 +82,9 @@ public enum Perm
      */
     private void send (CommandSender sender, Perm perm)
     {
-        if (this.perms.get(perm)!=null)
+        if (this.text!=null)
         {
-            sender.sendMessage(t("perm")+" "+t(this.perms.get(perm)));
+            sender.sendMessage(t("perm")+" "+t(this.text));
         }
     }
 }
