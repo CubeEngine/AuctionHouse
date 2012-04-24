@@ -4,6 +4,7 @@ import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.EnumMap;
 import java.util.Map;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.Permissible;
 
 /**
  * Check permissions and send message to ths User
@@ -38,10 +39,12 @@ public enum Perm
     command_add_cheatItems(null);
   
     private final String text;
+    private final String permission;
 
     private Perm(final String text)
     {
         this.text = text;
+        this.permission = "auctionhouse." + this.name().toLowerCase().replace("_", ".");
     }
     
     /**
@@ -50,9 +53,9 @@ public enum Perm
      * @param perm
      * @return true if sender has the perm permission
      */
-    private boolean checkPerm (CommandSender sender, Perm perm)
+    private boolean checkPerm (Permissible sender)
     {
-        return sender.hasPermission("auctionhouse."+perm.name().replace("_", "."));
+        return sender.hasPermission(this.permission);
     }
  
     /**
@@ -63,9 +66,9 @@ public enum Perm
      */
     public boolean check (CommandSender sender, Perm perm)
     {
-        if (this.checkPerm(sender, perm))
+        if (this.checkPerm(sender))
         {
-            this.send(sender, perm);
+            this.send(sender);
             return false;
         }
         else
@@ -80,7 +83,7 @@ public enum Perm
      * @param perm
      * permission in the enum
      */
-    private void send (CommandSender sender, Perm perm)
+    private void send (CommandSender sender)
     {
         if (this.text!=null)
         {
