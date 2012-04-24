@@ -39,6 +39,9 @@ public enum Perm
   
     private Map<Perm,String> perms;
 
+    /**
+     * Initialize Permission Messages
+     */
     public void Init()
     {
         this.perms = new EnumMap<Perm,String>(Perm.class);
@@ -66,11 +69,26 @@ public enum Perm
         this.perms.put(command_sub,"sub_perm");  
     }
 
+/*
+ * 
+ */
+    /**
+     * Transform perm to String and check for auctionhouse permission
+     * @param sender
+     * @param perm
+     * @return true if sender has the perm permission
+     */
     private boolean checkPerm (CommandSender sender, Perm perm)
     {
         return sender.hasPermission("auctionhouse."+perm.toString().replace("_", "."));
     }
-
+ 
+    /**
+     * Check for permission
+     * @param sender
+     * @param perm
+     * @return true if sender has the perm permission
+     */
     public boolean check (CommandSender sender, Perm perm)
     {
         if (this.checkPerm(sender, perm))
@@ -81,7 +99,15 @@ public enum Perm
         else
             return true;
     }
-
+    
+    /**
+     * Send permission message if needed
+     * 
+     * @param sender
+     * to check permission from
+     * @param perm
+     * permission in the enum
+     */
     private void send (CommandSender sender, Perm perm)
     {
         if (this.perms.get(perm)!=null)
