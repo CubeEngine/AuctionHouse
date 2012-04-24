@@ -41,12 +41,7 @@ public class InfoCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        if (!Perm.get().check(sender,"auctionhouse.command.info"))
-        {
-            
-            return true;
-        }
-
+        if (!plugin.permcheck(sender, Perm.command_info)) return true;
         if (args.getString(0).equalsIgnoreCase("Bids"))//bidding
         {
             List<Auction> auctions = Bidder.getInstance((Player) sender).getAuctions();
@@ -148,7 +143,7 @@ public class InfoCommand extends AbstractCommand
                             }
                             else
                             {
-                                if (!Perm.get().check(sender,"auctionhouse.command.info.others")) return true;
+                                if (!plugin.permcheck(sender, Perm.command_info_others)) return true;
                                 Bidder player = args.getBidder(0);
                                 if (player != null)
                                 {

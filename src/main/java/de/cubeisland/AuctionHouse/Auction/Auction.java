@@ -4,6 +4,9 @@ import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.AuctionHouseConfiguration;
 import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Database.DatabaseEntity;
+import de.cubeisland.AuctionHouse.Database.EntityIdentifier;
+import de.cubeisland.AuctionHouse.Database.EntityProperty;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
 import java.util.Stack;
@@ -14,13 +17,21 @@ import org.bukkit.inventory.ItemStack;
  *
  * @author Faithcaio
  */
-public class Auction
+public class Auction implements DatabaseEntity
 {
+    
+    @EntityIdentifier
     private int id;
+    @EntityProperty
     private final ItemStack item;
+    @EntityProperty
     private Bidder owner;
+    @EntityProperty
     private final long auctionEnd;
+    @EntityProperty
     private final Stack<Bid> bids;
+    
+    
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
     private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     private final Database db;
@@ -30,6 +41,9 @@ public class Auction
  */
     public Auction(ItemStack item, Bidder owner, long auctionEnd, double startBid)
     {
+        
+        
+        
         this.db = AuctionHouse.getInstance().getDB();
         this.id = Manager.getInstance().getFreeIds().pop();
         this.item = item;
@@ -70,10 +84,10 @@ public class Auction
             return false;
         }
         if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) >= amount)
-                || Perm.get().check(bidder,"auctionhouse.command.bid.infinite"))
+                || plugin.permcheck(bidder.getPlayer(), Perm.command_bid_infinite))
         {
             if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) - bidder.getTotalBidAmount() >= amount
-                    || Perm.get().check(bidder,"auctionhouse.command.bid.infinite"))
+                    || plugin.permcheck(bidder.getPlayer(), Perm.command_bid_infinite))
             {
                 this.bids.push(new Bid(bidder, amount, this));
                 return true;
@@ -116,6 +130,14 @@ public class Auction
                       ,bidder.getId(), this.id, this.bids.peek().getTimestamp());
         this.bids.pop();
         return true;
+    }
+    
+/**
+ *  @return TableName in Database
+ */ 
+    public String getTable()
+    {
+        return "auction";
     }
 
 /**

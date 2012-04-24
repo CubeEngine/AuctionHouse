@@ -3,7 +3,6 @@ package de.cubeisland.AuctionHouse;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.AuctionItem;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
-import de.cubeisland.AuctionHouse.Auction.AuctionBox;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import java.util.Collections;
 import java.util.List;
@@ -111,7 +110,7 @@ public class AuctionHouseListener implements Listener
         {
             if (event.getLine(1).equalsIgnoreCase("AuctionBox")||event.getLine(1).equalsIgnoreCase("box"))
             {
-                if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.box"))
+                if (!plugin.permcheck(event.getPlayer(), Perm.sign_create_box))
                 {
                     event.setCancelled(true);
                     return;
@@ -124,7 +123,7 @@ public class AuctionHouseListener implements Listener
             {
                 if (event.getLine(1).equalsIgnoreCase("Start"))
                 {
-                    if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.add"))
+                    if (!plugin.permcheck(event.getPlayer(), Perm.sign_create_add))
                     {
                         event.setCancelled(true);
                         return;
@@ -141,7 +140,7 @@ public class AuctionHouseListener implements Listener
                 {
                     if (event.getLine(1).equalsIgnoreCase("List")||event.getLine(1).equalsIgnoreCase("AuctionSearch"))
                     {
-                        if (!Perm.get().check(event.getPlayer(), "auctionhouse.sign.create.list"))
+                        if (!plugin.permcheck(event.getPlayer(), Perm.sign_create_list))
                         {
                             event.setCancelled(true);
                             return;
@@ -227,7 +226,7 @@ public class AuctionHouseListener implements Listener
                     if ((sign).getLine(1).equals("AuctionBox"))
                     {
                         //AuktionBox GetItems
-                        if (!Perm.get().check(player,"auctionhouse.sign.auctionbox")) return;
+                        if (!plugin.permcheck(player, Perm.sign_auctionbox)) return;
                         if (!(Bidder.getInstance(player).getBox().giveNextItem()))
                         {
                             player.sendMessage(t("i")+" "+t("time_sign_empty"));
@@ -241,8 +240,7 @@ public class AuctionHouseListener implements Listener
                             return;
                         }
                         //AuktionBox Start Auktion
-                        if (!Perm.get().check(player, "auctionhouse.sign.start")) return;
-
+                        if (!plugin.permcheck(player, Perm.sign_start)) return;
                         Double startbid;
                         Integer length = Util.convertTimeToMillis(sign.getLine(2));
                         if (length == null)
@@ -286,7 +284,7 @@ public class AuctionHouseListener implements Listener
                     }
                     if ((sign).getLine(1).equals("AuctionSearch"))
                     {
-                        if (!Perm.get().check(player, "auctionhouse.sign.list")) return;
+                        if (!plugin.permcheck(player, Perm.sign_list)) return;
                         List<Auction> auctions;
                         if ((sign).getLine(2).equals("# All #"))
                         {

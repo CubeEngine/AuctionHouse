@@ -12,7 +12,6 @@ Create auctions bid on them and get your lovely items!
 planned features:
 
 -  auctionbox as chest with separate inventory
--  average price for Items
 -  flatfile for starting Serverauctions
 
 Commands:
@@ -31,6 +30,7 @@ Commands:
 - /ah subscribe : Subscribes to auctions or material
 - /ah unsubscribe : Unsubscribes auctions or material
 - /ah undoBid : Undo bids
+- /ah reload : reload the plugin
 
 Signs:
 ------------

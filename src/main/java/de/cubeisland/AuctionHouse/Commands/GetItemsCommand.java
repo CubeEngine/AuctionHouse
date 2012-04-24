@@ -12,7 +12,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * Gives you the next Item from your ItemContainer
+ * Gives you the next Item from your auctionbox
  * 
  * @author Faithcaio
  */
@@ -25,7 +25,7 @@ public class GetItemsCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.command.getItems")) return true;
+        if (!AuctionHouse.getInstance().permcheck(sender, Perm.command_getItems)) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             AuctionHouse.log("Console can not receive Items");

@@ -2,6 +2,7 @@ package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
@@ -24,7 +25,7 @@ public class UndoBidCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.command.undobid")) return true;
+        if (!AuctionHouse.getInstance().permcheck(sender, Perm.command_undobid)) return true;
         if (args.isEmpty())
         {
             sender.sendMessage(t("undo_title1"));

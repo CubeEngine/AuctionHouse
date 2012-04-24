@@ -1,6 +1,7 @@
 package de.cubeisland.AuctionHouse.Commands;
 
 import de.cubeisland.AuctionHouse.AbstractCommand;
+import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
@@ -22,7 +23,7 @@ public class HelpCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.use")) return true;
+        if (!AuctionHouse.getInstance().permcheck(sender, Perm.use)) return true;
         sender.sendMessage(t("help_list"));
         for (AbstractCommand command : getBase().getRegisteredCommands())
         {

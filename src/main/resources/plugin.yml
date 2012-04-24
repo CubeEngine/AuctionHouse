@@ -64,8 +64,7 @@ permissions:
       auctionhouse.sign.*: true
       auctionhouse.admin.reload: true
       auctionhouse.admin.save: true
-      
-      
+ 
   auctionhouse.command.add.nolomit:
       description: ""
 
@@ -192,9 +191,3 @@ permissions:
 
   auctionhouse.admin.reload:
     description: ""
-    
-  auctionhouse.admin.save:
-    description: ""
-
-    
-    

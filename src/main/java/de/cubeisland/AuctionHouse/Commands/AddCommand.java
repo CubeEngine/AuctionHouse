@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
+//TODO Fehler bei ah add -s Server -m 1 1 1 1 1
 /**
  * Adds an auction.
  * 
@@ -44,7 +44,7 @@ public class AddCommand extends AbstractCommand
         Double startBid = 0.0;
         long auctionEnd = 1;
         Integer multiAuction = 1;
-        if (!Perm.get().check(sender, "auctionhouse.command.add")) return true;
+        if (!plugin.permcheck(sender, Perm.command_add)) return true;
         if (args.isEmpty())
         {
             sender.sendMessage(t("add_title1"));
@@ -63,7 +63,7 @@ public class AddCommand extends AbstractCommand
                 sender.sendMessage(t("i")+" "+t("add_multi_number"));
                 return true;
             }
-            if (!Perm.get().check(sender, "auctionhouse.command.add.multi")) return true;
+            if (!plugin.permcheck(sender, Perm.command_add_multi)) return true;
         }
         if (args.getString(0)==null)
         {
@@ -200,7 +200,7 @@ public class AddCommand extends AbstractCommand
         {
             if (!((Player) sender).getInventory().contains(removeItem.getType(), removeItem.getAmount()))
             {
-                if (Perm.get().check(sender, "auctionhouse.command.add.cheatItems"))
+                if (!plugin.permcheck(sender, Perm.command_add_cheatItems))
                 {
                     sender.sendMessage(t("i")+" "+t("add_enough_item")+" "+t("add_cheat"));
                 }

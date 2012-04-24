@@ -34,7 +34,7 @@ public class BidCommand extends AbstractCommand
     public boolean execute(CommandSender sender, CommandArgs args)
     {
         Manager manager = Manager.getInstance();
-        if (!Perm.get().check(sender,"auctionhouse.command.bid")) return true;
+        if (!AuctionHouse.getInstance().permcheck(sender, Perm.command_bid)) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             sender.sendMessage(t("bid_console"));

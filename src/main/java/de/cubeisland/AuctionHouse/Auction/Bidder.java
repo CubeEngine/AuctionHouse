@@ -1,7 +1,11 @@
 package de.cubeisland.AuctionHouse.Auction;
 
+import de.cubeisland.AuctionHouse.AuctionBox;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Database.DatabaseEntity;
+import de.cubeisland.AuctionHouse.Database.EntityIdentifier;
+import de.cubeisland.AuctionHouse.Database.EntityProperty;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Util;
 import java.sql.ResultSet;
@@ -20,19 +24,29 @@ import org.bukkit.inventory.ItemStack;
  * 
  * @author Faithcaio
  */
-public class Bidder
+public class Bidder implements DatabaseEntity
 {
     public static final byte NOTIFY_STATUS = 8;
     public static final byte NOTIFY_ITEMS = 4;
     public static final byte NOTIFY_CANCEL = 2;
     public static final byte NOTIFY_WIN = 1;
-    private final ArrayList<Auction> activeBids;
-    private final ArrayList<Auction> subscriptions;
-    private final ArrayList<ItemStack> materialSub;
-    private final OfflinePlayer player;
-    private final AuctionBox itemContainer;
-    private byte notifyState = 0;
+    
+    @EntityIdentifier
     private int id;
+    
+    @EntityProperty
+    private final ArrayList<Auction> activeBids;
+    @EntityProperty
+    private final ArrayList<Auction> subscriptions;
+    @EntityProperty
+    private final ArrayList<ItemStack> materialSub;
+    @EntityProperty
+    private final OfflinePlayer player;
+    @EntityProperty
+    private final AuctionBox auctionbox;
+    @EntityProperty
+    private byte notifyState = 0;
+
     private static final Map<OfflinePlayer, Bidder> bidderInstances = new HashMap<OfflinePlayer, Bidder>();
     private final Database db;
 /**
@@ -43,7 +57,7 @@ public class Bidder
         this.db = AuctionHouse.getInstance().getDB();
         this.player = player;
         this.activeBids = new ArrayList<Auction>();
-        this.itemContainer = new AuctionBox(this);
+        this.auctionbox = new AuctionBox(this);
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = -1;
@@ -99,7 +113,7 @@ public class Bidder
             this.player = AuctionHouse.getInstance().getServer().getOfflinePlayer(name);
         }
         this.activeBids = new ArrayList<Auction>();
-        this.itemContainer = new AuctionBox(this);
+        this.auctionbox = new AuctionBox(this);
         this.subscriptions = new ArrayList<Auction>();
         this.materialSub = new ArrayList<ItemStack>();
         this.id = id;
@@ -124,6 +138,14 @@ public class Bidder
             bidderInstances.put(AuctionHouse.getInstance().getServer().getOfflinePlayer(player), instance);
         }
         return instance;
+    }
+    
+/**
+ *  @return TableName in Database
+ */ 
+    public String getTable()
+    {
+        return "bidder";
     }
     
 /**
@@ -245,7 +267,7 @@ public class Bidder
  */ 
     public AuctionBox getBox()
     {
-        return itemContainer;
+        return auctionbox;
     }
 
 /**

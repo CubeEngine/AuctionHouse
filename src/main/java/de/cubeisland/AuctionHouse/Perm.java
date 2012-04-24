@@ -1,76 +1,92 @@
 package de.cubeisland.AuctionHouse;
 
-import de.cubeisland.AuctionHouse.Auction.Bidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
+import java.util.EnumMap;
+import java.util.Map;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  * Check permissions and send message to ths User
  * 
  * @author Faithcaio
  */
-public class Perm {
-    
-    private static Perm instance = null;
-    
-    
-    public static Perm get()
+public enum Perm 
+{
+            command_add,
+            command_add_multi,
+            command_bid,
+            sign_auctionbox,
+            command_getItems,
+            use,
+            command_info,
+            command_info_others,
+            command_notify,
+            command_delete_all,
+            command_delete_id,
+            command_delete_server,
+            command_delete_player,
+            command_delete_player_other,
+            command_search,
+            command_undobid,
+            sign_start,
+            sign_list,
+            sign_create_box,
+            sign_create_add,
+            sign_create_list,
+            command_sub,
+            command_bid_infinite,
+            command_add_cheatItems;
+  
+    private Map<Perm,String> perms;
+
+    public void Init()
     {
-        if (instance == null)
-        {
-            instance = new Perm();
-        }
-        return instance; 
+        this.perms = new EnumMap<Perm,String>(Perm.class);
+        this.perms.put(command_add,"add_Auc_perm"); 
+        this.perms.put(command_add_multi,"add_multi_perm");
+        this.perms.put(command_bid,"bid_perm");
+        this.perms.put(sign_auctionbox,"event_sign_perm");
+        this.perms.put(command_getItems,"get_perm");
+        this.perms.put(use,"help_perm");
+        this.perms.put(command_info,"info_perm");
+        this.perms.put(command_info_others,"info_perm_other");
+        this.perms.put(command_notify,"note_perm");
+        this.perms.put(command_delete_all,"rem_all_perm");
+        this.perms.put(command_delete_id,"rem_id_perm");
+        this.perms.put(command_delete_server,"rem_serv_perm");
+        this.perms.put(command_delete_player,"rem_own_perm");
+        this.perms.put(command_delete_player_other,"rem_other_perm");
+        this.perms.put(command_search,"search_perm");
+        this.perms.put(command_undobid,"undo_perm");
+        this.perms.put(sign_start,"event_sign_perm");
+        this.perms.put(sign_list,"event_sign_perm");
+        this.perms.put(sign_create_box,"event_signplacebox_perm");
+        this.perms.put(sign_create_add,"event_signplaceadd_perm");
+        this.perms.put(sign_create_list,"event_signplacelist_perm");
+        this.perms.put(command_sub,"sub_perm");  
     }
-    
-    public boolean check(Player sender, String perm)
+
+    private boolean checkPerm (CommandSender sender, Perm perm)
     {
-        if (perm == null)
+        return sender.hasPermission("auctionhouse."+perm.toString().replace("_", "."));
+    }
+
+    public boolean check (CommandSender sender, Perm perm)
+    {
+        if (this.checkPerm(sender, perm))
         {
+            this.send(sender, perm);
             return false;
         }
-        //TODO post-release: enum oder so
-        if (!sender.hasPermission(perm))
-        {
-                 if (perm.equalsIgnoreCase("auctionhouse.command.add"))                 sender.sendMessage(t("perm")+" "+t("add_Auc_perm")); 
-            else if (perm.equalsIgnoreCase("auctionhouse.command.add.multi"))           sender.sendMessage(t("perm")+" "+t("add_multi_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.bid"))                 sender.sendMessage(t("perm")+" "+t("bid_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.auctionbox"))             sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.getItems"))            sender.sendMessage(t("perm")+" "+t("get_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.use"))                         sender.sendMessage(t("perm")+" "+t("help_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.info"))                sender.sendMessage(t("perm")+" "+t("info_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.info.others"))         sender.sendMessage(t("perm")+" "+t("info_perm_other"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.notify"))              sender.sendMessage(t("perm")+" "+t("note_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.all"))          sender.sendMessage(t("perm")+" "+t("rem_all_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.id"))           sender.sendMessage(t("perm")+" "+t("rem_id_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.server"))       sender.sendMessage(t("perm")+" "+t("rem_allserv_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.server"))       sender.sendMessage(t("perm")+" "+t("rem_serv_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.player"))       sender.sendMessage(t("perm")+" "+t("rem_own_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.delete.player.other")) sender.sendMessage(t("perm")+" "+t("rem_other_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.search"))              sender.sendMessage(t("perm")+" "+t("search_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.undobid"))             sender.sendMessage(t("perm")+" "+t("undo_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.start"))                  sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.list"))                   sender.sendMessage(t("perm")+" "+t("event_sign_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.box"))             sender.sendMessage(t("perm")+" "+t("event_signplacebox_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.sign.create.add"))             sender.sendMessage(t("perm")+" "+t("event_signplaceadd_perm"));
-            else if (perm.equalsIgnoreCase("auctionhouse.command.sub"))                 sender.sendMessage(t("perm")+" "+t("sub_perm"));
-            return false;
-        }
-        return true;
+        else
+            return true;
     }
-    
-    public boolean check(Bidder sender, String perm)
+
+    private void send (CommandSender sender, Perm perm)
     {
-       return this.check(sender.getPlayer(), perm);  
-    }
-    
-    public boolean check(CommandSender sender, String perm)
-    {
-        if (sender instanceof Player)
+        if (this.perms.get(perm)!=null)
         {
-            return this.check((Player)sender, perm);
+            sender.sendMessage(t("perm")+" "+t(this.perms.get(perm)));
         }
-        return true;
     }
 }

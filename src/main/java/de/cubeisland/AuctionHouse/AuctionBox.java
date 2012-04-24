@@ -1,5 +1,8 @@
-package de.cubeisland.AuctionHouse.Auction;
+package de.cubeisland.AuctionHouse;
 
+import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.AuctionItem;
+import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.Database.Database;
@@ -71,7 +74,7 @@ public class AuctionBox
         if (tmp == null)
         {
             player.updateInventory();
-            db.execUpdate("DELETE FROM `itemcontainer` WHERE `id`=?", this.itemList.getFirst().getId());
+            db.execUpdate("DELETE FROM `auctionbox` WHERE `id`=?", this.itemList.getFirst().getId());
             this.itemList.removeFirst();
             return true;
         }
@@ -79,7 +82,7 @@ public class AuctionBox
         {
             player.sendMessage(t("i") + " " + t("cont_rec_remain"));
 
-            db.execUpdate("UPDATE `itemcontainer` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().getId());
+            db.execUpdate("UPDATE `auctionbox` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().getId());
             itemList.getFirst().getItem().setAmount(tmp.getAmount());
             player.updateInventory();
             return true;

@@ -2,6 +2,9 @@ package de.cubeisland.AuctionHouse.Auction;
 
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import de.cubeisland.AuctionHouse.Database.Database;
+import de.cubeisland.AuctionHouse.Database.DatabaseEntity;
+import de.cubeisland.AuctionHouse.Database.EntityIdentifier;
+import de.cubeisland.AuctionHouse.Database.EntityProperty;
 import de.cubeisland.AuctionHouse.Util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,14 +16,21 @@ import org.bukkit.inventory.ItemStack;
  * 
  * @author Faithcaio
  */
-public class AuctionItem
+public class AuctionItem implements DatabaseEntity
 {
-    private Bidder bidder;
-    private ItemStack item;
-    private long date;
-    private String owner;
-    private Double price;
+    @EntityIdentifier
     private int id;
+    @EntityProperty
+    private Bidder bidder;
+    @EntityProperty
+    private ItemStack item;
+    @EntityProperty
+    private long date;
+    @EntityProperty
+    private String owner;
+    @EntityProperty
+    private Double price;
+    
     private final Database db;
     
 /**
@@ -53,7 +63,7 @@ public class AuctionItem
         try
         {
             db.exec(
-                    "INSERT INTO `itemcontainer` ("+
+                    "INSERT INTO `auctionbox` ("+
                     "`bidderid` ,"+
                     "`item` ,"+
                     "`amount` ,"+
@@ -65,7 +75,7 @@ public class AuctionItem
                   ,this.bidder.getId(),Util.convertItem(this.item),
                   this.item.getAmount(),this.price,new Timestamp(this.date),auction.getOwner().getId());
             ResultSet set =
-                    db.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
+                    db.query("SELECT * FROM `auctionbox` ORDER BY `id` DESC LIMIT 1");
              if (set.next())
                 this.id = set.getInt("id");
                 
@@ -106,7 +116,7 @@ public class AuctionItem
         try
         {
             db.exec(
-                    "INSERT INTO `itemcontainer` ("+
+                    "INSERT INTO `auctionbox` ("+
                     "`playerid` ,"+
                     "`item` ,"+
                     "`amount` ,"+
@@ -118,7 +128,7 @@ public class AuctionItem
                   ,bidder.getId(),Util.convertItem(item),
                   item.getAmount(),this.price,this.date,bidder.getId());
             ResultSet set =
-                    db.query("SELECT * FROM `itemcontainer` ORDER BY `id` DESC LIMIT 1");
+                    db.query("SELECT * FROM `auctionbox` ORDER BY `id` DESC LIMIT 1");
             if (set.next())
                 this.id = set.getInt("id");
         }
@@ -139,6 +149,14 @@ public class AuctionItem
         this.date = date;
         this.owner = owner;
         this.price = price;
+    }
+    
+/**
+ *  @return TableName in Database
+ */ 
+    public String getTable()
+    {
+        return "auctionbox";
     }
 
 /**

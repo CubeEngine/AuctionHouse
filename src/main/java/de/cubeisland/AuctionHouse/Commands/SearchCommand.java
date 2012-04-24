@@ -27,7 +27,7 @@ public class SearchCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (!Perm.get().check(sender,"auctionhouse.command.search")) return true;
+        if (!plugin.permcheck(sender, Perm.command_search)) return true;
         if (args.isEmpty())
         {
             sender.sendMessage(t("search_title1"));

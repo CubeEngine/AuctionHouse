@@ -110,7 +110,7 @@ public class Database
                         "PRIMARY KEY (`id`)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;"
                  );
-        this.exec(       "CREATE TABLE IF NOT EXISTS `itemcontainer` ("+
+        this.exec(       "CREATE TABLE IF NOT EXISTS `auctionbox` ("+
                         "`id` int(11) NOT NULL AUTO_INCREMENT,"+
                         "`bidderid` int(11) NOT NULL,"+
                         "`item` varchar(42) NOT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
@@ -267,9 +267,9 @@ public class Database
             }
         }
         AuctionHouse.debug("All subscriptions loaded!");
-        //load in ItemContainer
+        //load in auctionbox
         ResultSet itemset =
-              this.query("SELECT * from `itemcontainer` ORDER BY `timestamp`;");
+              this.query("SELECT * from `auctionbox` ORDER BY `timestamp`;");
         while (itemset.next())
         {
             Bidder bidder = Bidder.getInstance(itemset.getInt("bidderid"), this.getBidderString(itemset.getInt("bidderid")));

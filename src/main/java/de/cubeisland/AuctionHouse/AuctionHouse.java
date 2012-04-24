@@ -4,7 +4,6 @@ import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Commands.AddCommand;
 import de.cubeisland.AuctionHouse.Commands.BidCommand;
 import de.cubeisland.AuctionHouse.Commands.ConfirmCommand;
-import de.cubeisland.AuctionHouse.Commands.ForceDBSaveCommand;
 import de.cubeisland.AuctionHouse.Commands.GetItemsCommand;
 import de.cubeisland.AuctionHouse.Commands.HelpCommand;
 import de.cubeisland.AuctionHouse.Commands.InfoCommand;
@@ -23,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Server;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -44,9 +44,10 @@ public class AuctionHouse extends JavaPlugin
     private File dataFolder;
     private Economy economy = null;
     private Database database;
-//TODO post-release: später eigene AuktionsBox als Kiste mit separatem inventar 
-//TODO post-release: flatfile mit angeboten
-//TODO post-release: force saving Database TRUNCATE all Lists
+    private Perm perm;
+//TODO später eigene AuktionsBox als Kiste mit separatem inventar 
+//TODO flatfile mit angeboten
+//TODO DatenBank leichter nutzen
     public AuctionHouse()
     {
         instance = this;
@@ -86,6 +87,7 @@ public class AuctionHouse extends JavaPlugin
         
         database.loadDatabase();
         Manager.getInstance().removeOldAuctions();
+        perm.Init();
         
         this.pm.registerEvents(new AuctionHouseListener(this), this);
         
@@ -105,7 +107,6 @@ public class AuctionHouse extends JavaPlugin
             .registerSubCommand(new         ListCommand(baseCommand))
             .registerSubCommand(new      ConfirmCommand(baseCommand))    
             .registerSubCommand(new       ReloadCommand(baseCommand)) 
-            .registerSubCommand(new  ForceDBSaveCommand(baseCommand)) 
         .setDefaultCommand("help");
         this.getCommand("auctionhouse").setExecutor(baseCommand);
         
@@ -181,5 +182,10 @@ public class AuctionHouse extends JavaPlugin
     public Database getDB()
     {
         return this.database;
+    }
+    
+    public boolean permcheck(CommandSender sender, Perm perm)
+    {
+        return perm.check(sender, perm);
     }
 }

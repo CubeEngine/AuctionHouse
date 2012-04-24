@@ -35,7 +35,7 @@ public class NotifyCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-        if (!Perm.get().check(sender,"auctionhouse.command.notify")) return true;
+        if (!AuctionHouse.getInstance().permcheck(sender, Perm.command_notify)) return true;
         if (args.getString(0) == null)
         {
             return true;
