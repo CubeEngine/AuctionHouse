@@ -62,9 +62,10 @@ public class SubscribeCommand extends AbstractCommand
         {
             if (args.getInt("i") != null)
             {
-                if (Manager.getInstance().getAuction(args.getInt("i")) != null)
+                Manager manager = Manager.getInstance();
+                if (manager.getAuction(args.getInt("i")) != null)
                 {
-                    if (bidder.addSubscription(Manager.getInstance().getAuction(args.getInt("i"))))
+                    if (bidder.addSubscription(manager.getAuction(args.getInt("i"))))
                     {
                         sender.sendMessage(t("i")+" "+t("sub_add",args.getInt("i")));
                         if (!bidder.hasNotifyState(Bidder.NOTIFY_STATUS))

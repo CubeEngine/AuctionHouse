@@ -119,14 +119,15 @@ public class Manager
         int size = this.auctions.size();
         for (int i = 0; i < size; i++)
         {
-            if (this.auctions.get(i) == null)
+            Auction auction = this.auctions.get(i);
+            if (auction == null)
             {
                 return null;
             }
-            if (this.auctions.get(i).getItem().getType() == material.getType())
+            if (auction.getItem().getType() == material.getType())
             //    && (this.auctions.get(i).getItem().getDurability() == material.getDurability())
             {
-                auctionlist.add(this.auctions.get(i));
+                auctionlist.add(auction);
             }
         }
         return auctionlist;
@@ -159,7 +160,7 @@ public class Manager
         {
             endingActions.add(this.auctions.get(i));
         }
-        AuctionSort.sortAuction(endingActions, "date");
+        Sorter.sortAuction(endingActions, "date");
         
         return endingActions;
     }

@@ -129,7 +129,6 @@ public class Bidder implements DatabaseEntity
         {
             return ServerBidder.getInstance(id);
         }
-        
         instance = bidderInstances.get(AuctionHouse.getInstance().getServer().getOfflinePlayer(player));
 
         if (instance == null)

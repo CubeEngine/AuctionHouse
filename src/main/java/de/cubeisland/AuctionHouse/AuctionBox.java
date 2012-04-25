@@ -3,7 +3,6 @@ package de.cubeisland.AuctionHouse;
 import de.cubeisland.AuctionHouse.Auction.Auction;
 import de.cubeisland.AuctionHouse.Auction.AuctionItem;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
-import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
 import de.cubeisland.AuctionHouse.Database.Database;
 import java.util.LinkedList;
@@ -55,17 +54,16 @@ public class AuctionBox
         }
 
         AuctionItem auctionItem = this.itemList.getFirst();
-
-        ItemStack tmp = player.getInventory().addItem(this.itemList.getFirst().cloneItem().getItem()).get(0);
-
+        ItemStack item = auctionItem.getItem();
+        ItemStack tmp = player.getInventory().addItem(auctionItem.cloneItem().getItem()).get(0);
 
         if (auctionItem.getOwner().equals(this.bidder.getName()))
         {
-            player.sendMessage(t("i") + " " + t("cont_rec_ab", auctionItem.getItem().getType().toString() + "x" + auctionItem.getItem().getAmount()));
+            player.sendMessage(t("i") + " " + t("cont_rec_ab", item.getType().toString() + "x" + item.getAmount()));
         }
         else
         {
-            player.sendMessage(t("i") + " " + t("cont_rec", auctionItem.getItem().getType().toString() + "x" + auctionItem.getItem().getAmount(),
+            player.sendMessage(t("i") + " " + t("cont_rec", item.getType().toString() + "x" + item.getAmount(),
                 econ.format(auctionItem.getPrice()), auctionItem.getOwner(),
                 DateFormatUtils.formatUTC(auctionItem.getDate(), "MMM dd"))
             );
@@ -74,7 +72,7 @@ public class AuctionBox
         if (tmp == null)
         {
             player.updateInventory();
-            db.execUpdate("DELETE FROM `auctionbox` WHERE `id`=?", this.itemList.getFirst().getId());
+            db.execUpdate("DELETE FROM `auctionbox` WHERE `id`=?", auctionItem.getId());
             this.itemList.removeFirst();
             return true;
         }
@@ -82,8 +80,8 @@ public class AuctionBox
         {
             player.sendMessage(t("i") + " " + t("cont_rec_remain"));
 
-            db.execUpdate("UPDATE `auctionbox` SET `amount`=? WHERE `id`=?", tmp.getAmount(), this.itemList.getFirst().getId());
-            itemList.getFirst().getItem().setAmount(tmp.getAmount());
+            db.execUpdate("UPDATE `auctionbox` SET `amount`=? WHERE `id`=?", tmp.getAmount(), auctionItem.getId());
+            item.setAmount(tmp.getAmount());
             player.updateInventory();
             return true;
         }

@@ -9,12 +9,20 @@ import java.util.List;
  *
  * @author Faithcaio
  */
-public class AuctionSort
+public class Sorter
 {
     private static final Comparator compareId;
     private static final Comparator comparePrice;
     private static final Comparator compareDate;
     private static final Comparator compareQuantity;
+    
+    //TODO enum für Comparator
+    /*
+     * public enum comparator{
+        
+    }
+    * 
+    */
 
     static
     {
@@ -70,6 +78,7 @@ public class AuctionSort
 
 /**
  * Sorts auctionlist
+ * @param auctionlist
  * @param type: id | price | date | quantity
  */    
     public static void sortAuction(List<Auction> auctionlist, String type)

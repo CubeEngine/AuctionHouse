@@ -14,6 +14,7 @@ import de.cubeisland.AuctionHouse.Perm;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  * Removes an auction
@@ -43,23 +44,27 @@ public class RemoveCommand extends AbstractCommand
             sender.sendMessage("");
             return true;
         }
-
+        Manager manager = Manager.getInstance();
+        BukkitScheduler timer = plugin.getServer().getScheduler();
+        final CommandSender sender2= sender;
+        
         if (args.getString(0) != null)
         {
             if (args.getString(0).equalsIgnoreCase("all"))
             {
                 if (!plugin.permcheck(sender, Perm.command_delete_all)) return true;
-                Manager.getInstance().getAllConfirm().add(Bidder.getInstance(sender));
+                manager.getAllConfirm().add(Bidder.getInstance(sender));
                 sender.sendMessage(t("rem_all"));
                 sender.sendMessage(t("rem_confirm"));
-                final CommandSender sender2= sender;
-                AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                timer.scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
                     {
                         public void run() 
                         {
-                            if (Manager.getInstance().getAllConfirm().contains(Bidder.getInstance(sender2)))
+                            Manager manager = Manager.getInstance();
+                            Bidder bidder = Bidder.getInstance(sender2);
+                            if (manager.getAllConfirm().contains(bidder))
                                 sender2.sendMessage(t("rem_abort"));
-                            Manager.getInstance().getAllConfirm().remove(Bidder.getInstance(sender2));  
+                            manager.getAllConfirm().remove(bidder);  
                         }
                     }, 200L);
 
@@ -70,18 +75,17 @@ public class RemoveCommand extends AbstractCommand
                 if (args.getString(0).equalsIgnoreCase("Server"))
                 {
                     if (!plugin.permcheck(sender, Perm.command_delete_server)) return true;
-                    Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
+                    manager.getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
                     sender.sendMessage(t("rem_allserv"));
-                    sender.sendMessage(t("rem_confirm"));
-                    final CommandSender sender2= sender;
-                    
-                    AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                    sender.sendMessage(t("rem_confirm"));                    
+                    timer.scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
                         {
                             public void run() 
                             {
-                                if (Manager.getInstance().getBidderConfirm().containsKey(Bidder.getInstance(sender2)))
+                                Manager manager = Manager.getInstance();
+                                if (manager.getBidderConfirm().containsKey(Bidder.getInstance(sender2)))
                                     sender2.sendMessage(t("rem_abort"));
-                                Manager.getInstance().getBidderConfirm().remove(Bidder.getInstance(sender2));  
+                                manager.getBidderConfirm().remove(Bidder.getInstance(sender2));  
                             }
                         }, 200L);
 
@@ -93,13 +97,13 @@ public class RemoveCommand extends AbstractCommand
                 if (id != null)
                 {
                     if (!plugin.permcheck(sender, Perm.command_delete_id)) return true;
-                    if (Manager.getInstance().getAuction(id) == null)
+                    if (manager.getAuction(id) == null)
                     {
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
                         return true;
                     }
                     
-                    Auction auction = Manager.getInstance().getAuction(id);
+                    Auction auction = manager.getAuction(id);
                     if (auction.getOwner() instanceof ServerBidder)
                         if (!plugin.permcheck(sender, Perm.command_delete_server)) return true;                    
                     if (config.auction_removeTime < System.currentTimeMillis() - auction.getBids().firstElement().getTimestamp())
@@ -114,25 +118,24 @@ public class RemoveCommand extends AbstractCommand
                         if (!plugin.permcheck(sender, Perm.command_delete_player_other)) return true;
                     if (config.auction_confirmID)
                     {
-                        Manager.getInstance().getSingleConfirm().put(Bidder.getInstance(sender), id);
+                        manager.getSingleConfirm().put(Bidder.getInstance(sender), id);
                         sender.sendMessage(t("rem_single"));
                         sender.sendMessage(t("rem_confirm"));
-                        final CommandSender sender2= sender;
-
-                        AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                        timer.scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
                             {
                                 public void run() 
                                 {
-                                    if (Manager.getInstance().getSingleConfirm().containsKey(Bidder.getInstance(sender2)))
+                                    Manager manager = Manager.getInstance();
+                                    if (manager.getSingleConfirm().containsKey(Bidder.getInstance(sender2)))
                                         sender2.sendMessage(t("rem_abort"));
-                                    Manager.getInstance().getSingleConfirm().remove(Bidder.getInstance(sender2));  
+                                    manager.getSingleConfirm().remove(Bidder.getInstance(sender2));  
                                 }
                             }, 200L);
 
                         return true;
                     }    
                     ItemStack item = auction.getItem();
-                    Manager.getInstance().cancelAuction(auction, false);
+                    manager.cancelAuction(auction, false);
                     sender.sendMessage(t("i")+" "+t("rem_id",id,item.getType().toString()+"x"+item.getAmount()));
                     return true;
                 }
@@ -156,17 +159,17 @@ public class RemoveCommand extends AbstractCommand
                     if (!plugin.permcheck(sender, Perm.command_delete_player_other)) return true;
                 if (!(player.getAuctions().isEmpty()))
                 {
-                    Manager.getInstance().getBidderConfirm().put(Bidder.getInstance(sender), player);
+                    manager.getBidderConfirm().put(Bidder.getInstance(sender), player);
                     sender.sendMessage(t("rem_play",player.getName()));
                     sender.sendMessage(t("rem_confirm"));
-                    final CommandSender sender2= sender;
-                    AuctionHouse.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
+                    timer.scheduleSyncDelayedTask(AuctionHouse.getInstance(), new Runnable() 
                         {
                             public void run() 
                             {
-                                if (Manager.getInstance().getBidderConfirm().containsKey(Bidder.getInstance(sender2)))
+                                Manager manager = Manager.getInstance();
+                                if (manager.getBidderConfirm().containsKey(Bidder.getInstance(sender2)))
                                     sender2.sendMessage(t("rem_abort"));
-                                Manager.getInstance().getBidderConfirm().remove(Bidder.getInstance(sender2));  
+                                manager.getBidderConfirm().remove(Bidder.getInstance(sender2));  
                             }
                         }, 200L);
                     return true;

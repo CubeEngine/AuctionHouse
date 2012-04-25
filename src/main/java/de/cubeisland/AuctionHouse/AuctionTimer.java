@@ -1,10 +1,10 @@
 package de.cubeisland.AuctionHouse;
 
 import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bid;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
-import de.cubeisland.AuctionHouse.Database.Database;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -48,16 +48,17 @@ public class AuctionTimer
                             List<Bidder> rPlayer = new ArrayList<Bidder>();
                             while (auction.getOwner() != auction.getBids().peek().getBidder())
                             {
-                                Bidder winner = auction.getBids().peek().getBidder();
+                                Bid highBid = auction.getBids().peek();
+                                Bidder winner = highBid.getBidder();
                                 if (rPlayer.contains(winner))//remove punished Player
                                 {
                                     auction.getBids().pop();
                                     continue;
                                 }
 
-                                if (econ.getBalance(winner.getName()) > auction.getBids().peek().getAmount())
+                                if (econ.getBalance(winner.getName()) > highBid.getAmount())
                                 {
-                                    double topbid = auction.getBids().peek().getAmount();
+                                    double topbid = highBid.getAmount();
                                     econ.withdrawPlayer(winner.getName(), topbid);
                                     if (!(auction.getOwner() instanceof ServerBidder))
                                     {
@@ -96,7 +97,7 @@ public class AuctionTimer
                                         winner.getPlayer().sendMessage(t("time_pun3"));
                                     }
                                     rPlayer.add(winner);
-                                    econ.withdrawPlayer(winner.getName(), auction.getBids().peek().getAmount() * config.auction_punish / 100);
+                                    econ.withdrawPlayer(winner.getName(), highBid.getAmount() * config.auction_punish / 100);
                                     winner.removeAuction(auction);
                                     auction.getBids().pop();
                                 }
@@ -232,6 +233,7 @@ public class AuctionTimer
         timer.cancel();
         notifyTimer.cancel();
         this.instance = null;
+        //TODO nötig?
         Runtime.getRuntime().gc();
     }
     

@@ -60,9 +60,10 @@ public class UnSubscribeCommand extends AbstractCommand
         {
             if (args.getInt("i") != null)
             {
-                if (Manager.getInstance().getAuction(args.getInt("i")) != null)
+                Manager manager = Manager.getInstance();
+                if (manager.getAuction(args.getInt("i")) != null)
                 {
-                    if (bidder.removeSubscription(Manager.getInstance().getAuction(args.getInt("i"))))
+                    if (bidder.removeSubscription(manager.getAuction(args.getInt("i"))))
                     {
                         sender.sendMessage(t("i")+" "+t("sub_rem",args.getInt("i")));
                         return true;

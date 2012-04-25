@@ -2,6 +2,7 @@ package de.cubeisland.AuctionHouse;
 
 
 import de.cubeisland.AuctionHouse.Auction.Auction;
+import de.cubeisland.AuctionHouse.Auction.Bid;
 import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
@@ -113,6 +114,7 @@ public class Util
             "VALUES (?, ?, ?, ?, ?)"
             ,auction.getId(), auction.getOwner().getId(), Util.convertItem(auction.getItem()),
             auction.getItem().getAmount(), new Timestamp(auction.getAuctionEnd()));
+        //TODO getOwnerID / getItemAmount /getItemString von Util.convertItem als Methoden bei "Auction"
         return true;
     }
     
@@ -136,28 +138,29 @@ public class Util
                 output += auction.getItem().getEnchantmentLevel(enchantment);
             }
         }
-        if (auction.getBids().peek().getBidder().equals(auction.getOwner()))
+        Bid bid = auction.getBids().peek();
+        if (bid.getBidder().equals(auction.getOwner()))
         {
-            output += " "+t("info_out_bid",econ.format(auction.getBids().peek().getAmount()));
+            output += " "+t("info_out_bid",econ.format(bid.getAmount()));
         }
         else
         {
-            if (auction.getBids().peek().getBidder() instanceof ServerBidder)
+            if (bid.getBidder() instanceof ServerBidder)
             {
                 output += " "+t("info_out_leadserv");
             }
             else
             {
-                if (auction.getBids().peek().getBidder().getName().equals(sender.getName()))
-                    output += " "+t("info_out_lead",auction.getBids().peek().getBidder().getName());
+                if (bid.getBidder().getName().equals(sender.getName()))
+                    output += " "+t("info_out_lead",bid.getBidder().getName());
                 else
-                    output += " "+t("info_out_lead2",auction.getBids().peek().getBidder().getName());
+                    output += " "+t("info_out_lead2",bid.getBidder().getName());
             }
-            output +=" "+t("info_out_with",econ.format(auction.getBids().peek().getAmount()));
+            output +=" "+t("info_out_with",econ.format(bid.getAmount()));
         }
         if (auction.getAuctionEnd()-System.currentTimeMillis()>1000*60*60*24)
             output += " "+t("info_out_end",DateFormatUtils.format(auction.getAuctionEnd(), 
-                    AuctionHouse.getInstance().getConfiguration().auction_timeFormat));
+                            config.auction_timeFormat));
         else
             output += " " + t("info_out_end2", convertTime(auction.getAuctionEnd() - System.currentTimeMillis()));
         sender.sendMessage(output);

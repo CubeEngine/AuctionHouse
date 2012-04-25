@@ -54,18 +54,18 @@ public class SearchCommand extends AbstractCommand
         {
             if (args.getString("s").equalsIgnoreCase("date"))
             {
-                AuctionSort.sortAuction(auctionlist, "date");
+                Sorter.sortAuction(auctionlist, "date");
                 Collections.reverse(auctionlist);
             }
             if (args.getString("s").equalsIgnoreCase("id"))
             {
-                AuctionSort.sortAuction(auctionlist, "id");
+                Sorter.sortAuction(auctionlist, "id");
                 Collections.reverse(auctionlist);
             }
             if (args.getString("s").equalsIgnoreCase("price"))
             {
-                AuctionSort.sortAuction(auctionlist, "date");
-                AuctionSort.sortAuction(auctionlist, "price");
+                Sorter.sortAuction(auctionlist, "date");
+                Sorter.sortAuction(auctionlist, "price");
                 Collections.reverse(auctionlist);
             }
         }

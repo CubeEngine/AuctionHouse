@@ -95,7 +95,7 @@ public class AuctionHouseListener implements Listener
         }
         if (!(items.getItemList().isEmpty()))
         {
-            Bidder.getInstance(event.getPlayer()).setNotifyState(Bidder.NOTIFY_ITEMS);
+            bidder.setNotifyState(Bidder.NOTIFY_ITEMS);
         }
         Util.updateNotifyData(bidder);
     }
@@ -289,12 +289,12 @@ public class AuctionHouseListener implements Listener
                         if ((sign).getLine(2).equals("# All #"))
                         {
                             auctions = Manager.getInstance().getAuctions();
-                            AuctionSort.sortAuction(auctions, "date");
+                            Sorter.sortAuction(auctions, "date");
                         }   
                         else
                         {
                              auctions= Manager.getInstance().getAuctionItem(new ItemStack(Material.matchMaterial(sign.getLine(2)),1));
-                            AuctionSort.sortAuction(auctions, "date");
+                            Sorter.sortAuction(auctions, "date");
                         }
                         if (auctions.isEmpty())
                         {

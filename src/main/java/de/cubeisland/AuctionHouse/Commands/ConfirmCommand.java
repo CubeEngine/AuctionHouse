@@ -28,9 +28,10 @@ public class ConfirmCommand extends AbstractCommand
     public boolean execute(CommandSender sender, CommandArgs args)
     {
         Manager manager = Manager.getInstance();
-        if (manager.getAllConfirm().contains(Bidder.getInstance(sender)))
+        Bidder bidder = Bidder.getInstance(sender);
+        if (manager.getAllConfirm().contains(bidder))
         {
-            manager.getAllConfirm().remove(Bidder.getInstance(sender));
+            manager.getAllConfirm().remove(bidder);
             int max = manager.size();
             if (max == 0)
             {
@@ -44,15 +45,15 @@ public class ConfirmCommand extends AbstractCommand
             sender.sendMessage(t("i")+" "+t("confirm_del"));
             return true;
         }
-        if (manager.getBidderConfirm().containsKey(Bidder.getInstance(sender)))
+        if (manager.getBidderConfirm().containsKey(bidder))
         {
-            if (manager.getBidderConfirm().get(Bidder.getInstance(sender)) instanceof ServerBidder)
+            if (manager.getBidderConfirm().get(bidder) instanceof ServerBidder)
             {
                 int max = ServerBidder.getInstance().getAuctions().size();
                 if (max == 0)
                 {
                     sender.sendMessage(t("i")+" "+t("confirm_no_serv"));
-                    manager.getBidderConfirm().remove(Bidder.getInstance(sender));
+                    manager.getBidderConfirm().remove(bidder);
                     return true;
                 }
                 for (int i = max - 1; i >= 0; --i)
@@ -60,12 +61,12 @@ public class ConfirmCommand extends AbstractCommand
                     manager.cancelAuction(ServerBidder.getInstance().getAuctions().get(i), false);
                 }
                 sender.sendMessage(t("i")+" "+t("confirm_del_serv"));
-                manager.getBidderConfirm().remove(Bidder.getInstance(sender));
+                manager.getBidderConfirm().remove(bidder);
                 return true;
             }
             else
             {
-                Bidder player = manager.getBidderConfirm().get(Bidder.getInstance(sender));
+                Bidder player = manager.getBidderConfirm().get(bidder);
                 ArrayList<Auction> auctions = (ArrayList<Auction>)player.getActiveBids().clone();
                 int max = auctions.size();
                 for (Auction auction : auctions)
@@ -88,16 +89,16 @@ public class ConfirmCommand extends AbstractCommand
                 }
                 if (max!=0)
                     sender.sendMessage(t("i")+" "+t("confirm_rem",max,player.getName()));
-                manager.getBidderConfirm().remove(Bidder.getInstance(sender));
+                manager.getBidderConfirm().remove(bidder);
                 return true;
             }
         }
-        if (manager.getSingleConfirm().containsKey(Bidder.getInstance(sender)))
+        if (manager.getSingleConfirm().containsKey(bidder))
         {
-            ItemStack item = Manager.getInstance().getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))).getItem();
-            manager.cancelAuction(manager.getAuction(manager.getSingleConfirm().get(Bidder.getInstance(sender))), false);
-            sender.sendMessage(t("i")+" "+t("rem_id",manager.getSingleConfirm().get(Bidder.getInstance(sender)),item.getType().toString()+"x"+item.getAmount()));
-            manager.getBidderConfirm().remove(Bidder.getInstance(sender));
+            ItemStack item = Manager.getInstance().getAuction(manager.getSingleConfirm().get(bidder)).getItem();
+            manager.cancelAuction(manager.getAuction(manager.getSingleConfirm().get(bidder)), false);
+            sender.sendMessage(t("i")+" "+t("rem_id",manager.getSingleConfirm().get(bidder),item.getType().toString()+"x"+item.getAmount()));
+            manager.getBidderConfirm().remove(bidder);
             return true;
         }
         sender.sendMessage(t("e")+" "+t("confirm_no_req"));

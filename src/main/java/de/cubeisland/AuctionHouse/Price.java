@@ -45,11 +45,11 @@ public class Price {
             t_price += price;
             t_price /= ++t_amount;
         }
-        
+        String item2 = Util.convertItem(item);
         AuctionHouse.getInstance().getDB().execUpdate(
-            "DELETE FROM `price` WHERE `item`=?", Util.convertItem(item));
+            "DELETE FROM `price` WHERE `item`=?", item2);
         AuctionHouse.getInstance().getDB().execUpdate(
-            "INSERT INTO `price` (`item` ,`price` ,`amount` ) VALUES ( ?, ? ,?);", Util.convertItem(item), t_price, t_amount);
+            "INSERT INTO `price` (`item` ,`price` ,`amount` ) VALUES ( ?, ? ,?);", item2, t_price, t_amount);
         return this.setPrice(item, t_price, t_amount);
     }
     

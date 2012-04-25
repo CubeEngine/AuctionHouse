@@ -105,7 +105,9 @@ public class Auction implements DatabaseEntity
  */
     public boolean undobid(final Bidder bidder)
     {
-        if (bidder != this.bids.peek().getBidder())
+        
+        Bid bid = this.bids.peek();
+        if (bidder != bid.getBidder())
         {
             bidder.getPlayer().sendMessage(t("e")+" "+t("undo_bidder"));
             return false;
@@ -118,16 +120,16 @@ public class Auction implements DatabaseEntity
         long undoTime = config.auction_undoTime;
         if (undoTime < 0) //Infinite UndoTime
         {
-            undoTime = this.auctionEnd - this.bids.peek().getTimestamp();
+            undoTime = this.auctionEnd - bid.getTimestamp();
         }
-        if ((System.currentTimeMillis() - this.bids.peek().getTimestamp()) > undoTime)
+        if ((System.currentTimeMillis() - bid.getTimestamp()) > undoTime)
         {
             bidder.getPlayer().sendMessage(t("e")+" "+t("undo_time"));
             return false;
         }
         //else: Undo Last Bid
         db.execUpdate("DELETE FROM `bids` WHERE `bidderid`=? && `auctionid`=? && `timestamp`=?"
-                      ,bidder.getId(), this.id, this.bids.peek().getTimestamp());
+                      ,bidder.getId(), this.id, bid.getTimestamp());
         this.bids.pop();
         return true;
     }
