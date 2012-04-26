@@ -86,10 +86,10 @@ public class Auction implements DatabaseEntity
             return false;
         }
         if ((AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) >= amount)
-                || plugin.permcheck(bidder.getPlayer(), Perm.command_bid_infinite))
+                || Perm.command_bid_infinite.check(bidder.getPlayer()))
         {
             if (AuctionHouse.getInstance().getEconomy().getBalance(bidder.getName()) - bidder.getTotalBidAmount() >= amount
-                    || plugin.permcheck(bidder.getPlayer(), Perm.command_bid_infinite))
+                    || Perm.command_bid_infinite.check(bidder.getPlayer()))
             {
                 this.bids.push(new Bid(bidder, amount, this));
                 return true;

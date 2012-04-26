@@ -62,7 +62,7 @@ public enum Perm
      * @param perm
      * @return true if sender has the perm permission
      */
-    public boolean check (CommandSender sender, Perm perm)
+    public boolean check (CommandSender sender)
     {
         if (this.checkPerm(sender))
             return true;

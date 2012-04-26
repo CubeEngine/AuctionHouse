@@ -25,7 +25,7 @@ public class GetItemsCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (!AuctionHouse.getInstance().permcheck(sender, Perm.command_getItems)) return true;
+        if (!Perm.command_getItems.check(sender)) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             AuctionHouse.log("Console can not receive Items");

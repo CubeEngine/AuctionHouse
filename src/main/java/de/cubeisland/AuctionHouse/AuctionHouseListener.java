@@ -108,9 +108,10 @@ public class AuctionHouseListener implements Listener
     {
         if(event.getLine(0).equalsIgnoreCase("[AuctionHouse]")||event.getLine(0).equalsIgnoreCase("[ah]"))
         {
+            Player player = event.getPlayer();
             if (event.getLine(1).equalsIgnoreCase("AuctionBox")||event.getLine(1).equalsIgnoreCase("box"))
             {
-                if (!plugin.permcheck(event.getPlayer(), Perm.sign_create_box))
+                if (!Perm.sign_create_box.check(player))
                 {
                     event.setCancelled(true);
                     return;
@@ -123,14 +124,14 @@ public class AuctionHouseListener implements Listener
             {
                 if (event.getLine(1).equalsIgnoreCase("Start"))
                 {
-                    if (!plugin.permcheck(event.getPlayer(), Perm.sign_create_add))
+                    if (!Perm.sign_create_add.check(player))
                     {
                         event.setCancelled(true);
                         return;
                     }
                     if (Util.convertTimeToMillis(event.getLine(2)) < 0)
                     {
-                        event.getPlayer().sendMessage(t("event_sign_fail"));
+                        player.sendMessage(t("event_sign_fail"));
                         event.setCancelled(true);
                         return;
                     }
@@ -140,7 +141,7 @@ public class AuctionHouseListener implements Listener
                 {
                     if (event.getLine(1).equalsIgnoreCase("List")||event.getLine(1).equalsIgnoreCase("AuctionSearch"))
                     {
-                        if (!plugin.permcheck(event.getPlayer(), Perm.sign_create_list))
+                        if (!Perm.sign_create_list.check(player))
                         {
                             event.setCancelled(true);
                             return;
@@ -155,13 +156,13 @@ public class AuctionHouseListener implements Listener
                     else
                     {
 
-                        event.getPlayer().sendMessage(t("event_sign_fail"));
+                        player.sendMessage(t("event_sign_fail"));
                         event.setCancelled(true);
                         return;
                     }
                 }
             }
-            event.getPlayer().sendMessage(t("event_sign_create"));            
+            player.sendMessage(t("event_sign_create"));            
             event.setLine(0, "[AuctionHouse]");
         }
     }
@@ -226,7 +227,7 @@ public class AuctionHouseListener implements Listener
                     if ((sign).getLine(1).equals("AuctionBox"))
                     {
                         //AuktionBox GetItems
-                        if (!plugin.permcheck(player, Perm.sign_auctionbox)) return;
+                        if (!Perm.sign_auctionbox.check(player)) return;
                         if (!(Bidder.getInstance(player).getBox().giveNextItem()))
                         {
                             player.sendMessage(t("i")+" "+t("time_sign_empty"));
@@ -240,7 +241,7 @@ public class AuctionHouseListener implements Listener
                             return;
                         }
                         //AuktionBox Start Auktion
-                        if (!plugin.permcheck(player, Perm.sign_start)) return;
+                        if (!Perm.sign_start.check(player)) return;
                         Double startbid;
                         Integer length = Util.convertTimeToMillis(sign.getLine(2));
                         if (length == null)
@@ -284,26 +285,26 @@ public class AuctionHouseListener implements Listener
                     }
                     if ((sign).getLine(1).equals("AuctionSearch"))
                     {
-                        if (!plugin.permcheck(player, Perm.sign_list)) return;
+                        if (!Perm.sign_list.check(player)) return;
                         List<Auction> auctions;
                         if ((sign).getLine(2).equals("# All #"))
                         {
                             auctions = Manager.getInstance().getAuctions();
-                            Sorter.sortAuction(auctions, "date");
+                            Sorter.DATE.sortAuction(auctions);
                         }   
                         else
                         {
                              auctions= Manager.getInstance().getAuctionItem(new ItemStack(Material.matchMaterial(sign.getLine(2)),1));
-                            Sorter.sortAuction(auctions, "date");
+                            Sorter.DATE.sortAuction(auctions);
                         }
                         if (auctions.isEmpty())
                         {
-                           event.getPlayer().sendMessage(t("no_detect"));
+                           player.sendMessage(t("no_detect"));
                            return;
                         }
                         Collections.reverse(auctions);
                         for (Auction auction : auctions)
-                            Util.sendInfo(event.getPlayer(), auction);
+                            Util.sendInfo(player, auction);
                     }
                 }
             }

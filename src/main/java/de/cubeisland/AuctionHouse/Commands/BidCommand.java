@@ -6,16 +6,15 @@ import de.cubeisland.AuctionHouse.Auction.Bidder;
 import de.cubeisland.AuctionHouse.Auction.ServerBidder;
 import de.cubeisland.AuctionHouse.AuctionHouse;
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
-import de.cubeisland.AuctionHouse.Sorter;
 import de.cubeisland.AuctionHouse.BaseCommand;
 import de.cubeisland.AuctionHouse.CommandArgs;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.Sorter;
 import java.util.List;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -35,7 +34,7 @@ public class BidCommand extends AbstractCommand
     public boolean execute(CommandSender sender, CommandArgs args)
     {
         Manager manager = Manager.getInstance();
-        if (!AuctionHouse.getInstance().permcheck(sender, Perm.command_bid)) return true;
+        if (!Perm.command_bid.check(sender)) return true;
         if (sender instanceof ConsoleCommandSender)
         {
             sender.sendMessage(t("bid_console"));
@@ -88,8 +87,8 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage(t("i")+" "+t("bid_no_auction",item.getType().toString()));
                     return true;
                 }
-                Sorter.sortAuction(auctions, "quantity", quantity);
-                Sorter.sortAuction(auctions, "price");
+                Sorter.QUANTITY.sortAuction(auctions, quantity);
+                Sorter.PRICE.sortAuction(auctions);
                 while (!auctions.isEmpty() && auctions.get(0).getOwner()==Bidder.getInstance(sender))
                     auctions.remove(0);
                 

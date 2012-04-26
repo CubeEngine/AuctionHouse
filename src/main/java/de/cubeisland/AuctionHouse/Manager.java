@@ -160,8 +160,7 @@ public class Manager
         {
             endingActions.add(this.auctions.get(i));
         }
-        Sorter.sortAuction(endingActions, "date");
-        
+        Sorter.DATE.sortAuction(endingActions);
         return endingActions;
     }
     

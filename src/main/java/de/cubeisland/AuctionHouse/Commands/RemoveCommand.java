@@ -52,7 +52,7 @@ public class RemoveCommand extends AbstractCommand
         {
             if (args.getString(0).equalsIgnoreCase("all"))
             {
-                if (!plugin.permcheck(sender, Perm.command_delete_all)) return true;
+                if (!Perm.command_delete_all.check(sender)) return true;
                 manager.getAllConfirm().add(Bidder.getInstance(sender));
                 sender.sendMessage(t("rem_all"));
                 sender.sendMessage(t("rem_confirm"));
@@ -74,7 +74,7 @@ public class RemoveCommand extends AbstractCommand
             {
                 if (args.getString(0).equalsIgnoreCase("Server"))
                 {
-                    if (!plugin.permcheck(sender, Perm.command_delete_server)) return true;
+                    if (!Perm.command_delete_server.check(sender)) return true;
                     manager.getBidderConfirm().put(Bidder.getInstance(sender), ServerBidder.getInstance());
                     sender.sendMessage(t("rem_allserv"));
                     sender.sendMessage(t("rem_confirm"));                    
@@ -96,7 +96,7 @@ public class RemoveCommand extends AbstractCommand
                 Integer id = args.getInt(0);
                 if (id != null)
                 {
-                    if (!plugin.permcheck(sender, Perm.command_delete_id)) return true;
+                    if (!Perm.command_delete_id.check(sender)) return true;
                     if (manager.getAuction(id) == null)
                     {
                         sender.sendMessage(t("e")+" "+t("auction_no_exist",id));
@@ -105,7 +105,7 @@ public class RemoveCommand extends AbstractCommand
                     
                     Auction auction = manager.getAuction(id);
                     if (auction.getOwner() instanceof ServerBidder)
-                        if (!plugin.permcheck(sender, Perm.command_delete_server)) return true;                    
+                        if (!Perm.command_delete_server.check(sender)) return true;                    
                     if (config.auction_removeTime < System.currentTimeMillis() - auction.getBids().firstElement().getTimestamp())
                     {
                         if (!sender.hasPermission("aucionhouse.delete.player.all"))
@@ -115,7 +115,7 @@ public class RemoveCommand extends AbstractCommand
                         }
                     }
                     if (!auction.getOwner().equals(Bidder.getInstance(sender)))
-                        if (!plugin.permcheck(sender, Perm.command_delete_player_other)) return true;
+                        if (!Perm.command_delete_player_other.check(sender)) return true;
                     if (config.auction_confirmID)
                     {
                         manager.getSingleConfirm().put(Bidder.getInstance(sender), id);
@@ -154,9 +154,9 @@ public class RemoveCommand extends AbstractCommand
             else
             {
                 if (player.getPlayer().equals((Player) sender))
-                    if (!plugin.permcheck(sender, Perm.command_delete_player)) return true;
+                    if (!Perm.command_delete_player.check(sender)) return true;
                 else
-                    if (!plugin.permcheck(sender, Perm.command_delete_player_other)) return true;
+                    if (!Perm.command_delete_player_other.check(sender)) return true;
                 if (!(player.getAuctions().isEmpty()))
                 {
                     manager.getBidderConfirm().put(Bidder.getInstance(sender), player);

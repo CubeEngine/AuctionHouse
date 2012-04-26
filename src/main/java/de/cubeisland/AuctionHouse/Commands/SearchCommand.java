@@ -27,7 +27,7 @@ public class SearchCommand extends AbstractCommand
 
     public boolean execute(CommandSender sender, CommandArgs args)
     {
-        if (!plugin.permcheck(sender, Perm.command_search)) return true;
+        if (!Perm.command_search.check(sender)) return true;
         if (args.isEmpty())
         {
             sender.sendMessage(t("search_title1"));
@@ -54,18 +54,18 @@ public class SearchCommand extends AbstractCommand
         {
             if (args.getString("s").equalsIgnoreCase("date"))
             {
-                Sorter.sortAuction(auctionlist, "date");
+                Sorter.DATE.sortAuction(auctionlist);
                 Collections.reverse(auctionlist);
             }
             if (args.getString("s").equalsIgnoreCase("id"))
             {
-                Sorter.sortAuction(auctionlist, "id");
+                Sorter.ID.sortAuction(auctionlist);
                 Collections.reverse(auctionlist);
             }
             if (args.getString("s").equalsIgnoreCase("price"))
             {
-                Sorter.sortAuction(auctionlist, "date");
-                Sorter.sortAuction(auctionlist, "price");
+                Sorter.DATE.sortAuction(auctionlist);
+                Sorter.PRICE.sortAuction(auctionlist);
                 Collections.reverse(auctionlist);
             }
         }

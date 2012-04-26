@@ -9,8 +9,9 @@ import java.util.List;
  *
  * @author Faithcaio
  */
-public class Sorter
-{
+public enum Sorter
+{ID,PRICE,DATE,QUANTITY;
+    
     private static final Comparator compareId;
     private static final Comparator comparePrice;
     private static final Comparator compareDate;
@@ -81,21 +82,21 @@ public class Sorter
  * @param auctionlist
  * @param type: id | price | date | quantity
  */    
-    public static void sortAuction(List<Auction> auctionlist, String type)
+    public void sortAuction(List<Auction> auctionlist)
     {
-        if (type.equalsIgnoreCase("id"))
+        if (this == Sorter.ID)
         {
             Collections.sort(auctionlist, compareId);
         }
-        if (type.equalsIgnoreCase("price"))
+        if (this == Sorter.PRICE)
         {
             Collections.sort(auctionlist, comparePrice);
         }
-        if (type.equalsIgnoreCase("date"))
+        if (this == Sorter.DATE)
         {
             Collections.sort(auctionlist, compareDate);
         }
-        if (type.equalsIgnoreCase("quantity"))
+        if (this == Sorter.QUANTITY)
         {
             Collections.sort(auctionlist, compareQuantity);
         }
@@ -106,11 +107,11 @@ public class Sorter
  * @param type: id | price | date | quantity
  * @param quantity: filter low quantity
  */
-    public static List<Auction> sortAuction(List<Auction> auctionlist, String type, int quantity)
+    public List<Auction> sortAuction(List<Auction> auctionlist, int quantity)
     {
-        sortAuction(auctionlist, type);
+        this.sortAuction(auctionlist);
 
-        if (type.equalsIgnoreCase("quantity"))
+        if (this == Sorter.QUANTITY)
         {
             if (auctionlist.isEmpty())
             {

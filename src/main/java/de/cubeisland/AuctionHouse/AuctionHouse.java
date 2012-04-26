@@ -22,7 +22,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Server;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -181,10 +180,5 @@ public class AuctionHouse extends JavaPlugin
     public Database getDB()
     {
         return this.database;
-    }
-    
-    public boolean permcheck(CommandSender sender, Perm perm)
-    {
-        return perm.check(sender, perm);
     }
 }
