@@ -125,7 +125,7 @@ public class Manager
                 return null;
             }
             if (auction.getItem().getType() == material.getType())
-            //    && (this.auctions.get(i).getItem().getDurability() == material.getDurability())
+            //    && (this.auctions.get(i).getItemData() == material.getDurability())
             {
                 auctionlist.add(auction);
             }

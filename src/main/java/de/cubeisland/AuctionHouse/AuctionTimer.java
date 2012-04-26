@@ -68,7 +68,7 @@ public class AuctionTimer
                                         if (auction.getOwner().isOnline())
                                         {
                                             auction.getOwner().getPlayer().sendMessage(t("time_sold",
-                                                                    auction.getItem().getType().toString()+" x"+auction.getItem().getAmount(),
+                                                                    auction.getItemType()+" x"+auction.getItemAmount(),
                                                                     econ.format(topbid - topbid * config.auction_comission / 100),
                                                                     econ.format(topbid * config.auction_comission / 100)));
                                         }
@@ -77,7 +77,7 @@ public class AuctionTimer
                                     Manager.getInstance().adjustPrice(auction.getItem(), topbid);
                                     if (winner.isOnline())
                                     {
-                                        winner.getPlayer().sendMessage(t("time_won",auction.getItem().getType().toString()+" x"+auction.getItem().getAmount()
+                                        winner.getPlayer().sendMessage(t("time_won",auction.getItemType()+" x"+auction.getItemAmount()
                                                                          ,econ.format(topbid)));
                                     }
                                     else

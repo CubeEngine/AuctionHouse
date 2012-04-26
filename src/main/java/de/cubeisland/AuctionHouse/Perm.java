@@ -1,8 +1,6 @@
 package de.cubeisland.AuctionHouse;
 
 import static de.cubeisland.AuctionHouse.AuctionHouse.t;
-import java.util.EnumMap;
-import java.util.Map;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
@@ -67,12 +65,13 @@ public enum Perm
     public boolean check (CommandSender sender, Perm perm)
     {
         if (this.checkPerm(sender))
+            return true;
+        else
         {
             this.send(sender);
             return false;
         }
-        else
-            return true;
+            
     }
     
     /**

@@ -200,7 +200,7 @@ public class AddCommand extends AbstractCommand
         {
             if (!((Player) sender).getInventory().contains(removeItem.getType(), removeItem.getAmount()))
             {
-                if (!plugin.permcheck(sender, Perm.command_add_cheatItems))
+                if (plugin.permcheck(sender, Perm.command_add_cheatItems))
                 {
                     sender.sendMessage(t("i")+" "+t("add_enough_item")+" "+t("add_cheat"));
                 }

@@ -26,7 +26,7 @@ import org.bukkit.inventory.ItemStack;
 public class Util
 {
     private static final AuctionHouse plugin = AuctionHouse.getInstance();
-    private static final AuctionHouseConfiguration config = plugin.getConfiguration();
+    //private static final AuctionHouseConfiguration config = plugin.getConfiguration();
     
 /**
  * Converts Time in d | h | m | s  to Milliseconds
@@ -93,12 +93,12 @@ public class Util
 
         for (Bidder bidder : Bidder.getInstances().values())
         {
-            if (bidder.getMatSub().contains(new ItemStack(auction.getItem().getType(), 1, auction.getItem().getDurability())))
+            if (bidder.getMatSub().contains(new ItemStack(auction.getItem().getType(), 1, auction.getItemData())))
             {
                 if (!bidder.equals(auction.getOwner()))
                 {
                     bidder.addSubscription(auction);
-                    bidder.getPlayer().sendMessage(t("info_new",auction.getId(),auction.getItem().getType().toString()));
+                    bidder.getPlayer().sendMessage(t("info_new",auction.getId(),auction.getItemType()));
                 }
             }
         }
@@ -112,12 +112,11 @@ public class Util
             "`timestamp`"+
             ")"+
             "VALUES (?, ?, ?, ?, ?)"
-            ,auction.getId(), auction.getOwner().getId(), Util.convertItem(auction.getItem()),
-            auction.getItem().getAmount(), new Timestamp(auction.getAuctionEnd()));
-        //TODO getOwnerID / getItemAmount /getItemString von Util.convertItem als Methoden bei "Auction"
+            ,auction.getId(), auction.getOwnerId(), auction.getConvertItem(),
+            auction.getItemAmount(), auction.getEndTimestamp());
         return true;
     }
-    
+
 /**
  * send Info about auction to sender
  */ 
@@ -125,10 +124,10 @@ public class Util
     {
         Economy econ = plugin.getEconomy();
         String output = "";
-        if (auction.getItem().getDurability()==0)
-            output += t("info_out_1",auction.getId(),auction.getItem().getType().toString(),auction.getItem().getAmount());
+        if (auction.getItemData()==0)
+            output += t("info_out_1",auction.getId(),auction.getItemType(),auction.getItemAmount());
         else
-            output += t("info_out_11",auction.getId(),auction.getItem().getType().toString(),auction.getItem().getDurability(),auction.getItem().getAmount());
+            output += t("info_out_11",auction.getId(),auction.getItemType(),auction.getItemData(),auction.getItemAmount());
         if (auction.getItem().getEnchantments().size() > 0)
         {
             output += " "+t("info_out_ench");
@@ -158,6 +157,7 @@ public class Util
             }
             output +=" "+t("info_out_with",econ.format(bid.getAmount()));
         }
+        AuctionHouseConfiguration config = plugin.getConfiguration();
         if (auction.getAuctionEnd()-System.currentTimeMillis()>1000*60*60*24)
             output += " "+t("info_out_end",DateFormatUtils.format(auction.getAuctionEnd(), 
                             config.auction_timeFormat));

@@ -106,7 +106,7 @@ public class AuctionHouseListener implements Listener
     @EventHandler
     public void onSignChange(SignChangeEvent event)
     {
-        if(event.getLine(0).equalsIgnoreCase("[AuctionHouse]"))
+        if(event.getLine(0).equalsIgnoreCase("[AuctionHouse]")||event.getLine(0).equalsIgnoreCase("[ah]"))
         {
             if (event.getLine(1).equalsIgnoreCase("AuctionBox")||event.getLine(1).equalsIgnoreCase("box"))
             {
@@ -277,7 +277,7 @@ public class AuctionHouseListener implements Listener
                             player.getInventory().removeItem(player.getItemInHand());
                             player.updateInventory();
                             player.sendMessage(t("i")+" "+t("add_start",1,
-                                    newAuction.getItem().getType().toString()+"x"+newAuction.getItem().getAmount(),
+                                    newAuction.getItemType()+"x"+newAuction.getItemAmount(),
                                     econ.format(startbid),
                                     DateFormatUtils.format(newAuction.getAuctionEnd(), config.auction_timeFormat))); 
                         }    

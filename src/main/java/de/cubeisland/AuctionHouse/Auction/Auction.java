@@ -9,6 +9,8 @@ import de.cubeisland.AuctionHouse.Database.EntityIdentifier;
 import de.cubeisland.AuctionHouse.Database.EntityProperty;
 import de.cubeisland.AuctionHouse.Manager;
 import de.cubeisland.AuctionHouse.Perm;
+import de.cubeisland.AuctionHouse.Util;
+import java.sql.Timestamp;
 import java.util.Stack;
 import org.bukkit.inventory.ItemStack;
 
@@ -198,5 +200,59 @@ public class Auction implements DatabaseEntity
     {
         this.owner = ServerBidder.getInstance();
         this.bids.peek().giveServer();
+    }
+    
+/**
+ * 
+ * @return DataBase Id of the owner
+ */
+    public int getOwnerId()
+    {
+        return this.owner.getId();
+    }
+    
+/**
+ * 
+ * @return Amount of item in this auction
+ */
+    public int getItemAmount()
+    {
+        return this.item.getAmount();
+    }
+    
+/**
+ * 
+ * @return item as String for DataBase
+ */
+    public String getConvertItem()
+    {
+        return Util.convertItem(this.item);
+    }
+    
+/**
+ * 
+ * @return DataBase Timestamp of AuctionEnd
+ */
+    public Timestamp getEndTimestamp()
+    {
+        return new Timestamp(this.auctionEnd);
+    }
+    
+/**
+ * 
+ * @return ItemType of item as String
+ */
+    public String getItemType()
+    {
+        return this.item.getType().toString();
+    }
+    
+/**
+ * 
+ * @return DataValue / DamageValue of item
+ */
+    public short getItemData()
+    {
+        return this.item.getDurability();
     }
 }

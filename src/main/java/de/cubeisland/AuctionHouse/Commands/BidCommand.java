@@ -42,7 +42,7 @@ public class BidCommand extends AbstractCommand
             return true;
         }
 
-        Double bidAmount;
+        Double bidAmount = null;
         Auction auction;
         Integer quantity;
         if (args.size() < 2)
@@ -85,31 +85,44 @@ public class BidCommand extends AbstractCommand
                 
                 if (auctions.isEmpty())
                 {
-                    sender.sendMessage(t("i")+" "+t("bid_no_auction",item.getType().toString()+"x"+item.getAmount()));
+                    sender.sendMessage(t("i")+" "+t("bid_no_auction",item.getType().toString()));
                     return true;
                 }
                 Sorter.sortAuction(auctions, "quantity", quantity);
                 Sorter.sortAuction(auctions, "price");
+                while (!auctions.isEmpty() && auctions.get(0).getOwner()==Bidder.getInstance(sender))
+                    auctions.remove(0);
+                
                 if (auctions.isEmpty())
                 {
-                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",item.getType().toString()+"x"+item.getAmount()));
+                    sender.sendMessage(t("i")+" "+t("bid_no_auc_least",quantity,item.getType().toString()));
                     return true;
                 }
                 auction = auctions.get(0);//First is Cheapest after Sort
-                bidAmount = args.getDouble(0);
+                if (args.getString(0)!=null)
+                    bidAmount = args.getDouble(0);
                 if (bidAmount != null)
                 {
-                    if (auction.getOwner() == Bidder.getInstance((Player) sender))
+                    Bidder bidder = Bidder.getInstance(sender);
+                    Bidder oldBidder = auction.getBids().peek().getBidder();
+                    if (auction.bid(bidder, bidAmount))
                     {
-                        sender.sendMessage(t("pro")+" "+t("bid_own"));
-                        return true;
-                    }
-                    if (auction.bid(Bidder.getInstance((Player) sender), bidAmount))
-                    {
-                        Bidder.getInstance((Player) sender).addAuction(auction);
+                        bidder.addAuction(auction);
                         this.SendBidInfo(auction, sender);
+                        if (oldBidder == bidder)
+                            sender.sendMessage(t("i")+" "+t("bid_again"));
+                        else
+                            if (oldBidder != auction.getOwner())
+                                if (oldBidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                                    if (oldBidder.getPlayer()!=null)
+                                        oldBidder.getPlayer().sendMessage(t("i")+" "+t("bid_over",auction.getId()));
                         return true;
                     }
+                    return true;
+                }
+                else
+                {
+                    sender.sendMessage(t("e")+" "+t("bid_no_price"));
                     return true;
                 }
             }
@@ -122,7 +135,8 @@ public class BidCommand extends AbstractCommand
         Integer id = args.getInt(0);
         if (id != null)
         {
-            bidAmount = args.getDouble(1);
+            if (args.getString(1)!=null)
+                    bidAmount = args.getDouble(1);
             if (bidAmount != null)
             {
                 if (manager.getAuction(id) == null)
@@ -137,12 +151,25 @@ public class BidCommand extends AbstractCommand
                     sender.sendMessage(t("pro")+" "+t("bid_own"));
                     return true;
                 }
+                Bidder oldBidder = auction.getBids().peek().getBidder();
                 if (auction.bid(bidder, bidAmount))
                 {
                     bidder.addAuction(auction);
                     this.SendBidInfo(auction, sender);
+                    if (oldBidder == bidder)
+                        sender.sendMessage(t("i")+" "+t("bid_again"));
+                    else
+                        if (oldBidder != auction.getOwner())
+                            if (oldBidder.hasNotifyState(Bidder.NOTIFY_STATUS))
+                                if (oldBidder.getPlayer()!=null)
+                                    oldBidder.getPlayer().sendMessage(t("i")+" "+t("bid_over",auction.getId()));
                     return true;
                 }
+                return true;
+            }
+            else
+            {
+                sender.sendMessage(t("e")+" "+t("bid_no_price"));
                 return true;
             }
         }
@@ -153,7 +180,7 @@ public class BidCommand extends AbstractCommand
     public void SendBidInfo(Auction auction, CommandSender sender)
     {
         sender.sendMessage(t("bid_out",econ.format(auction.getBids().peek().getAmount()),
-            auction.getItem().getType().toString()+"x"+auction.getItem().getAmount(),auction.getId()));
+            auction.getItemType()+"x"+auction.getItemAmount(),auction.getId()));
         if (!(auction.getOwner() instanceof ServerBidder) && auction.getOwner().isOnline())
         {
             if (auction.getOwner().hasNotifyState(Bidder.NOTIFY_STATUS))

@@ -73,7 +73,7 @@ public class AuctionItem implements DatabaseEntity
                     ")"+
                     "VALUES ( ?, ?, ?, ?, ?, ? );"
                   ,this.bidder.getId(),Util.convertItem(this.item),
-                  this.item.getAmount(),this.price,new Timestamp(this.date),auction.getOwner().getId());
+                  this.item.getAmount(),this.price,new Timestamp(this.date),auction.getOwnerId());
             ResultSet set =
                     db.query("SELECT * FROM `auctionbox` ORDER BY `id` DESC LIMIT 1");
              if (set.next())

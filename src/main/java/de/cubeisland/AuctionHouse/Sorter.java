@@ -66,7 +66,7 @@ public class Sorter
         {
             public int compare(Object a1, Object a2)
             {
-                if (((Auction) a1).getItem().getAmount() <= ((Auction) a2).getItem().getAmount())
+                if (((Auction) a1).getItemAmount() <= ((Auction) a2).getItemAmount())
                 {
                     return 1;
                 }
@@ -116,7 +116,7 @@ public class Sorter
             {
                 return null;
             }
-            while (auctionlist.get(auctionlist.size() - 1).getItem().getAmount() < quantity)
+            while (auctionlist.get(auctionlist.size() - 1).getItemAmount() < quantity)
             {
                 auctionlist.remove(auctionlist.size() - 1);
                 if (auctionlist.isEmpty())
