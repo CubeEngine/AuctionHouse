@@ -13,4 +13,7 @@ import java.lang.annotation.Target;
 public @interface EntityProperty
 {
     public String name() default "";
+    public String toDBString() default "";
+    public String toDBCreateString() default "";
+    public String toDBCreateForeignKey() default "";
 }

@@ -214,4 +214,12 @@ public class AuctionItem implements DatabaseEntity
     {
         return this.id;
     }   
+    
+/**
+ *  @return TableName for Database
+ */ 
+    public String getDBTable()
+    {
+        return "`"+this.getTable()+"`";
+    }
 }

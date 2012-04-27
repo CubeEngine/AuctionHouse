@@ -7,4 +7,5 @@ package de.cubeisland.AuctionHouse.Database;
 public interface DatabaseEntity
 {
     public String getTable();
+    public String getDBTable();
 }

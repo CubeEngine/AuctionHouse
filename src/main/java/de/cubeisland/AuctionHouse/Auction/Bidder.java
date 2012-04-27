@@ -568,4 +568,12 @@ public class Bidder implements DatabaseEntity
         this.materialSub.add(item);
         return true;
     }
+    
+/**
+ *  @return TableName for Database
+ */ 
+    public String getDBTable()
+    {
+        return "`"+this.getTable()+"`";
+    }
 }

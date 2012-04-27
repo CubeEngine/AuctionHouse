@@ -43,10 +43,9 @@ public class AuctionHouse extends JavaPlugin
     private File dataFolder;
     private Economy economy = null;
     private Database database;
-    private Perm perm;
 //TODO später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO flatfile mit angeboten
-//TODO DatenBank leichter nutzen ohne SQL überall
+//TODO DatenBankNutzung schöner machen
     public AuctionHouse()
     {
         instance = this;

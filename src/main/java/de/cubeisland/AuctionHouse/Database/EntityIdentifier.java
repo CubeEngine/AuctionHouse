@@ -13,4 +13,6 @@ import java.lang.annotation.Target;
 public @interface EntityIdentifier
 {
     public String name() default "";
+    public String toDBString() default "";
+    public String toDBCreateString() default "";
 }

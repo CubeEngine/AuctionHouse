@@ -16,14 +16,6 @@ public enum Sorter
     private static final Comparator comparePrice;
     private static final Comparator compareDate;
     private static final Comparator compareQuantity;
-    
-    //TODO enum für Comparator
-    /*
-     * public enum comparator{
-        
-    }
-    * 
-    */
 
     static
     {

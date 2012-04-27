@@ -135,14 +135,6 @@ public class Auction implements DatabaseEntity
         this.bids.pop();
         return true;
     }
-    
-/**
- *  @return TableName in Database
- */ 
-    public String getTable()
-    {
-        return "auction";
-    }
 
 /**
  * @return id as int
@@ -254,5 +246,21 @@ public class Auction implements DatabaseEntity
     public short getItemData()
     {
         return this.item.getDurability();
+    }
+
+/**
+ *  @return TableName in Database
+ */ 
+    public String getTable()
+    {
+        return "auction";
+    }
+    
+/**
+ *  @return TableName for Database
+ */ 
+    public String getDBTable()
+    {
+        return "`"+this.getTable()+"`";
     }
 }
