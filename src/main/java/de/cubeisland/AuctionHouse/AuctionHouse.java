@@ -46,6 +46,7 @@ public class AuctionHouse extends JavaPlugin
 //TODO später eigene AuktionsBox als Kiste mit separatem inventar 
 //TODO flatfile mit angeboten
 //TODO DatenBankNutzung schöner machen
+    //TODO ah rem last / l
     public AuctionHouse()
     {
         instance = this;

@@ -86,13 +86,15 @@ public class Database
     {
         String exec = "";
         exec += "CREATE TABLE IF NOT EXISTS `"+tablename+"` (";//Create table with tablename
-        exec += "`"+id.name()+"` "//Identifier
-              + ""//Type
-              + "NOT NULL";
-        exec += "PRIMARY KEY(`"+id.name()+"`)";//Identifier as Primary Key
+        exec += id.toDBCreateString();//Identifier ; Type ;  Not null?
+        for (int i=0; i<properties.length; ++i)
+            exec += id.toDBCreateString();//Property ; Type ;  Not null?
+        exec += "PRIMARY KEY("+id.toDBString()+")";//Identifier as Primary Key
+        for (int i=0; i<properties.length; ++i)
+            exec += properties[i].toDBCreateForeignKey();//Property Foreign Key ...
+        exec += ") ENGINE=MyISAM DEFAULT CHARSET=latin1;";
     }
-    
-    //##########################################################
+//##########################################################
     
     private void setupStructure()
     {

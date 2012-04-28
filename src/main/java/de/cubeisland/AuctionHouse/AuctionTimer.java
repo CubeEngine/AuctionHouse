@@ -233,8 +233,6 @@ public class AuctionTimer
         timer.cancel();
         notifyTimer.cancel();
         this.instance = null;
-        //TODO nötig?
-        Runtime.getRuntime().gc();
     }
     
 }
