@@ -3,7 +3,7 @@
 
     <groupId>de.cubeisland</groupId>
     <artifactId>auctionhouse</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>AuctionHouse</name>
     <url>http://cubeisland.de</url>
     <packaging>jar</packaging>
