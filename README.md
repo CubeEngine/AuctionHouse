@@ -7,22 +7,36 @@ Create auctions bid on them and get your lovely items!
 
 This plugin provides an AuctionHouse for your economy server. (Vault needed!)
 
-AuctionHouse is simple:
+AuctionHouse is simple to use:
+
 You only need one command to bid on auctions! Everything else an be done by simply clicking on the AuctionHouse signs!
-But if you want you can enable the other chat commands such as: 
-Adding auctions, removing auctions, undo bids, search for specified items, get infos about your auctions and much more!
+
+But if you want you can enable the other chat commands such as:
+
+- Adding auctions, removing auctions, undo bids, search for specified items, get infos about your auctions and much more!
+
 As Admin you can also start auctions as server so you can cheat in items if you want.
+
 AuctionHouse also provides a system to punish people who bid more money than they have. By default 20% of their bid.
+
 When an auction ends the item gets into the AuctionBox which is a virtual container for all your Items won.
+
 Keep in mind items get deleted after 2 days (by default) in the Box.
+
 If you don't want some items to be sold you can simply add them to the blacklist.
+
 AuctionHouse also have language support in english and german. (I could do french too if requested)
 
 You can enable or disable every single command with the permissions.
+
 For example you could give only the "auctionhouse.use", "auctionhouse.command.bid" and "auctionhouse.sign.use"
+
 to a user who is only allowed to bid on auction and use signs to start/search auctions and receive Items.
+
 "auctionhouse.user.command" allows general usage of all normal commands and signs!
+
 "auctionhouse.mod" grants permission to remove auction of other users and to create new AuctionHouse signs.
+
 Finally "auctionhouse.admin" gives all permissions for every command such as removing all active auctions on your server.
 
 AuctionHouse is my first plugin. If you have found any bugs, or have got any suggestions, please feel free to create a ticket or contact me on IRC!
@@ -30,16 +44,17 @@ AuctionHouse is my first plugin. If you have found any bugs, or have got any sug
 Features:
 ---------
 
-Create auctions with different length and startbid.
-Add your item in hand or specify the item!
-Enchantments do work too!
-Add multiple auctions at once.
-Add auctions as server.
-Bid on auctions.
-Undo your bid after configurable time.
-Abort your own auctions or even all auctions.
-Subscribe to auctions and materials to get notified.
-Get your items from everywhere or use signs.
+ - Create auctions with different length and startbid.
+ - Add your item in hand or specify the item!
+ - Enchantments do work too!
+ - Add multiple auctions at once.
+ - Add auctions as server.
+ - Bid on auctions.
+ - Undo your bid after configurable time.
+ - Abort your own auctions or even all auctions.
+ - Subscribe to auctions and materials to get notified.
+ - Get your items from everywhere or use signs.
+
 And much more...
 
 planned features:

@@ -104,7 +104,7 @@ public class Database
                         "`item` varchar(42) NOT NULL,"+
                         "`amount` int(11) NOT NULL,"+
                         "`timestamp` timestamp NOT NULL,"+
-                        "PRIMARY KEY (`id`)"+
+                        "PRIMARY KEY (`id`),"+
                         "FOREIGN KEY (ownerid) REFERENCES bidder(id)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1;"
                  );
@@ -122,8 +122,8 @@ public class Database
                         "`bidderid` int(11) NOT NULL,"+
                         "`amount` int(11) NOT NULL,"+
                         "`timestamp` timestamp NOT NULL,"+
-                        "PRIMARY KEY (`id`)"+
-                        "FOREIGN KEY (auctionid) REFERENCES auctions(id)"+
+                        "PRIMARY KEY (`id`),"+
+                        "FOREIGN KEY (auctionid) REFERENCES auctions(id),"+
                         "FOREIGN KEY (bidderid) REFERENCES bidder(id)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;"
                  );
@@ -135,7 +135,7 @@ public class Database
                         "`price` decimal(11,2) NOT NULL,"+
                         "`timestamp` timestamp NOT NULL,"+
                         "`ownerid` int(11) NOT NULL COMMENT 'Bidder who started auction',"+
-                        "PRIMARY KEY (`id`)"+
+                        "PRIMARY KEY (`id`),"+
                         "FOREIGN KEY (bidderid) REFERENCES bidder(id)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
                  );
@@ -145,8 +145,8 @@ public class Database
                         "`auctionid` int(11) DEFAULT NULL,"+
                         "`type` tinyint(1) NOT NULL,"+
                         "`item` varchar(42) DEFAULT NULL COMMENT 'ID:DATA Ench1:Val Ench2:Val ...',"+
-                        "PRIMARY KEY (`id`)"+
-                        "FOREIGN KEY (auctionid) REFERENCES auctions(id)"+
+                        "PRIMARY KEY (`id`),"+
+                        "FOREIGN KEY (auctionid) REFERENCES auctions(id),"+
                         "FOREIGN KEY (bidderid) REFERENCES bidder(id)"+
                         ") ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;"
                  );
