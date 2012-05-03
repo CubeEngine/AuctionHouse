@@ -10,7 +10,7 @@ commands:
 depend:
   - Vault
 database: false
-website: "http://parallel-universe.de"
+website: "http://cubeisland.de/"
 description: ""
 authors:
   - "Faithcaio"
